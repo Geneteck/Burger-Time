@@ -1,2 +1,1 @@
 # Burger-Time
-Salut lOIC
