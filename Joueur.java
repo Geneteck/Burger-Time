@@ -1,6 +1,11 @@
-public class Joueur{
+import java.util.*;
+import class Perso;
+import java.util.ArrayList;
+
+class Joueur{
     private String pseudo;
     private int score;
+    private Perso p;
 
     public int getScore(){
       return this.score;
@@ -10,12 +15,8 @@ public class Joueur{
       this.score = score;
     }
 
-    public void Joueur(String pseudo, int score){
+    public Joueur(String pseudo, int score){
       this.pseudo = pseudo;
       this.score = score;
     }
-}
-
-public static void main(){
-  Joueur j = new Joueur("Loïc", 0);
 }
