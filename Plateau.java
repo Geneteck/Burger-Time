@@ -9,6 +9,7 @@ public class Plateau
   String AFF_LIMITE = "X ";
   String AFF_SOL = "_ ";
   String AFF_ECHELLE ="||";
+  String AFF_CUISTO = "C ";
 
   private int NB_LIGNES; // Nombre de ligne du plateau
   private int NB_COLONNES; // Nombre de colonne du plateau
@@ -72,22 +73,26 @@ public class Plateau
         if(touche == 'z' && this.valide('z', cuisto.getPosLig(), cuisto.getPosCol()))
         {
           cuisto.setPosLig(cuisto.getPosLig()-1);
-          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), "C ");
+          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), AFF_CUISTO);
+          modifieCase(cuisto.getPosLig()+1, cuisto.getPosCol()+1, AFF_SOL);
         }
         else if(touche == 'q' && this.valide('q', cuisto.getPosLig(), cuisto.getPosCol()))
         {
           cuisto.setPosCol(cuisto.getPosCol()-1);
-          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), "C ");
+          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), AFF_CUISTO);
+          modifieCase(cuisto.getPosLig(), cuisto.getPosCol()+1, AFF_SOL);
         }
         else if(touche == 'd'  && this.valide('d', cuisto.getPosLig(), cuisto.getPosCol()))
         {
           cuisto.setPosCol(cuisto.getPosCol()+1);
-          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), "C ");
+          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), AFF_CUISTO);
+          modifieCase(cuisto.getPosLig(), cuisto.getPosCol()-1, AFF_SOL);
         }
         else if(touche == 's'  && this.valide('s', cuisto.getPosLig(), cuisto.getPosCol()))
         {
           cuisto.setPosLig(cuisto.getPosLig()+1);
-          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), "C ");
+          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), AFF_CUISTO);
+          modifieCase(cuisto.getPosLig()-1, cuisto.getPosCol(), AFF_SOL);
         }
       this.affiche();
     }
@@ -114,8 +119,8 @@ public class Plateau
   // Constructeur(s) de la classe
   public Plateau(int lig, int col)
   {
-    this.NB_LIGNES = lig;
-    this.NB_COLONNES = col;
+    this.setNbLigne(lig);
+    this.setNbCol(col);
     this.GRILLE = new String[lig][col];
   }
 
@@ -145,7 +150,7 @@ public class Plateau
     Plateau p = new Plateau(4,4);
     p.PlateauNiveau1();
     p.affiche();
-    Entite e = new Entite(0,0,0);
+    Entite e = new Entite(p.getID(p.getNbLigne()-1, p.getNbCol()-1),p.getNbLigne()-1,p.getNbCol()-1);
     p.DeplacementCuisinier(e);
  }
 }
