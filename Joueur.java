@@ -1,11 +1,7 @@
-import java.util.*;
-import class Perso;
-import java.util.ArrayList;
-
 class Joueur{
     private String pseudo;
     private int score;
-    private Perso p;
+    private cuisinier cuisto;
 
     public int getScore(){
       return this.score;

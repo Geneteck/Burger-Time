@@ -1,5 +1,3 @@
-
-
 public class Entite
 {
   // Attributs des Entités
@@ -10,10 +8,6 @@ public class Entite
   private int posCol; // Correspond à la colonne actuel de l'entité
 
   // méthode de la class Entite
-  public int getVie() { return this.ptVie; } // Renvoie les points de vie
-
-  public void setVie(int v) { this.ptVie = v; }
-
   public String getNom(){ return this.nom; }
 
   public void setNom(String n){ this.nom = n ; }
@@ -30,39 +24,18 @@ public class Entite
 
   public void setPosCol(int col) {  this.posCol = col;}
 
-  public Entite(int ind, int lig, int col)
+  // Constructeur de la classe Entite
+  Entite(int ind, int lig, int col)
   {
     this.indicePos = ind; //indice qui correspond a l'indice en bas a gauche du plateau
     this.posLig = lig;
     this.posCol = col;
   }
-}
 
-public class Monstre extends Entite
-{
-  private int NbMonstre; //a faire varier en fonction de la difficulté
+  Entite(){ }
 
-  public Monstre(int n)
-  {
-    super();
-    this.NbMonstre = n;
-  }
-
-  public void run(){
-    //a voir plus tard
-  }
-}
-
-public class Cuisinier extends Entite
-{
-  private int ptVie; // Point de vie de l'entité
-
-  public Cuisinier(int ind, int lig, int col)
-  {
-    super();
-    this.ptVie = 3;
-    this.indicePos = ind; //indice qui correspond a l'indice en bas a gauche du plateau
-    this.posLig = lig;
-    this.posCol = col;
+  public static void main(String[] args) {
+      Entite e = new Entite(0,0,0);
+      e.setPosLig(1);
   }
 }
