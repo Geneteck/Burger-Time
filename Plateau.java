@@ -1,13 +1,13 @@
 public class Plateau
 {
 
-  char AFF_LIMITE = 'X';
-  char AFF_SOL = '_';
-  char AFF_ECHELLE ='|';
+  String AFF_LIMITE = "X ";
+  String AFF_SOL = "_ ";
+  String AFF_ECHELLE ="||";
 
   private int NB_LIGNES; // Nombre de ligne du plateau
   private int NB_COLONNES; // Nombre de colonne du plateau
-  private char GRILLE[][];// Le plateau à deux dimension dans un tableau
+  private String GRILLE[][];// Le plateau à deux dimension dans un tableau
 
   public void setNbLigne(int n)
   {
@@ -33,7 +33,7 @@ public class Plateau
   {
     this.NB_LIGNES = lig;
     this.NB_COLONNES = col;
-    this.GRILLE = new char[this.NB_LIGNES][this.NB_COLONNES];
+    this.GRILLE = new String[this.NB_LIGNES][this.NB_COLONNES];
   }
 
   public int getID(int lig, int col)
@@ -41,29 +41,29 @@ public class Plateau
     return (this.NB_COLONNES*lig)+col;
   }
 
-  public void ModifieCase(int lig, int col, char c)
+  public void ModifieCase(int lig, int col, String c)
   {
     GRILLE[lig][col] = c;
   }
 
   public void PlateauNiveau1()
   {
-    ModifieCase(0,0,'x');
-    ModifieCase(0,1,'_');
-    ModifieCase(0,2,'_');
-    ModifieCase(0,3,'_');
-    ModifieCase(1,0,'_');
-    ModifieCase(1,1,'_');
-    ModifieCase(1,2,'_');
-    ModifieCase(1,3,'x');
-    ModifieCase(2,0,'x');
-    ModifieCase(2,1,'_');
-    ModifieCase(2,2,'_');
-    ModifieCase(2,3,'x');
-    ModifieCase(3,0,'_');
-    ModifieCase(3,1,'_');
-    ModifieCase(3,2,'_');
-    ModifieCase(3,3,'_');
+    ModifieCase(0,0,AFF_ECHELLE);
+    ModifieCase(0,1,AFF_SOL);
+    ModifieCase(0,2,AFF_SOL);
+    ModifieCase(0,3,AFF_SOL);
+    ModifieCase(1,0,AFF_SOL);
+    ModifieCase(1,1,AFF_SOL);
+    ModifieCase(1,2,AFF_SOL);
+    ModifieCase(1,3,AFF_ECHELLE);
+    ModifieCase(2,0,AFF_ECHELLE);
+    ModifieCase(2,1,AFF_SOL);
+    ModifieCase(2,2,AFF_SOL);
+    ModifieCase(2,3,AFF_ECHELLE);
+    ModifieCase(3,0,AFF_SOL);
+    ModifieCase(3,1,AFF_SOL);
+    ModifieCase(3,2,AFF_SOL);
+    ModifieCase(3,3,AFF_SOL);
   }
 
   public void affiche()
