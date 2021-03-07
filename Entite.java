@@ -1,6 +1,6 @@
 
 
-spublic class Entite extends Thread
+public class Entite
 {
   // Attributs des Entités
   private String nom; // Cuisinier ou oeuf ou cornichon etc...
@@ -30,58 +30,39 @@ spublic class Entite extends Thread
 
   public void setPosCol(int col) {  this.posCol = col;}
 
-
-
-  public class Monstre extends Entite
+  public Entite(int ind, int lig, int col)
   {
-    private int NbMonstre; //a faire varier en fonction de la difficulté
+    this.indicePos = ind; //indice qui correspond a l'indice en bas a gauche du plateau
+    this.posLig = lig;
+    this.posCol = col;
+  }
+}
 
-    public Monstre(int n)
-    {
-      super();
-      this.NbMonstre = n;
-    }
+public class Monstre extends Entite
+{
+  private int NbMonstre; //a faire varier en fonction de la difficulté
 
-    public void run(){
-      //a voir plutard
-    }
+  public Monstre(int n)
+  {
+    super();
+    this.NbMonstre = n;
   }
 
+  public void run(){
+    //a voir plus tard
+  }
+}
 
+public class Cuisinier extends Entite
+{
+  private int ptVie; // Point de vie de l'entité
 
-
-
-  public class Cuisinier extends Entite
+  public Cuisinier(int ind, int lig, int col)
   {
-    private int ptVie; // Point de vie de l'entité
-
-    public Cuisiner()
-    {
-      super();
-      this.PtVie = 3;
-    }
-
-    while( partie != fini)
-    {
-      String touche = Lire.S();
-
-      if(touche.equals("z"))
-      {
-
-      }
-      else if(touche.equals("q"))
-      {
-        int
-        ModifieCase();
-      }
-      else if(touche.equals("d"))
-      {
-
-      }
-      else if(touche.equals("s"))
-      {
-
-      }
-    }
-
+    super();
+    this.ptVie = 3;
+    this.indicePos = ind; //indice qui correspond a l'indice en bas a gauche du plateau
+    this.posLig = lig;
+    this.posCol = col;
+  }
 }

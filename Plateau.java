@@ -1,3 +1,9 @@
+import java.util.*;
+import Entite.*;
+
+
+
+
 public class Plateau
 {
 
@@ -9,36 +15,22 @@ public class Plateau
   private int NB_COLONNES; // Nombre de colonne du plateau
   private String GRILLE[][];// Le plateau à deux dimension dans un tableau
 
-  public void setNbLigne(int n)
-  {
-    this.NB_LIGNES = n;
-  }
+  public void setNbLigne(int n) { this.NB_LIGNES = n; }
 
-  public int getNbLigne(int n)
-  {
-    return this.NB_LIGNES;
-  }
+  public int getNbLigne() { return this.NB_LIGNES; }
 
-  public void setNbCol(int n)
-  {
-    this.NB_COLONNES = n;
-  }
+  public void setNbCol(int n) { this.NB_COLONNES = n; }
 
-  public int getNbCol(int n)
-  {
-    return this.NB_COLONNES;
-  }
+  public int getNbCol() { return this.NB_COLONNES; }
+
+  public int getID(int lig, int col) { return (this.NB_COLONNES*lig)+col; }
+
 
   public Plateau(int lig, int col)
   {
     this.NB_LIGNES = lig;
     this.NB_COLONNES = col;
-    this.GRILLE = new String[this.NB_LIGNES][this.NB_COLONNES];
-  }
-
-  public int getID(int lig, int col)
-  {
-    return (this.NB_COLONNES*lig)+col;
+    this.GRILLE = new String[lig][col];
   }
 
   public void ModifieCase(int lig, int col, String c)
@@ -83,10 +75,78 @@ public class Plateau
     }
   }
 
+  public boolean Valide(char c, int ligCuisto, int colCuisto)
+  {
+    boolean verif = false;
+    switch(c)
+    {
+      case 'z' :
+      {
+        if(GRILLE[ligCuisto+1][colCuisto] == AFF_ECHELLE) { verif = true;}
+        break;
+      }
+
+      case 'q' :
+      {
+        if(GRILLE[ligCuisto][colCuisto-1] != AFF_LIMITE) { verif = true;}
+        break;
+      }
+
+      case 's' :
+      {
+        if(GRILLE[ligCuisto-1][colCuisto] == AFF_ECHELLE) { verif = true;}
+        break;
+      }
+
+      case 'd' :
+      {
+        if(GRILLE[ligCuisto][colCuisto+1] != AFF_LIMITE) { verif = true;}
+        break;
+      }
+    }
+    return verif;
+  }
+
+
+  // Fonction appelé lorsque l'on demande le déplacement du cuisinier, déplacement asynchrone
+  public void DeplacementCuisinier(Entite cuisto)
+  {
+    for (int i = 0 ; i<5; i++ )
+    {
+      Scanner sc = new Scanner(System.in);  // Create a Scanner object
+      System.out.println("Déplacer le cuisto");
+
+      char touche = sc.next().charAt(0);    // Read user input
+
+        if(touche == 'z' && this.valide('z', cuisto.getPosLig(), cuisto.getPosCol()))
+        {
+          cuisto.setPosLig(cuisto.getPosLig()-1);
+          ModifieCase(cuisto.getPosLig(), cuisto.getPosCol(), "C ");
+        }
+        else if(touche == 'q' && this.valide('q', cuisto.getPosLig(), cuisto.getPosCol()))
+        {
+          cuisto.setPosCol(cuisto.getPosCol()-1);
+          ModifieCase(cuisto.getPosLig(), cuisto.getPosCol(), "C ");
+        }
+        else if(touche == 'd'  && this.valide('d', cuisto.getPosLig(), cuisto.getPosCol()))
+        {
+          cuisto.setPosCol(cuisto.getPosCol()+1);
+          ModifieCase(cuisto.getPosLig(), cuisto.getPosCol(), "C ");
+        }
+        else if(touche == 's'  && this.valide('s', cuisto.getPosLig(), cuisto.getPosCol()))
+        {
+          cuisto.setPosLig(cuisto.getPosLig()+1);
+          ModifieCase(cuisto.getPosLig(), cuisto.getPosCol(), "C ");
+        }
+      this.affiche();
+    }
+  }
+
   public static void main(String[] args)
   {
     Plateau p = new Plateau(4,4);
     p.PlateauNiveau1();
     p.affiche();
+    Entite e = new Entite(0,0,0);
   }
 }
