@@ -27,9 +27,9 @@ public class Entite
   // Constructeur de la classe Entite
   Entite(int ind, int lig, int col)
   {
-    this.indicePos = ind; //indice qui correspond a l'indice en bas a gauche du plateau
-    this.posLig = lig;
-    this.posCol = col;
+    this.setIndicePos(ind); // Indice qui correspond a l'indice en bas a gauche du plateau (pour le début de partie)
+    this.setPosLig(lig);
+    this.setPosCol(col);
   }
 
   Entite(){ }
