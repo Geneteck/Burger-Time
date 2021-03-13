@@ -9,6 +9,7 @@ public class test {
   }
   public static void main(String[] args)
   {
+    Entite e = new Entite(1,2,4);
     Scanner myObj = new Scanner(System.in);  // Create a Scanner object
     System.out.println("Enter username");
     Plateau p = new Plateau(4, 4);

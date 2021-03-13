@@ -6,14 +6,15 @@ import java.io.*;
 public class Plateau
 {
 
-  String AFF_LIMITE = "X ";
-  String AFF_SOL = "_ ";
-  String AFF_ECHELLE ="||";
-  String AFF_CUISTO = "C ";
+  char AFF_LIMITE = 'X';
+  char AFF_SOL = '_';
+  char AFF_ECHELLE ='=';
+  char AFF_CUISTO = 'C';
+  char AFF_ELEBUGER='~';
 
   private int NB_LIGNES; // Nombre de ligne du plateau
   private int NB_COLONNES; // Nombre de colonne du plateau
-  private String GRILLE[][];// Le plateau à deux dimension dans un tableau
+  private char GRILLE[][];// Le plateau à deux dimension dans un tableau
 
   public void setNbLigne(int n) { this.NB_LIGNES = n; }
 
@@ -25,7 +26,7 @@ public class Plateau
 
   public int getID(int lig, int col) { return (this.NB_COLONNES*lig)+col; }
 
-  public void modifieCase(int lig, int col, String c) { GRILLE[lig][col] = c; }
+  public void modifieCase(int lig, int col, char c) { GRILLE[lig][col] = c; }
 
   // Fonction valide vérifie si le déplacement (cuisto) désiré est réalisable
   public boolean valide(char c, int ligCuisto, int colCuisto)
@@ -101,16 +102,16 @@ public class Plateau
   // Fonction affiche permet de visualiser l'état du plateau
   public void affiche()
   {
-    for(int i=-1; i<=this.NB_COLONNES;i++)
+    for(int i=-1; i<=this.NB_LIGNES;i++)
     {
-      for(int j=-1; j<=this.NB_LIGNES; j++)
+      for(int j=-1; j<=this.NB_COLONNES; j++)
       {
-        if (i == -1 || j == -1 || i == NB_LIGNES || j ==  NB_COLONNES) // permet de faire une limite autour du plateau de jeux
+        if (i == -1 || j == -1 || i == NB_LIGNES || j ==  NB_COLONNES) // Permet l'affichage des bords du tableau
             {
                 System.out.print(AFF_LIMITE);
             }
         else
-          System.out.print(GRILLE[i][j]);
+          System.out.print(AFF_SOL);
       }
       System.out.println("\n");
     }
@@ -121,7 +122,7 @@ public class Plateau
   {
     this.setNbLigne(lig);
     this.setNbCol(col);
-    this.GRILLE = new String[lig][col];
+    this.GRILLE = new char[lig][col];
   }
 
   // Modifie chaque case d'une nouvelle instance de la classe Plateau, par des caractères définis plus haut
@@ -145,10 +146,22 @@ public class Plateau
     modifieCase(3,3,AFF_SOL);
   }
 
+  public Plateau PlateaAlea(int x, int y)
+  {
+    Plateau p = new Plateau(x, y);
+    for(int i=0; i<this.NB_LIGNES;i++)
+    {
+      for(int j=0; j<this.NB_LIGNES;j++)
+      {
+        // On complète le tableau de sol
+        p.modifieCase(i, j, AFF_SOL);
+      }
+    }
+    return p;
+  }
   // Main
  public static void main(String[] args) {
-    Plateau p = new Plateau(4,4);
-    p.PlateauNiveau1();
+    Plateau p = new Plateau(5,4);
     p.affiche();
     Entite e = new Entite(p.getID(p.getNbLigne()-1, p.getNbCol()-1),p.getNbLigne()-1,p.getNbCol()-1);
     p.DeplacementCuisinier(e);
