@@ -5,16 +5,16 @@ import java.io.*;
 
 public class Plateau
 {
-
   char AFF_LIMITE = 'X';
   char AFF_SOL = '_';
-  char AFF_ECHELLE ='=';
-  char AFF_CUISTO = 'C';
-  char AFF_ELEBUGER='~';
+  char AFF_ECHELLE ='#';
 
   private int NB_LIGNES; // Nombre de ligne du plateau
   private int NB_COLONNES; // Nombre de colonne du plateau
-  private char GRILLE[][];// Le plateau à deux dimension dans un tableau
+  private char mapStatic[][]; // Le mapStatic du jeux representer par un tableau a 2 dimension
+  private char mapDynam[][];// Genre pour les thread quoi
+
+  public Cuisinier c;
 
   public void setNbLigne(int n) { this.NB_LIGNES = n; }
 
@@ -26,7 +26,9 @@ public class Plateau
 
   public int getID(int lig, int col) { return (this.NB_COLONNES*lig)+col; }
 
-  public void modifieCase(int lig, int col, char c) { GRILLE[lig][col] = c; }
+  public void modifieCaseStatic(int lig, int col, char c) { mapStatic[lig][col] = c; }
+
+  public void modifieCaseDynamique(int lig, int col, char c){ mapDynam[lig][col] = c; }
 
   // Fonction valide vérifie si le déplacement (cuisto) désiré est réalisable
   public boolean valide(char c, int ligCuisto, int colCuisto)
@@ -36,25 +38,25 @@ public class Plateau
     {
       case 'z' :
       {
-        if(GRILLE[ligCuisto+1][colCuisto] == AFF_ECHELLE) { verif = true;}
+        if(mapStatic[ligCuisto][colCuisto] == AFF_ECHELLE) { verif = true;}
         break;
       }
 
       case 'q' :
       {
-        if(GRILLE[ligCuisto][colCuisto-1] != AFF_LIMITE) { verif = true;}
+        if(mapStatic[ligCuisto][colCuisto-1] != AFF_LIMITE) { verif = true;}
         break;
       }
 
       case 's' :
       {
-        if(GRILLE[ligCuisto-1][colCuisto] == AFF_ECHELLE) { verif = true;}
+        if(mapStatic[ligCuisto-1][colCuisto] == AFF_ECHELLE) { verif = true;}
         break;
       }
 
       case 'd' :
       {
-        if(GRILLE[ligCuisto][colCuisto+1] != AFF_LIMITE) { verif = true;}
+        if(mapStatic[ligCuisto][colCuisto+1] != AFF_LIMITE) { verif = true;}
         break;
       }
     }
@@ -62,42 +64,43 @@ public class Plateau
   }
 
   // Fonction appelé lorsque l'on demande le déplacement du cuisinier, déplacement asynchrone
-  public void DeplacementCuisinier(Entite cuisto)
+public void DeplacementCuisinier(Cuisinier cuisto)
+{
+  for (int i = 0 ; i<5; i++ )
   {
-    for (int i = 0 ; i<5; i++ )
-    {
-      Scanner sc = new Scanner(System.in);  // Create a Scanner object
-      System.out.println("Déplacer le cuisto");
+    Scanner sc = new Scanner(System.in);  // Create a Scanner object
+    System.out.println("Déplacer le cuisto");
 
-      char touche = sc.next().charAt(0);    // Read user input
+    char touche = sc.next().charAt(0);    // Read user input
 
-        if(touche == 'z' && this.valide('z', cuisto.getPosLig(), cuisto.getPosCol()))
-        {
-          cuisto.setPosLig(cuisto.getPosLig()-1);
-          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), AFF_CUISTO);
-          modifieCase(cuisto.getPosLig()+1, cuisto.getPosCol()+1, AFF_SOL);
-        }
-        else if(touche == 'q' && this.valide('q', cuisto.getPosLig(), cuisto.getPosCol()))
-        {
-          cuisto.setPosCol(cuisto.getPosCol()-1);
-          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), AFF_CUISTO);
-          modifieCase(cuisto.getPosLig(), cuisto.getPosCol()+1, AFF_SOL);
-        }
-        else if(touche == 'd'  && this.valide('d', cuisto.getPosLig(), cuisto.getPosCol()))
-        {
-          cuisto.setPosCol(cuisto.getPosCol()+1);
-          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), AFF_CUISTO);
-          modifieCase(cuisto.getPosLig(), cuisto.getPosCol()-1, AFF_SOL);
-        }
-        else if(touche == 's'  && this.valide('s', cuisto.getPosLig(), cuisto.getPosCol()))
-        {
-          cuisto.setPosLig(cuisto.getPosLig()+1);
-          modifieCase(cuisto.getPosLig(), cuisto.getPosCol(), AFF_CUISTO);
-          modifieCase(cuisto.getPosLig()-1, cuisto.getPosCol(), AFF_SOL);
-        }
-      this.affiche();
-    }
+      if(touche == 'z' && this.valide('z', cuisto.getPosLigne(), cuisto.getPosColonne()))
+      {
+        cuisto.setPosLigne(cuisto.getPosLigne()-1);
+        modifieCaseDynamique(cuisto.getPosLigne()+1, cuisto.getPosColonne(), AFF_ECHELLE);
+      }
+
+      else if(touche == 'q' && this.valide('q', cuisto.getPosLigne(), cuisto.getPosColonne()))
+      {
+        cuisto.setPosColonne(cuisto.getPosColonne()-1);
+        modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne()+1, AFF_SOL);
+      }
+      else if(touche == 'd'  && this.valide('d', cuisto.getPosLigne(), cuisto.getPosColonne()))
+      {
+        cuisto.setPosColonne(cuisto.getPosColonne()+1);
+        modifieCaseDynamiques(cuisto.getPosLigne(), cuisto.getPosColonne()-1, AFF_SOL);
+      }
+
+      else if(touche == 's'  && this.valide('s', cuisto.getPosLigne(), cuisto.getPosColonne()))
+      {
+        cuisto.setPosLigne(cuisto.getPosLigne()+1);
+        modifieCaseDynamique(cuisto.getPosLigne()-1, cuisto.getPosColonne(), AFF_ECHELLE);
+      }
+
+      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
+      System.out.println("Je suis ici : lig : "+cuisto.getPosLigne()+" , col :"+cuisto.getPosColonne());
+      affiche();
   }
+}
 
   // Fonction affiche permet de visualiser l'état du plateau
   public void affiche()
@@ -107,63 +110,95 @@ public class Plateau
       for(int j=-1; j<=this.NB_COLONNES; j++)
       {
         if (i == -1 || j == -1 || i == NB_LIGNES || j ==  NB_COLONNES) // Permet l'affichage des bords du tableau
-            {
-                System.out.print(AFF_LIMITE);
-            }
+          System.out.print(AFF_LIMITE);
+
+        else if( mapDynam[i][j] == 'S' || mapDynam[i][j] == 'O' || mapDynam[i][j] == 'C' || mapDynam[i][j] == 'J' )
+          System.out.print(mapDynam[i][j]);
+
         else
-          System.out.print(AFF_SOL);
+          System.out.print(mapStatic[i][j]);
       }
       System.out.println("\n");
     }
   }
 
-  // Constructeur(s) de la classe
+  // Constructeur(s) de la classe spécifique
   public Plateau(int lig, int col)
   {
     this.setNbLigne(lig);
     this.setNbCol(col);
-    this.GRILLE = new char[lig][col];
+    this.mapStatic = new char[lig][col];
+    this.mapDynam = new char[lig][col];
+  }
+
+  // Plateau() est le constructeur
+  public Plateau()
+  {
+    this.NB_LIGNES = 4;
+    this.NB_COLONNES = 4;
+    this.mapStatic = new char[this.NB_LIGNES][this.NB_COLONNES];
   }
 
   // Modifie chaque case d'une nouvelle instance de la classe Plateau, par des caractères définis plus haut
   public void PlateauNiveau1()
   {
-    modifieCase(0,0,AFF_ECHELLE);
-    modifieCase(0,1,AFF_SOL);
-    modifieCase(0,2,AFF_SOL);
-    modifieCase(0,3,AFF_SOL);
-    modifieCase(1,0,AFF_SOL);
-    modifieCase(1,1,AFF_SOL);
-    modifieCase(1,2,AFF_SOL);
-    modifieCase(1,3,AFF_ECHELLE);
-    modifieCase(2,0,AFF_ECHELLE);
-    modifieCase(2,1,AFF_SOL);
-    modifieCase(2,2,AFF_SOL);
-    modifieCase(2,3,AFF_ECHELLE);
-    modifieCase(3,0,AFF_SOL);
-    modifieCase(3,1,AFF_SOL);
-    modifieCase(3,2,AFF_SOL);
-    modifieCase(3,3,AFF_SOL);
+    modifieCaseStatic(0,0,AFF_ECHELLE);
+    modifieCaseStatic(0,1,AFF_SOL);
+    modifieCaseStatic(0,2,AFF_SOL);
+    modifieCaseStatic(0,3,AFF_SOL);
+    modifieCaseStatic(0,4,AFF_SOL);
+    modifieCaseStatic(0,5,AFF_SOL);
+
+    modifieCaseStatic(1,0,AFF_SOL);
+    modifieCaseStatic(1,1,AFF_SOL);
+    modifieCaseStatic(1,2,AFF_SOL);
+    modifieCaseStatic(1,3,AFF_SOL);
+    modifieCaseStatic(1,4,AFF_ECHELLE);
+    modifieCaseStatic(1,5,AFF_SOL);
+
+    modifieCaseStatic(2,0,AFF_ECHELLE);
+    modifieCaseStatic(2,1,AFF_SOL);
+    modifieCaseStatic(2,2,AFF_SOL);
+    modifieCaseStatic(2,3,AFF_ECHELLE);
+    modifieCaseStatic(2,4,AFF_SOL);
+    modifieCaseStatic(2,5,AFF_SOL);
+
+
+    modifieCaseStatic(3,0,AFF_SOL);
+    modifieCaseStatic(3,1,AFF_SOL);
+    modifieCaseStatic(3,2,AFF_SOL);
+    modifieCaseStatic(3,3,AFF_SOL);
+    modifieCaseStatic(3,4,AFF_SOL);
+    modifieCaseStatic(3,5,AFF_SOL);
   }
 
-  public Plateau PlateaAlea(int x, int y)
+  public void Test()
   {
-    Plateau p = new Plateau(x, y);
-    for(int i=0; i<this.NB_LIGNES;i++)
-    {
-      for(int j=0; j<this.NB_LIGNES;j++)
-      {
-        // On complète le tableau de sol
-        p.modifieCase(i, j, AFF_SOL);
-      }
-    }
-    return p;
+    modifieCaseDynamique(0,0,'J');
+    modifieCaseDynamique(1,3,'S');
+    modifieCaseDynamique(2,2,'O');
+    modifieCaseDynamique(3,1,'C');
   }
+
+  public void AfficheCuisinier(Cuisinier c)
+  {
+    char couille = c.getCharCuisinier();
+    int ligne = c.getPosLigne();
+    int colonne = c.getPosColonne();
+    modifieCaseDynamique(ligne, colonne, couille);
+  }
+
   // Main
  public static void main(String[] args) {
-    Plateau p = new Plateau(5,4);
-    p.affiche();
-    Entite e = new Entite(p.getID(p.getNbLigne()-1, p.getNbCol()-1),p.getNbLigne()-1,p.getNbCol()-1);
-    p.DeplacementCuisinier(e);
+    Plateau p = new Plateau(4,6);
+    //Cuisinier cuisto = new Cuisinier(0, 4, 5);
+    p.PlateauNiveau1();
+    Cuisinier c = new Cuisinier(0, 0);
+
+    p.DeplacementCuisinier(c);
+
+
+    //Entite e = new Entite(p.getID(p.getNbLigne()-1, p.getNbCol()-1),p.getNbLigne()-1,p.getNbCol()-1);
+    //p.DeplacementCuisinier(e);
  }
 }
