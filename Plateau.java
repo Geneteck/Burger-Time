@@ -8,6 +8,7 @@ public class Plateau
   char AFF_LIMITE = 'X';
   char AFF_SOL = '_';
   char AFF_ECHELLE ='#';
+  char AFF_VIDE =' ';
 
   private int NB_LIGNES; // Nombre de ligne du plateau
   private int NB_COLONNES; // Nombre de colonne du plateau
@@ -44,7 +45,7 @@ public class Plateau
 
       case 'q' :
       {
-        if(mapStatic[ligCuisto][colCuisto-1] != AFF_LIMITE) { verif = true;}
+        if(mapStatic[ligCuisto][colCuisto-1] != AFF_LIMITE && mapStatic[ligCuisto][colCuisto-1] != AFF_VIDE) { verif = true;}
         break;
       }
 
@@ -56,7 +57,7 @@ public class Plateau
 
       case 'd' :
       {
-        if(mapStatic[ligCuisto][colCuisto+1] != AFF_LIMITE) { verif = true;}
+        if(mapStatic[ligCuisto][colCuisto+1] != AFF_LIMITE && mapStatic[ligCuisto][colCuisto+1] != AFF_VIDE) { verif = true;}
         break;
       }
     }
@@ -66,7 +67,7 @@ public class Plateau
   // Fonction appelé lorsque l'on demande le déplacement du cuisinier, déplacement asynchrone
 public void DeplacementCuisinier(Cuisinier cuisto)
 {
-  for (int i = 0 ; i<10; i++ )
+  for (int i = 0 ; i<200; i++ )
   {
     Scanner sc = new Scanner(System.in);  // Create a Scanner object
     System.out.println("Déplacer le cuisto");
@@ -76,24 +77,20 @@ public void DeplacementCuisinier(Cuisinier cuisto)
       modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), ' ');
       if(touche == 'z' && this.valide('z', cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
-        modifieCaseStatic(cuisto.getPosLigne(), cuisto.getPosColonne(), AFF_ECHELLE);
         cuisto.setPosLigne(cuisto.getPosLigne()-1);
       }
 
       else if(touche == 'q' && this.valide('q', cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
-        modifieCaseStatic(cuisto.getPosLigne(), cuisto.getPosColonne(), AFF_SOL);
         cuisto.setPosColonne(cuisto.getPosColonne()-1);
       }
       else if(touche == 'd'  && this.valide('d', cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
-        modifieCaseStatic(cuisto.getPosLigne(), cuisto.getPosColonne(), AFF_SOL);
         cuisto.setPosColonne(cuisto.getPosColonne()+1);
       }
 
       else if(touche == 's'  && this.valide('s', cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
-        modifieCaseStatic(cuisto.getPosLigne(), cuisto.getPosColonne(), AFF_ECHELLE);
         cuisto.setPosLigne(cuisto.getPosLigne()+1);
       }
 
@@ -143,12 +140,20 @@ public void DeplacementCuisinier(Cuisinier cuisto)
   // Modifie chaque case d'une nouvelle instance de la classe Plateau, par des caractères définis plus haut
   public void PlateauNiveau1()
   {
-    modifieCaseStatic(0,0,AFF_ECHELLE);
+    modifieCaseStatic(0,0,AFF_SOL);
     modifieCaseStatic(0,1,AFF_SOL);
     modifieCaseStatic(0,2,AFF_SOL);
     modifieCaseStatic(0,3,AFF_SOL);
     modifieCaseStatic(0,4,AFF_SOL);
     modifieCaseStatic(0,5,AFF_SOL);
+    modifieCaseStatic(0,6,AFF_SOL);
+    modifieCaseStatic(0,7,AFF_SOL);
+    modifieCaseStatic(0,8,AFF_SOL);
+    modifieCaseStatic(0,9,AFF_SOL);
+    modifieCaseStatic(0,10,AFF_SOL);
+    modifieCaseStatic(0,11,AFF_SOL);
+    modifieCaseStatic(0,12,AFF_SOL);
+    modifieCaseStatic(0,13,AFF_ECHELLE);
 
     modifieCaseStatic(1,0,AFF_SOL);
     modifieCaseStatic(1,1,AFF_SOL);
@@ -156,14 +161,29 @@ public void DeplacementCuisinier(Cuisinier cuisto)
     modifieCaseStatic(1,3,AFF_SOL);
     modifieCaseStatic(1,4,AFF_ECHELLE);
     modifieCaseStatic(1,5,AFF_SOL);
+    modifieCaseStatic(1,6,AFF_SOL);
+    modifieCaseStatic(1,7,AFF_SOL);
+    modifieCaseStatic(1,8,AFF_VIDE);
+    modifieCaseStatic(1,9,AFF_VIDE);
+    modifieCaseStatic(1,10,AFF_SOL);
+    modifieCaseStatic(1,11,AFF_SOL);
+    modifieCaseStatic(1,12,AFF_SOL);
+    modifieCaseStatic(1,13,AFF_ECHELLE);
 
     modifieCaseStatic(2,0,AFF_ECHELLE);
     modifieCaseStatic(2,1,AFF_SOL);
     modifieCaseStatic(2,2,AFF_SOL);
-    modifieCaseStatic(2,3,AFF_ECHELLE);
+    modifieCaseStatic(2,3,AFF_SOL);
     modifieCaseStatic(2,4,AFF_SOL);
     modifieCaseStatic(2,5,AFF_SOL);
-
+    modifieCaseStatic(2,6,AFF_SOL);
+    modifieCaseStatic(2,7,AFF_SOL);
+    modifieCaseStatic(2,8,AFF_SOL);
+    modifieCaseStatic(2,9,AFF_SOL);
+    modifieCaseStatic(2,10,AFF_SOL);
+    modifieCaseStatic(2,11,AFF_SOL);
+    modifieCaseStatic(2,12,AFF_SOL);
+    modifieCaseStatic(2,13,AFF_SOL);
 
     modifieCaseStatic(3,0,AFF_SOL);
     modifieCaseStatic(3,1,AFF_SOL);
@@ -171,6 +191,14 @@ public void DeplacementCuisinier(Cuisinier cuisto)
     modifieCaseStatic(3,3,AFF_SOL);
     modifieCaseStatic(3,4,AFF_SOL);
     modifieCaseStatic(3,5,AFF_SOL);
+    modifieCaseStatic(3,6,AFF_SOL);
+    modifieCaseStatic(3,7,AFF_SOL);
+    modifieCaseStatic(3,8,AFF_SOL);
+    modifieCaseStatic(3,9,AFF_SOL);
+    modifieCaseStatic(3,10,AFF_SOL);
+    modifieCaseStatic(3,11,AFF_SOL);
+    modifieCaseStatic(3,12,AFF_SOL);
+    modifieCaseStatic(3,13,AFF_SOL);
   }
 
   public void Test()
@@ -191,7 +219,7 @@ public void DeplacementCuisinier(Cuisinier cuisto)
 
   // Main
  public static void main(String[] args) {
-    Plateau p = new Plateau(4,6);
+    Plateau p = new Plateau(4,14);
     //Cuisinier cuisto = new Cuisinier(0, 4, 5);
     p.PlateauNiveau1();
     Cuisinier c = new Cuisinier(0, 0);
