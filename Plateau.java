@@ -50,7 +50,7 @@ public class Plateau
 
       case 's' :
       {
-        if(mapStatic[ligCuisto-1][colCuisto] == AFF_ECHELLE) { verif = true;}
+        if(mapStatic[ligCuisto][colCuisto] == AFF_ECHELLE) { verif = true;}
         break;
       }
 
@@ -66,34 +66,35 @@ public class Plateau
   // Fonction appelé lorsque l'on demande le déplacement du cuisinier, déplacement asynchrone
 public void DeplacementCuisinier(Cuisinier cuisto)
 {
-  for (int i = 0 ; i<5; i++ )
+  for (int i = 0 ; i<10; i++ )
   {
     Scanner sc = new Scanner(System.in);  // Create a Scanner object
     System.out.println("Déplacer le cuisto");
 
     char touche = sc.next().charAt(0);    // Read user input
 
+      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), ' ');
       if(touche == 'z' && this.valide('z', cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
+        modifieCaseStatic(cuisto.getPosLigne(), cuisto.getPosColonne(), AFF_ECHELLE);
         cuisto.setPosLigne(cuisto.getPosLigne()-1);
-        modifieCaseDynamique(cuisto.getPosLigne()+1, cuisto.getPosColonne(), AFF_ECHELLE);
       }
 
       else if(touche == 'q' && this.valide('q', cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
+        modifieCaseStatic(cuisto.getPosLigne(), cuisto.getPosColonne(), AFF_SOL);
         cuisto.setPosColonne(cuisto.getPosColonne()-1);
-        modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne()+1, AFF_SOL);
       }
       else if(touche == 'd'  && this.valide('d', cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
+        modifieCaseStatic(cuisto.getPosLigne(), cuisto.getPosColonne(), AFF_SOL);
         cuisto.setPosColonne(cuisto.getPosColonne()+1);
-        modifieCaseDynamiques(cuisto.getPosLigne(), cuisto.getPosColonne()-1, AFF_SOL);
       }
 
       else if(touche == 's'  && this.valide('s', cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
+        modifieCaseStatic(cuisto.getPosLigne(), cuisto.getPosColonne(), AFF_ECHELLE);
         cuisto.setPosLigne(cuisto.getPosLigne()+1);
-        modifieCaseDynamique(cuisto.getPosLigne()-1, cuisto.getPosColonne(), AFF_ECHELLE);
       }
 
       modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
