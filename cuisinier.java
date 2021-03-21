@@ -1,3 +1,12 @@
+/* 
+    Projet Info4B - Burger Time
+    Auteurs : Pinon Alexandre, Salaï Loïc
+
+    (Mettre à jour le numéro de version à chaque modification de Cuisinier)
+    Version : V.1.00
+*/
+
+
 public class Cuisinier extends Thread
 {
   private int ptVie; // Point de vie de l'entité

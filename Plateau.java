@@ -1,3 +1,12 @@
+/* 
+    Projet Info4B - Burger Time
+    Auteurs : Pinon Alexandre, Salaï Loïc
+
+    (Mettre à jour le numéro de version à chaque modification de Plateau)
+    Version : V.1.00
+*/
+
+
 import java.awt.*;
 import javax.swing.*;
 import java.util.*;

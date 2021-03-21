@@ -1,12 +1,32 @@
+/* 
+    Projet Info4B - Burger Time
+    Auteurs : Pinon Alexandre, Salaï Loïc
+
+    (Mettre à jour le numéro de version à chaque modification de Burger)
+    Version : V.1.00
+*/
+
+
 public class Burger
 {
-  //attributs
+  /* 
+    Déclaration des attributs de la classe Burger :
+    - posLigne pour récupérer la ligne d'un 
+    - 
+  */
+
+  // Réfléchir à l'utilité des attributs
   private int posLigne;
   private int posColonne;
 
   private char pain;
   private char steak;
   private char salade;
+
+  /* 
+     Déclarations des différentes méthodes de la classe :
+     --> Tous les accesseurs en lectures et en écritures des attributs dont on a besoin
+  */
 
   public char getCharPain() { return this.pain;}
 
@@ -29,22 +49,18 @@ public class Burger
   public void setPosColonne(int col) { this.posColonne = col; }
 
 
-  public Burger(int id, int col)
+  // Burger(int lig, int col), est le constructeur définit avec des paramètres 
+  public Burger()
   {
-      char b = new char[3][3];
-      int[][] matriceEntiers = new int[3][3];
+      char b[][] = new char[3][3];
       for(int i = 0; i<3 ; i++)
       {
         for(int j = 0; j<3 ; j++)
         {
-          if( i == 0 )
-            b[i][j] = 'P';
-          else if ( i == 1)
-            b[i][j] = '~';
-          else if ( i == 2)
-           b[i][j] = 'K';
-          else
-            b[i][j] = 'P';
+          if( i == 0 ) { b[i][j] = 'P'; }
+          else if ( i == 1) { b[i][j] = '~'; }
+          else if ( i == 2) { b[i][j] = 'K'; }
+          else { b[i][j] = 'P'; }
         }
       }
   }

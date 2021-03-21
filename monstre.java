@@ -1,3 +1,12 @@
+/* 
+    Projet Info4B - Burger Time
+    Auteurs : Pinon Alexandre, Salaï Loïc
+
+    (Mettre à jour le numéro de version à chaque modification de Monstre)
+    Version : V.1.00
+*/
+
+
 public class Monstre extends Thread
 {
   private int NbMonstre; //nombre de monstre que l'on pourra faire varier en fonction de la difficulté
