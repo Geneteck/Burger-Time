@@ -1,4 +1,4 @@
-/* 
+/*
     Projet Info4B - Burger Time
     Auteurs : Pinon Alexandre, Salaï Loïc
 
@@ -14,6 +14,7 @@ public class Cuisinier extends Thread
   private int posColonne; // Correspond à la colonne actuel du cuisto
   private int indicePos;  // Correspond à l'indice du cuisinier (calculé en fonction de ligne et de la colonne actuel)
   private char charCuisto;
+  private int Score;
 
   // Acceseur Setter & Getter des attributs
 
@@ -37,6 +38,12 @@ public class Cuisinier extends Thread
   public void setCharCuisinier(char c) { this.charCuisto = c;}
 
   public char getCharCuisinier() { return this.charCuisto;}
+
+  public int getScore(){ return this.Score; }
+
+  public void setScore(int score) { this.Score =  score; }
+
+  public void Affichage() { System.out.print(" SCORE : "+this.getScore()); }
   // Méthode possible du cuisinier
   // public void jetPoivre()
 

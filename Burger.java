@@ -1,4 +1,4 @@
-/* 
+/*
     Projet Info4B - Burger Time
     Auteurs : Pinon Alexandre, Salaï Loïc
 
@@ -9,64 +9,98 @@
 
 public class Burger
 {
-  /* 
-    Déclaration des attributs de la classe Burger :
-    - posLigne pour récupérer la ligne d'un 
-    - 
-  */
-
-  // Réfléchir à l'utilité des attributs
-  private int posLigne;
-  private int posColonne;
-
-  private char pain;
-  private char steak;
-  private char salade;
-
-  /* 
-     Déclarations des différentes méthodes de la classe :
-     --> Tous les accesseurs en lectures et en écritures des attributs dont on a besoin
-  */
-
-  public char getCharPain() { return this.pain;}
-
-  public void setCharPain(char pain) { this.pain = pain; }
-
-  public char getCharSteak() { return this.steak; }
-
-  public void setCharSteack(char steak) { this.steak = steak; }
-
-  public char getCharSalade() { return this.salade;}
-
-  public void setCharSalade(char salade) { this.salade = salade; }
-
-  public int getPosLigne(){ return this.posLigne; }
-
-  public void setPosLigne(int lig) { this.posLigne = lig; }
-
-  public int getPosColonne(){ return this.posColonne; }
-
-  public void setPosColonne(int col) { this.posColonne = col; }
-
-
-  // Burger(int lig, int col), est le constructeur définit avec des paramètres 
-  public Burger()
-  {
-      char b[][] = new char[3][3];
-      for(int i = 0; i<3 ; i++)
-      {
-        for(int j = 0; j<3 ; j++)
-        {
-          if( i == 0 ) { b[i][j] = 'P'; }
-          else if ( i == 1) { b[i][j] = '~'; }
-          else if ( i == 2) { b[i][j] = 'K'; }
-          else { b[i][j] = 'P'; }
-        }
-      }
-  }
-
   public static void main(String[] args)
   {
+     Burger b = new Burger();
+     boolean verif = b.valideBurger();
+     if( verif ) System.out.println(" VRAI ");
+     else  System.out.println(" FAUX ");
+  }
+
+  char AFF_PAIN = 'P';
+  char AFF_STEACK = 'K';
+  char AFF_FROMAGE = 'S';
+
+  private int NbLigne;
+  private int NbColonne;
+  private char Burger[][];
+
+  public int getNbLigne(){ return this.NbLigne; }
+
+  public void setNbLigne(int lig) { this.NbLigne = lig; }
+
+  public int getNbColonne(){ return this.NbColonne; }
+
+  public void setNbColonne(int col) { this.NbColonne = col; }
+
+  public char getTabBurger(int lig, int col) { return this.Burger[lig][col]; }
+
+  public void modifieBurger(int lig, int col, char c)
+  {
+    this.Burger[lig][col] = c;
+  }
+
+  public boolean valideBurger()
+  {
+    boolean verif = false;
+    int nbrPain = 0;
+    int nbrFromage = 0;
+    int nbrSteack = 0;
+
+    for(int i=0; i<this.getNbLigne(); i++)
+    {
+      for(int j=0; j<this.getNbColonne(); j++)
+      {
+        if( (i == 0 || i == 3) && this.getTabBurger(i, j) == AFF_PAIN )
+            nbrPain = nbrPain + 1;
+        else if ( i == 1 && this.getTabBurger(i, j) == AFF_FROMAGE)
+            nbrFromage = nbrFromage + 1;
+        else if (i == 2 && this.getTabBurger(i, j) == AFF_STEACK)
+            nbrSteack = nbrSteack + 1;
+      }
+    }
+    System.out.println(" nbSteack : "+nbrSteack +" nbrPain : "+nbrPain+" nbrFromage : "+ nbrFromage);
+    if(nbrPain == 6 && nbrFromage == 3 && nbrSteack == 3) verif=true;
+
+    return verif;
 
   }
+
+  public void affichageBurger()
+  {
+    for(int i=0; i<4; i++)
+    {
+      for(int j=0; j<3; j++)
+      {
+        System.out.print(getTabBurger(i, j));
+      }
+      System.out.print("\n");
+    }
+  }
+  // Burger(int lig, int col), est le constructeur définit avec des paramètres
+
+
+  public Burger()
+  {
+    setNbLigne(4);
+    setNbColonne(3);
+    this.Burger = new char[4][3];
+
+    // this.modifieBurger(0, 0, AFF_PAIN);
+    // this.modifieBurger(0, 1, AFF_PAIN);
+    //this.modifieBurger(0, 2, AFF_PAIN);
+    this.modifieBurger(3, 0, AFF_PAIN);
+    this.modifieBurger(3, 1, AFF_PAIN);
+    this.modifieBurger(3, 2, AFF_PAIN);
+
+    // this.modifieBurger(2, 0, AFF_FROMAGE);
+    // this.modifieBurger(2, 1, AFF_FROMAGE);
+    // this.modifieBurger(2, 2, AFF_FROMAGE);
+
+    // this.modifieBurger(1, 0, AFF_STEACK);
+    //this.modifieBurger(1, 1, AFF_STEACK);
+    //this.modifieBurger(1, 2, AFF_STEACK);
+    //this.affichageBurger();
+  }
+
 }

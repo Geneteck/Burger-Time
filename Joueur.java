@@ -1,4 +1,4 @@
-/* 
+/*
     Projet Info4B - Burger Time
     Auteurs : Pinon Alexandre, Salaï Loïc
 
@@ -7,20 +7,28 @@
 */
 
 class Joueur{
+    String tiret = "------------------------------------------------------------------------------------";
+    String tabu1 = "                      ";         // 12 tabulations
+    String tabu2 = "              ";                        // 7 tabulations
+
     private String pseudo;
     private int score;
-    private cuisinier cuisto;
+    private Cuisinier cuisto;
 
-    public int getScore(){
-      return this.score;
-    }
+    public String getPseudo() { return this.pseudo; }
 
-    public void setScore(int score){
-      this.score = score;
-    }
+    public int getScore(){ return this.score; }
 
-    public Joueur(String pseudo, int score){
+    public void setScore(int score){ this.score = score; }
+
+    public Cuisinier getCuisinier(){ return this.cuisto; }
+
+    public void setCuisinier(Cuisinier c) { this.cuisto = c; }
+
+
+
+    public Joueur(String pseudo){
       this.pseudo = pseudo;
-      this.score = score;
+      this.score = 0;
     }
 }

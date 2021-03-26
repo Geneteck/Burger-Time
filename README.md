@@ -83,8 +83,17 @@ Class Plateau
      -'B' pour Bacon ? ""
      -'_' pour le sol ? Est ce que le sol n'est pas un thread ?
      -'*' pour le cuisiner ?
-     -'M' pour symboliser les monstres 
+     -'M' pour symboliser les monstres
 
 
 Pour la partie où on doit créer une page qui stocke le score des meilleurs joueurs, réfléchir si la structure de stockage des ces infos
 sera statique ou dynamique.
+
+
+
+
+Le burger est un tableau de 4*3 (4 lignes et 3 colonnes)
+Un burger est valide seulement s'il est valide voir fonction valide.
+On ne peut pas faire tombé le pain du haut tan que le pain du bas n'est pas complet
+
+Pour la partie multijoueur, il faudra attendre que les deux joueurs est saisie leur déplacement 
