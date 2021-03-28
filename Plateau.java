@@ -216,8 +216,8 @@ public class Plateau
   {
     this.setNbLigne(lig);
     this.setNbCol(col);
-    this.mapStatic = new char[lig][col];
-    this.mapDynam = new char[lig][col];
+    this.mapStatic = new char[lig+2][col+2];
+    this.mapDynam = new char[lig+2][col+2];
   }
 
   public Plateau()                                               // Constructeur par défaut du Plateau
