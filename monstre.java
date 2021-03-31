@@ -14,12 +14,12 @@ public class Monstre extends Thread
   // La ligne et la colonne d'une entité
   private int posLigne; // Correspond à la ligne actuel de l'entité
   private int posColonne; // Correspond à la colonne actuel de l'entité
-  private char CharMonstre; //Correspond au caractères du monstre sur le plateau
+  private String StringMonstre; //Correspond au caractères du monstre sur le plateau
 
   char AFF_LIMITE = 'X';
   char AFF_SOL = '_';
-  char AFF_ECHELLE ='#';
-  char AFF_VIDE =' ';
+  char AFF_ECHELLE = '#';
+  String AFF_VIDE = " ";
 
   //public Plateau p; //permet d'utiliser les accesseur de plateau
 
@@ -42,9 +42,9 @@ public class Monstre extends Thread
 
   public void setNbMonstre(int nb) {  this.NbMonstre = nb; }
 
-  public char getCharMonstre() { return this.CharMonstre; }
+  public String getStringMonstre() { return this.StringMonstre; }
 
-  public void setCharMonstre(char c) {  this.CharMonstre = c; }
+  public void setStringMonstre(String c) {  this.StringMonstre = c; }
 
   public void run(Plateau p)
   {
@@ -54,119 +54,107 @@ public class Monstre extends Thread
     //ne pas oublier de start les monstre avec .start dans le jeu
   }
 
-  public synchronized void DeplacementMonstre(Plateau p)
-  {
-      int deplacement;
-      boolean valide = false;
-      while(valide == false)
-      {
-        deplacement = (int)(Math.random()*4);
-        System.out.println("Deplacement = " + deplacement);
-        p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
+  public void DeplacementMonstre(Plateau p)
+    {
+        int deplacement;
+        boolean valide = true;
 
-        switch(deplacement)
+        while(valide)
         {
-            case 0:  // Pour aller à gauche
-            {
-              if(this.ValideDep(p, deplacement)) { this.setPosColonne(this.getPosColonne()-1); valide = true; System.out.println(" Je suis dans le cas 0"); }
+          p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
+          deplacement = (int)(Math.random()*4);
 
-            }
-            case 1:       // Pour aller à droite
-            {
-              if(this.ValideDep(p, deplacement)) { this.setPosColonne(this.getPosColonne()+1); valide = true; System.out.println(" Je suis dans le cas 1");}
+          switch(deplacement)
+          {
+              case 0:  // Pour aller à gauche
+                // Vérification à gauche
+                if(this.ValideDep(p,0) == true)
+                {
+                  p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()-1, this.getStringMonstre());
+                  this.setPosColonne(this.getPosColonne()-1);
+                  valide = false;
+                }
+                break;
 
-            }
-            case 2:       // Pour aller en haut
-            {
-              if(this.ValideDep(p, deplacement)) { this.setPosLigne(this.getPosLigne()-1); valide = true; System.out.println(" Je suis dans le cas 2");}
+              case 1:       // Pour aller à droite
+                // Vérification à droite
+                if(this.ValideDep(p,1) == true)
+                {
+                  p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()+1, this.getStringMonstre());
+                  this.setPosColonne(this.getPosColonne()+1);
+                  valide = false;
+                }
+                break;
 
-            }
-            case 3:      // Pour aller en bas
-            {
-              if(this.ValideDep(p, deplacement)) { this.setPosLigne(this.getPosLigne()+1); valide = true; System.out.println(" Je suis dans le cas 3");}
+              case 2:       // Pour aller en haut
+                // Vérification en haut
+                if(this.ValideDep(p,2) == true)
+                {
+                  p.modifieCaseDynamique(this.getPosLigne()-1, this.getPosColonne(), this.getStringMonstre());
+                  this.setPosLigne(this.getPosLigne()-1);
+                  valide = false;
+                }
+                break;
 
-            }
-            default: System.out.println(" Je n'arrive pas à sortir 1");
+              case 3:      // Pour aller en bas
+                // Vérification en bas
+                if(this.ValideDep(p,3) == true)
+                {
+                  p.modifieCaseDynamique(this.getPosLigne()+1, this.getPosColonne(), this.getStringMonstre());
+                  this.setPosLigne(this.getPosLigne()+1);
+                  valide = false;
+                }
+                break;
+          }
         }
-        System.out.println(" Je n'arrive pas à sortir 2");
-        p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), this.getCharMonstre());
-      }
-  }
-
-
-
-  public void DeplacementMonstre2(Plateau p)
-  {
-    char tab[][] = p.getMapStatic();
-    char dyn[][] = p.getMapDynamic();
-
-    p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
-
-      // Vérification à gauche
-      if(this.getPosColonne() != 0 )
-      {
-        if(p.getCharat(p.getMapStatic(), this.getPosLigne(), this.getPosColonne()-1) == AFF_SOL && p.getCharat(p.getMapDynamic(), this.getPosLigne(), this.getPosColonne()-1) == ' ' )
-           { System.out.println(" Je suis dans le if 1/1"); this.setPosColonne(this.getPosColonne()-1);}
-      }
-      // Vérification à droite
-      if(this.getPosColonne() != p.getNbCol()-1)
-      {
-        if (p.getCharat(p.getMapStatic(), this.getPosLigne(), this.getPosColonne()+1) == AFF_SOL && p.getCharat(p.getMapDynamic(), this.getPosLigne(), this.getPosColonne()+1) == ' ' )
-             {  System.out.println(" Je suis dans le if 2/1"); this.setPosColonne(this.getPosColonne()+1);}
-      }
-      // Vérification en haut
-      if(this.getPosLigne() != 0)
-      {
-        if (p.getCharat(p.getMapStatic(), this.getPosLigne()-1, this.getPosColonne()) == AFF_ECHELLE && p.getCharat(p.getMapDynamic(), this.getPosLigne()-1, this.getPosColonne()) == ' ' )
-             { System.out.println(" Je suis dans le if 3/1"); this.setPosLigne(this.getPosLigne()-1);}
-      }
-      // Vérification en bas
-      if(this.getPosLigne() != p.getNbLigne()-1)
-      {
-         if(p.getCharat(p.getMapStatic(), this.getPosLigne()+1, this.getPosColonne()) == AFF_ECHELLE && p.getCharat(p.getMapDynamic(), this.getPosLigne()+1, this.getPosColonne()) == ' ' )
-              { System.out.println(" Je suis dans le if 4/1");  this.setPosLigne(this.getPosLigne()+1);}
-      }
-
-      p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), this.getCharMonstre());
-  }
-
-
+    }
 
   public boolean ValideDep(Plateau p, int val)
-  {
-    char tab[][] = p.getMapStatic();
-    char dyn[][] = p.getMapDynamic();
-
-    while(true)
     {
-      System.out.println(" Je suis dans le while");
-      // Vérification à gauche
-      if( val == 0 && this.getPosColonne() != 0 )
-      { System.out.println(" Je suis dans le if 1/1");
-        if(p.getCharat(tab, this.getPosLigne(), this.getPosColonne()-1) == AFF_SOL && p.getCharat(dyn, this.getPosLigne(), this.getPosColonne()-1) == ' ' )
-           { System.out.println(" Je suis dans le if 1/2"); return true; }
-      }
-      // Vérification à droite
-      if( val == 1 && this.getPosColonne() != p.getNbCol()-1)
-      { System.out.println(" Je suis dans le if 2/1");
-        if (p.getCharat(tab, this.getPosLigne(), this.getPosColonne()+1) == AFF_SOL && p.getCharat(dyn, this.getPosLigne(), this.getPosColonne()+1) == ' ' )
-             { System.out.println(" Je suis dans le if 2/2"); return true; }
-      }
-      // Vérification en haut
-      if( val == 2 && this.getPosLigne() != 0)
-      { System.out.println(" Je suis dans le if 3/1");
-        if (p.getCharat(tab, this.getPosLigne()-1, this.getPosColonne()) == AFF_ECHELLE && p.getCharat(dyn, this.getPosLigne()-1, this.getPosColonne()) == ' ' )
-             {System.out.println(" Je suis dans le if 3/2"); return true;}
-      }
-      // Vérification en bas
-      if( val == 3 && this.getPosLigne() != p.getNbLigne()-1)
-      {  System.out.println(" Je suis dans le if 4/1");
-         if(p.getCharat(tab, this.getPosLigne()+1, this.getPosColonne()) == AFF_ECHELLE && p.getCharat(dyn, this.getPosLigne()+1, this.getPosColonne()) == ' ' )
-              {System.out.println(" Je suis dans le if 4/2"); return true;}
-      }
-      else
+      char tab[][] = p.getMapStatic();
+      String dyn[][] = p.getMapDynamic();
+
+      int col = this.getPosColonne();
+      int lig = this.getPosLigne();
+
+        // Vérification à gauche
+        if( val == 0 && col != 0)
+        {
+          if( (p.getCharat(tab, lig, col-1) != AFF_SOL || p.getCharat(tab, lig, col-1) != AFF_ECHELLE) && p.getString(dyn, lig, col-1).equals(AFF_VIDE) )
+            return true;
+          else
+            return false;
+        }
+
+        // Vérification à droite
+        if( val == 1 && col != p.getNbCol()-1)
+        {
+          if ( (p.getCharat(tab, lig, col+1) != AFF_SOL || p.getCharat(tab, lig, col+1) != AFF_ECHELLE) && p.getString(dyn, lig, col+1).equals(AFF_VIDE) )
+            return true;
+          else
+            return false;
+        }
+
+        // Vérification en haut
+        if( val == 2 && lig != 0)
+        {
+          if ( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig-1, col) == AFF_ECHELLE && p.getString(dyn, lig-1, col).equals(AFF_VIDE) )
+            return true;
+          else
+            return false;
+        }
+
+        // Vérification en bas
+        if( val == 3 && lig != p.getNbLigne()-1)
+        {
+           if( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig+1, col) == AFF_ECHELLE && p.getString(dyn, lig+1, col).equals(AFF_VIDE) )
+             return true;
+           else
+             return false;
+        }
+
+        //Si on ne rentre dans aucun if alors on retourne false
         return false;
-     }
   }
 
   public static void main(String[] args)
@@ -184,7 +172,7 @@ class Oeuf extends Monstre
     setNbMonstre(nb);
     setPosLigne(ligne);
     setPosColonne(col);
-    setCharMonstre('O');
+    setStringMonstre("O");
   }
 }
 
@@ -197,7 +185,7 @@ class Saucisse extends Monstre
     setPosLigne(ligne);
     setPosColonne(col);
     //setIndicePos(getCalculIndice(ligne, col));
-    setCharMonstre('S');
+    setStringMonstre("S");
   }
 }
 
@@ -210,6 +198,6 @@ class Cornichon extends Monstre
     setPosLigne(ligne);
     setPosColonne(col);
     //setIndicePos(getCalculIndice(ligne, col));
-    setCharMonstre('C');
+    setStringMonstre("C");
   }
 }

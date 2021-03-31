@@ -13,7 +13,7 @@ public class Cuisinier extends Thread
   private int posLigne; // Correspond à la ligne actuel de cuisto
   private int posColonne; // Correspond à la colonne actuel du cuisto
   private int indicePos;  // Correspond à l'indice du cuisinier (calculé en fonction de ligne et de la colonne actuel)
-  private char charCuisto;
+  private String StringCuisto;
   private int Score;
 
   // Acceseur Setter & Getter des attributs
@@ -35,9 +35,9 @@ public class Cuisinier extends Thread
 
   public int getIndicePos() { return this.indicePos; }
 
-  public void setCharCuisinier(char c) { this.charCuisto = c;}
+  public void setStringCuisinier(String c) { this.StringCuisto = c;}
 
-  public char getCharCuisinier() { return this.charCuisto;}
+  public String getStringCuisinier() { return this.StringCuisto;}
 
   public int getScore(){ return this.Score; }
 
@@ -52,6 +52,6 @@ public class Cuisinier extends Thread
     setVie(3);
     setPosColonne(col);
     setPosLigne(lig);
-    setCharCuisinier('J');
+    setStringCuisinier("J");
   }
 }

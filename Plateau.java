@@ -3,7 +3,7 @@
     Auteurs : Pinon Alexandre, Salaï Loïc
 
     (Mettre à jour le numéro de version à chaque modification de Plateau)
-    Version : V.1.00
+    Version : V.1.01
 */
 
 
@@ -23,29 +23,28 @@ public class Plateau
      Cuisinier c = new Cuisinier(3, 0);
 
      Saucisse S = new Saucisse(1,0,0);
-     Cornichon C = new Cornichon(1,0,1);
-     Oeuf O  = new Oeuf(1,0,2);
+     Cornichon C = new Cornichon(1,2,0);
+     Oeuf O  = new Oeuf(1,2,8);
 
-     // p.addMonstre(S);
-     // p.addMonstre(C);
+     p.addMonstre(S);
+     p.addMonstre(C);
      p.addMonstre(O);
-     System.out.println("OOUR ETRE FIXER ENFAITE : " + p.getCharat(p.mapStatic, O.getPosLigne(), O.getPosColonne()));
 
      for(int i = 0; i<200; i++)
      {
        p.affiche(c, b);
        p.DeplacementCuisinier(c, b);
-       O.DeplacementMonstre2(p);
-       // S.DeplacementMonstre(p);
-       // C.DeplacementMonstre(p);
+       O.DeplacementMonstre(p);
+       S.DeplacementMonstre(p);
+       C.DeplacementMonstre(p);
      }
 
   }
 
   char AFF_LIMITE = 'X';
   char AFF_SOL = '_';
-  char AFF_ECHELLE ='#';
-  char AFF_VIDE =' ';
+  char AFF_ECHELLE = '#';
+  char AFF_VIDE = ' ';
 
 
   String tiret = "------------------------------------------------------------------------------------";
@@ -54,7 +53,7 @@ public class Plateau
   private int NB_LIGNES;                                        // Nombre de ligne du plateau
   private int NB_COLONNES;                                      // Nombre de colonne du plateau
   private char mapStatic[][];                                   // Le mapStatic du jeux representer par un tableau a 2 dimension
-  private char mapDynam[][];                                    // Genre pour les thread quoi
+  private String mapDynam[][];                                    // Genre pour les thread quoi
 
   // Fonctions pour accéder aux attributs ou les retourner
 
@@ -70,13 +69,15 @@ public class Plateau
 
   public char[][] getMapStatic() { return this.mapStatic; }
 
-  public char[][] getMapDynamic() { return this.mapDynam; }
+  public String[][] getMapDynamic() { return this.mapDynam; }
 
   public char getCharat(char[][] c, int lig, int col) { return c[lig][col];}
 
+  public String getString(String[][] c, int lig, int col) { return c[lig][col];}
+
   public void modifieCaseStatic(int lig, int col, char c) { mapStatic[lig][col] = c; }
 
-  public void modifieCaseDynamique(int lig, int col, char c){ mapDynam[lig][col] = c; }
+  public void modifieCaseDynamique(int lig, int col, String c){ mapDynam[lig][col] = c; }
 
   // Autre fonctions hors attributs
 
@@ -116,14 +117,14 @@ public class Plateau
   {
     int t = 0;
     Scanner sc = new Scanner(System.in);      // Create a Scanner object
-    System.out.println("Deplacer le cuisto");
+    System.out.println("Deplacer le cuisto :");
 
     boolean verif = false;
 
     while( verif == false)
     {
       char touche = sc.next().charAt(0);  // Read user input
-      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), ' ');
+      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), " ");
       if(touche == 'z' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
         cuisto.setPosLigne(cuisto.getPosLigne()-1);
@@ -147,9 +148,12 @@ public class Plateau
         cuisto.setPosLigne(cuisto.getPosLigne()+1);
         verif = true;
       }
+
+      else
+        System.out.println("Mauvaise touche, pour rappel Z pour monter, S pour descendre, Q pour aller a gauche, et S pour descendre !");
     }
 
-      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
+      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getStringCuisinier());
 }
 
   // public void tomber(Burger b, char c, int lig, int col)
@@ -176,29 +180,33 @@ public class Plateau
         else System.out.println("");
       }
 
-      for(int i=-1; i<=this.NB_LIGNES+2;i++)                       // Affichage du terrain dans lequel les monstres et le cuisinier évolue
+      for(int i=-1; i<=this.getNbLigne(); i++)                       // Affichage du terrain dans lequel les monstres et le cuisinier évolue
       {
-        for(int j=-1; j<=this.NB_COLONNES+2; j++)
+        for(int j=-1; j<=this.getNbCol(); j++)
         {
-          if(j == -1) System.out.print(tabu1);
-          if (i == -1 || j == -1 || i == NB_LIGNES+2 || j ==  NB_COLONNES+2) // Permet l'affichage des bords du tableau
+          if(j == -1)
+            System.out.print(tabu1);
+          if (i == -1 || j == -1 || i == this.getNbLigne() || j ==  this.getNbCol()) // Permet l'affichage des bords du tableau
             System.out.print(AFF_LIMITE);
-          else if( mapDynam[i][j] == 'S' || mapDynam[i][j] == 'O' || mapDynam[i][j] == 'C' || mapDynam[i][j] == 'J' || mapDynam[i][j] == 'P' || mapDynam[i][j] == 'K' || mapDynam[i][j] == 'F' )
+          else if( mapDynam[i][j] == "S" || mapDynam[i][j] == "O" || mapDynam[i][j] == "C" || mapDynam[i][j] == "J" || mapDynam[i][j] == "P" || mapDynam[i][j] == "K" || mapDynam[i][j] == "F" )
             System.out.print(mapDynam[i][j]);
-
           else
-            System.out.print(mapStatic[i][j]);
+            {
+              this.mapDynam[i][j] = " ";
+              System.out.print(mapStatic[i][j]);
+            }
         }
         System.out.println("\n");
       }
 
       for(int i=-1; i<=4;i++)                                   // Affichage des burgers qui se complèe au fur et à mesure
       {
-        for(int j=-1; j<=this.NB_COLONNES+2; j++)
+        for(int j=-1; j<=this.getNbCol(); j++)
         {
           int col = 7;
-          if(j == -1) System.out.print(tabu1);
-          if (i == -1 || j == -1 || i == 4 || j == NB_COLONNES+2) // Permet l'affichage des bords du tableau
+          if(j == -1)
+            System.out.print(tabu1);
+          if (i == -1 || j == -1 || i == 4 || j == this.getNbCol()) // Permet l'affichage des bords du tableau
             System.out.print(AFF_LIMITE);
           else if ((j == 7 || j == 8 || j == 9) && (b.getTabBurger(i, j-col) == 'P' || b.getTabBurger(i, j-col) == 'S' || b.getTabBurger(i, j-col) == 'K'))
                 System.out.print(b.getTabBurger(i, j-col));
@@ -214,18 +222,18 @@ public class Plateau
 
   public Plateau(int lig, int col)                               // Constructeur(s) de la classe spécifique
   {
-    this.setNbLigne(lig);
-    this.setNbCol(col);
+    this.setNbLigne(lig+2);
+    this.setNbCol(col+2);
     this.mapStatic = new char[lig+2][col+2];
-    this.mapDynam = new char[lig+2][col+2];
+    this.mapDynam = new String[lig+2][col+2];
   }
 
   public Plateau()                                               // Constructeur par défaut du Plateau
   {
-    this.NB_LIGNES = 6;
+    this.NB_LIGNES = 8;
     this.NB_COLONNES = 50;
     this.mapStatic = new char[getNbLigne()+2][getNbCol()+2];
-    this.mapDynam = new char[getNbLigne()+2][getNbCol()+2];
+    this.mapDynam = new String[getNbLigne()+2][getNbCol()+2];
   }
 
   public void Complete()                                         // Complete un plateau du constructeur par défaut
@@ -271,9 +279,9 @@ public class Plateau
     // modifieCaseDynamique(4, 8, 'F');
     // modifieCaseDynamique(4, 9, 'F');
 
-    modifieCaseDynamique(5, 7, 'K');
-    modifieCaseDynamique(5, 8, 'K');
-    modifieCaseDynamique(5, 9, 'K');
+    modifieCaseDynamique(5, 7, "K");
+    modifieCaseDynamique(5, 8, "K");
+    modifieCaseDynamique(5, 9, "K");
   }
 
   public void PlateauNiveau1()                                   // Modifie les cases d'un Plateau(4, 14) (Spécifique)
@@ -343,7 +351,7 @@ public class Plateau
   {
     int ligne = m.getPosLigne();
     int col = m.getPosColonne();
-    char c = m.getCharMonstre();
+    String c = m.getStringMonstre();
     modifieCaseDynamique(ligne, col, c);
   }
 
@@ -351,9 +359,7 @@ public class Plateau
   {
     int ligne = c.getPosLigne();
     int col = c.getPosColonne();
-    char carac = c.getCharCuisinier();
-    modifieCaseDynamique(ligne, col, carac);
+    String cuis = c.getStringCuisinier();
+    modifieCaseDynamique(ligne, col, cuis);
   }
-
-
  }

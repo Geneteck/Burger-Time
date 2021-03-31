@@ -7,7 +7,7 @@
 */
 
 
-class Cuisinier extends Thread
+public class Cuisinier extends Thread
 {
   private int ptVie; // Point de vie de l'entité
   private int posLigne; // Correspond à la ligne actuel de cuisto

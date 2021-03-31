@@ -22,9 +22,9 @@ class Game{
     p.addCuisinier(c);                          // Ajoute le cuisinier sur le plateau (test)
 
     // Ajout de monstres dans le nouveau plateau dans lequel le joueur/cuisinier va jouer
-    Saucisse S = new Saucisse(1,1,1);
-    Cornichon C = new Cornichon(1,1,2);
-    Oeuf O  = new Oeuf(1,1,3);
+    Saucisse S = new Saucisse(1,1,15);
+    Cornichon C = new Cornichon(1,2,5);
+    Oeuf O  = new Oeuf(1,2,18);
     p.addMonstre(S);
     p.addMonstre(C);
     p.addMonstre(O);
@@ -35,6 +35,9 @@ class Game{
     {
       p.affiche(c, b);
       p.DeplacementCuisinier(c, b);
+      O.DeplacementMonstre(p);
+      S.DeplacementMonstre(p);
+      C.DeplacementMonstre(p);
     }
 
   }

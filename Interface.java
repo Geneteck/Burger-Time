@@ -28,6 +28,7 @@ class Interface
     System.out.println(this.tabu2+" 1 - Solo   ");
     System.out.println(this.tabu2+" 2 - Multijoueur ");                         // lance une partie à deux joueurs
     System.out.println(this.tabu2+" 3 - Classement \n");                        // Réseaux avec le score des meilleurs joueurs + type (solo ou local)
+    System.out.println(this.tabu2+" 4 - Touche du jeux \n");
 
     System.out.println("Votre choix :");
     do {

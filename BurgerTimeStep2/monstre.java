@@ -6,7 +6,7 @@
     Version : V.1.00
 */
 
-class Monstre extends Thread
+public class Monstre extends Thread
 {
   private int NbMonstre; //nombre de monstre que l'on pourra faire varier en fonction de la difficulté
   private int indicePos; // Attribut qui correspond à l'indice de l'entité sur le plateau
@@ -145,13 +145,14 @@ class Monstre extends Thread
       if( val == 3 && lig != p.getNbLigne()-1)
       {
          if( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig+1, col) == AFF_ECHELLE && p.getString(dyn, lig+1, col).equals(AFF_VIDE) )
-           return true;
+           return true;}
          else
            return false;
       }
+
       //Si on ne rentre dans aucun if alors on retourne false
       return false;
-}
+  }
 
   public static void main(String[] args)
   {
