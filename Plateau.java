@@ -47,13 +47,14 @@ public class Plateau
   char AFF_VIDE = ' ';
 
 
-  String tiret = "------------------------------------------------------------------------------------";
+  String tiret = "-------------------------------------------------------------------------------------------------------------------------------------------";
   String tabu1 = "                ";
 
   private int NB_LIGNES;                                        // Nombre de ligne du plateau
   private int NB_COLONNES;                                      // Nombre de colonne du plateau
   private char mapStatic[][];                                   // Le mapStatic du jeux representer par un tableau a 2 dimension
   private String mapDynam[][];                                    // Genre pour les thread quoi
+  private char mapDynamBurger[][];
 
   // Fonctions pour accéder aux attributs ou les retourner
 
@@ -78,6 +79,8 @@ public class Plateau
   public void modifieCaseStatic(int lig, int col, char c) { mapStatic[lig][col] = c; }
 
   public void modifieCaseDynamique(int lig, int col, String c){ mapDynam[lig][col] = c; }
+
+  public void modifieCaseDynamiqueBurger(int lig, int col, char c){ mapDynamBurger[lig][col] = c; }
 
   // Autre fonctions hors attributs
 
@@ -174,19 +177,19 @@ public class Plateau
       {
         if(i == 9)
         {
-          System.out.print("                                      ");
+          System.out.print("                                                ");
           c.Affichage();
         }
         else System.out.println("");
       }
 
-      for(int i=-1; i<=this.getNbLigne(); i++)                       // Affichage du terrain dans lequel les monstres et le cuisinier évolue
+      for(int i=-1; i<=this.getNbLigne()+2; i++)                       // Affichage du terrain dans lequel les monstres et le cuisinier évolue
       {
-        for(int j=-1; j<=this.getNbCol(); j++)
+        for(int j=-1; j<=this.getNbCol()+2; j++)
         {
           if(j == -1)
             System.out.print(tabu1);
-          if (i == -1 || j == -1 || i == this.getNbLigne() || j ==  this.getNbCol()) // Permet l'affichage des bords du tableau
+          if (i == -1 || j == -1 || i == this.getNbLigne()+2 || j ==  this.getNbCol()+2) // Permet l'affichage des bords du tableau
             System.out.print(AFF_LIMITE);
           else if( mapDynam[i][j] == "S" || mapDynam[i][j] == "O" || mapDynam[i][j] == "C" || mapDynam[i][j] == "J" || mapDynam[i][j] == "P" || mapDynam[i][j] == "K" || mapDynam[i][j] == "F" )
             System.out.print(mapDynam[i][j]);
@@ -201,17 +204,15 @@ public class Plateau
 
       for(int i=-1; i<=4;i++)                                   // Affichage des burgers qui se complèe au fur et à mesure
       {
-        for(int j=-1; j<=this.getNbCol(); j++)
+        for(int j=-1; j<=this.getNbCol()+2; j++)
         {
           int col = 7;
           if(j == -1)
             System.out.print(tabu1);
-          if (i == -1 || j == -1 || i == 4 || j == this.getNbCol()) // Permet l'affichage des bords du tableau
+          if (i == -1 || j == -1 || i == 4 || j == this.getNbCol()+2) // Permet l'affichage des bords du tableau
             System.out.print(AFF_LIMITE);
-          else if ((j == 7 || j == 8 || j == 9) && (b.getTabBurger(i, j-col) == 'P' || b.getTabBurger(i, j-col) == 'S' || b.getTabBurger(i, j-col) == 'K'))
-                System.out.print(b.getTabBurger(i, j-col));
           else
-              System.out.print(AFF_VIDE);
+            System.out.print(b.get);
         }
         System.out.print("\n");
       }
@@ -222,18 +223,20 @@ public class Plateau
 
   public Plateau(int lig, int col)                               // Constructeur(s) de la classe spécifique
   {
-    this.setNbLigne(lig+2);
-    this.setNbCol(col+2);
+    this.setNbLigne(lig);
+    this.setNbCol(col);
     this.mapStatic = new char[lig+2][col+2];
     this.mapDynam = new String[lig+2][col+2];
+    this.mapDynamBurger = new char[lig+2][col+2];
   }
 
   public Plateau()                                               // Constructeur par défaut du Plateau
   {
     this.NB_LIGNES = 8;
-    this.NB_COLONNES = 50;
+    this.NB_COLONNES = 70;
     this.mapStatic = new char[getNbLigne()+2][getNbCol()+2];
     this.mapDynam = new String[getNbLigne()+2][getNbCol()+2];
+    this.mapDynamBurger = new char[getNbLigne()+2][getNbCol()+2];
   }
 
   public void Complete()                                         // Complete un plateau du constructeur par défaut
@@ -243,46 +246,69 @@ public class Plateau
       for(int j=0; j<=getNbCol()+1; j++)
       {
         if(i == 0 || j == 0 || i == getNbLigne()+1 || j == getNbCol()+1) modifieCaseStatic(i, j, AFF_VIDE);
-        else modifieCaseStatic(i, j, AFF_SOL);
+        else if ( i == 1 && ( j > 20 && j < 50))
+            modifieCaseStatic(i, j, AFF_VIDE);
+        else if ( i == 3 && ( j > 52 && j <= 70))
+            modifieCaseStatic(i, j, AFF_VIDE);
+        else if ( i == 4 && ( j > 25 && j < 42))
+            modifieCaseStatic(i, j, AFF_VIDE);
+        else if ( i == 3 &&  j <10)
+            modifieCaseStatic(i, j, AFF_VIDE);
+        else if ( i == this.getNbLigne() && j <= 15)   //permet de faire le vide dans le coin inferieur droit du décor
+            modifieCaseStatic(i, j, AFF_VIDE);
+        else if ( i == this.getNbLigne()-1 && (j >= 17 && j <= 36))
+            modifieCaseStatic(i, j, AFF_VIDE);
+        else if ( i == this.getNbLigne()-1 && (j >= 60 && j <= 70))
+            modifieCaseStatic(i, j, AFF_VIDE);
+        else if ( i == this.getNbLigne()-2 && (j >= 10 && j <= 25))
+            modifieCaseStatic(i, j, AFF_VIDE);
+        else
+            modifieCaseStatic(i, j, AFF_SOL);
       }
     }
 
-    modifieCaseStatic(1, 13, AFF_ECHELLE);
-    modifieCaseStatic(1, 13, AFF_ECHELLE);
-    modifieCaseStatic(1, 34, AFF_ECHELLE);
-    modifieCaseStatic(1, 34, AFF_ECHELLE);
-    modifieCaseStatic(1, 20, AFF_ECHELLE);
-    modifieCaseStatic(2, 20, AFF_ECHELLE);
-    modifieCaseStatic(1, 48, AFF_ECHELLE);
-    modifieCaseStatic(2, 48, AFF_ECHELLE);
-    modifieCaseStatic(2, 40, AFF_ECHELLE);
-    modifieCaseStatic(3, 40, AFF_ECHELLE);
-    modifieCaseStatic(2, 13, AFF_ECHELLE);
-    modifieCaseStatic(3, 13, AFF_ECHELLE);
-    modifieCaseStatic(3, 34, AFF_ECHELLE);
-    modifieCaseStatic(4, 34, AFF_ECHELLE);
-    modifieCaseStatic(4, 20, AFF_ECHELLE);
-    modifieCaseStatic(5, 20, AFF_ECHELLE);
+    modifieCaseStatic(1, 15, AFF_ECHELLE);
+    modifieCaseStatic(2, 15, AFF_ECHELLE);
+    modifieCaseStatic(3, 15, AFF_ECHELLE);
 
-    modifieCaseStatic(1, 5, AFF_ECHELLE);
-    modifieCaseStatic(2, 5, AFF_ECHELLE);
-    modifieCaseStatic(3, 5, AFF_ECHELLE);
-    modifieCaseStatic(4, 5, AFF_ECHELLE);
-    modifieCaseStatic(4, 38, AFF_ECHELLE);
-    modifieCaseStatic(5, 38, AFF_ECHELLE);
+    modifieCaseStatic(1, 50, AFF_ECHELLE);
+    modifieCaseStatic(2, 50, AFF_ECHELLE);
 
-    // modifieCaseDynamique(3, 7, 'P');
-    // modifieCaseDynamique(3, 8, 'P');
-    // modifieCaseDynamique(3, 9, 'P');
+    modifieCaseStatic(1, 70, AFF_ECHELLE);
+    modifieCaseStatic(2, 70, AFF_ECHELLE);
 
-    // modifieCaseDynamique(4, 7, 'F');
-    // modifieCaseDynamique(4, 8, 'F');
-    // modifieCaseDynamique(4, 9, 'F');
+    modifieCaseStatic(2, 60, AFF_ECHELLE);
+    modifieCaseStatic(3, 60, AFF_ECHELLE);
+    modifieCaseStatic(4, 60, AFF_ECHELLE);
+    modifieCaseStatic(5, 60, AFF_ECHELLE);
 
-    modifieCaseDynamique(5, 7, "K");
-    modifieCaseDynamique(5, 8, "K");
-    modifieCaseDynamique(5, 9, "K");
-  }
+    modifieCaseStatic(1, 3, AFF_ECHELLE);
+    modifieCaseStatic(2, 3, AFF_ECHELLE);
+    modifieCaseStatic(3, 3, AFF_ECHELLE);
+    modifieCaseStatic(4, 3, AFF_ECHELLE);
+
+    modifieCaseStatic(3, 35, AFF_ECHELLE);
+    modifieCaseStatic(4, 35, AFF_ECHELLE);
+    modifieCaseStatic(5, 35, AFF_ECHELLE);
+    modifieCaseStatic(6, 35, AFF_ECHELLE);
+
+    modifieCaseStatic(4, 25, AFF_ECHELLE);
+    modifieCaseStatic(5, 25, AFF_ECHELLE);
+
+    modifieCaseStatic(this.getNbLigne(), this.getNbCol(), AFF_ECHELLE);
+    modifieCaseStatic(this.getNbLigne()-1, this.getNbCol(), AFF_ECHELLE);
+    modifieCaseStatic(this.getNbLigne()-2, this.getNbCol(), AFF_ECHELLE);
+
+    modifieCaseStatic(this.getNbLigne(), 16, AFF_ECHELLE);
+    modifieCaseStatic(this.getNbLigne()-1, 16, AFF_ECHELLE);
+
+    modifieCaseStatic(this.getNbLigne()-1, 9, AFF_ECHELLE);
+    modifieCaseStatic(this.getNbLigne()-2, 9, AFF_ECHELLE);
+    modifieCaseStatic(this.getNbLigne()-3, 9, AFF_ECHELLE);
+
+    modifieCaseStatic(this.getNbLigne()-1, 50, AFF_ECHELLE);
+    modifieCaseStatic(this.getNbLigne()-2, 50, AFF_ECHELLE);
+}
 
   public void PlateauNiveau1()                                   // Modifie les cases d'un Plateau(4, 14) (Spécifique)
   {

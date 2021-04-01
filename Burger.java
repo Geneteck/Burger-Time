@@ -17,9 +17,10 @@ public class Burger
      else  System.out.println(" FAUX ");
   }
 
-  char AFF_PAIN = 'P';
-  char AFF_STEACK = 'K';
-  char AFF_FROMAGE = 'S';
+  char AFF_PAINH = '*';      //représente les pains haut du burger
+  char AFF_PAINB = '*';      //représente les pains bas du burger
+  char AFF_STEACK = '~';    //représente le steak du burger
+  char AFF_FROMAGE = '=';   //représente le fromage du burger
 
   private int NbLigne;
   private int NbColonne;
@@ -63,7 +64,6 @@ public class Burger
     if(nbrPain == 6 && nbrFromage == 3 && nbrSteack == 3) verif=true;
 
     return verif;
-
   }
 
   public void affichageBurger()
@@ -80,27 +80,15 @@ public class Burger
   // Burger(int lig, int col), est le constructeur définit avec des paramètres
 
 
-  public Burger()
+  public Burger(int ligne, int colonne)
   {
-    setNbLigne(4);
-    setNbColonne(3);
-    this.Burger = new char[4][3];
+    // setNbLigne(4);
+    // setNbColonne(3);
+    // this.Burger = new char[4][3];
 
-    // this.modifieBurger(0, 0, AFF_PAIN);
-    // this.modifieBurger(0, 1, AFF_PAIN);
-    //this.modifieBurger(0, 2, AFF_PAIN);
-    this.modifieBurger(3, 0, AFF_PAIN);
-    this.modifieBurger(3, 1, AFF_PAIN);
-    this.modifieBurger(3, 2, AFF_PAIN);
-
-    // this.modifieBurger(2, 0, AFF_FROMAGE);
-    // this.modifieBurger(2, 1, AFF_FROMAGE);
-    // this.modifieBurger(2, 2, AFF_FROMAGE);
-
-    // this.modifieBurger(1, 0, AFF_STEACK);
-    //this.modifieBurger(1, 1, AFF_STEACK);
-    //this.modifieBurger(1, 2, AFF_STEACK);
-    //this.affichageBurger();
+    this.modifieBurger(ligne, colone, AFF_PAINB);
+    this.modifieBurger(ligne, colonne-1, AFF_PAINB);
+    this.modifieBurger(ligne, colonne+1, AFF_PAINB);
   }
 
 }

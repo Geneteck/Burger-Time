@@ -77,6 +77,8 @@ class Interface
       System.out.println(tiret+"\n"+tiret+"\n");
   }
 
+
+
   public void start()
   {
     Scanner sc = new Scanner(System.in);                                        // Pour la saisie du pseudo du joueur
@@ -95,6 +97,24 @@ class Interface
       v = this.Menu2();
       if( v == 4) this.start();
       // else this.Menu3(v);
+    }
+    else if (v == 4)
+    {
+
+      System.out.println(tiret+"\n"+tiret+"\n");                                  // Affiche un max de tirets
+      System.out.println(this.tabu1+"BIENVENUE DANS BURGER TIME !\n");
+      System.out.println("Voici les touches du jeux : \n");
+      System.out.println(this.tabu2+" Z - Permet d'effectuer un déplacement en haut. ");
+      System.out.println(this.tabu2+" Q - Permet d'effectuer un déplacement en bas. ");                         // lance une partie à deux joueurs
+      System.out.println(this.tabu2+" S - Permet d'effectuer un déplacement à gauche. ");                        // Réseaux avec le score des meilleurs joueurs + type (solo ou local)
+      System.out.println(this.tabu2+" D - Permet d'effectuer un déplacement à droite. ");
+      System.out.println(this.tabu2+" Si vous souhaitez retourner au menu principal tapé 'oui' \n");
+      String verif;
+      do
+        {
+           verif = sc.nextLine();
+        }while( !(verif.equals("OUI") || verif.equals("oui") || verif.equals("ui")) );
+      this.start();
     }
                                                                // Pour la partie serveur avec la liste des meilleurs joueurs et leurs scores
   }
