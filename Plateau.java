@@ -30,15 +30,9 @@ public class Plateau
      p.PlateauNiveau1();
      Cuisinier c = new Cuisinier(3, 0);
 
-     Saucisse S = new Saucisse(1,0,0);
-     Cornichon C = new Cornichon(1,2,0);
-     Oeuf O  = new Oeuf(1);
+     Monstre m = new Monstre(8);
+     m.SpawnRandom(p);
 
-     O.SpawnRandom(p);
-
-     p.addMonstre(S);
-     p.addMonstre(C);
-     p.addMonstre(O);
      p.addBurger(b1);
      p.addBurger(b2);
      p.addBurger(b3);
@@ -47,9 +41,10 @@ public class Plateau
      {
        p.affiche(c);
        p.DeplacementCuisinier(c);
-       O.DeplacementMonstre(p);
-       S.DeplacementMonstre(p);
-       C.DeplacementMonstre(p);
+       //O.DeplacementMonstre(p);
+       //S.DeplacementMonstre(p);
+       //C.DeplacementMonstre(p);
+       m.DeplacementMonstre(p);
      }
 
   }
@@ -182,30 +177,101 @@ public class Plateau
       modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getStringCuisinier());
 }
 
-   public void tomber(char c, int lig, int col)                                                     // le but est de faire tomber l'élément de burger fromage avec les déplacements à gauche
-   {
-      int ligne = lig;                                                                              // On stocke le numéro de la ligne en question dans une variable
-      if( c == 'q' && mapDynamBurger[lig][col-1] == '~')                                            // Ici on vérifie quel déplacement à été effectuer (z, q, s, d), sur cette ligne c'est q pour la gauche
+  public void tomber(char c, int lig, int col)                    // le but est de faire tomber l'élément de burger fromage avec les déplacements à gauche
+  {
+      int ligne = lig;                                                                                  // On stocke le numéro de la ligne en question dans une variable
+      if(mapDynamBurger[ligne][col-1] == '~')                                                             // Ici on vérifie, si la
       {
-        modifieCaseDynamiqueBurger(lig, col-1, AFF_VIDE);                                             // Si c'est le cas on enlève le caractère '=' de sa position actuel
-        ligne++;                                                                                    // On incrémente la variable ligne pour passer à la ligne du dessous
-        if(lig<this.getNbLigne())                                                                 // On vérifie quand faisant "tomber"l'élément fromage, la ligne existe
-        {                                                                                           // Puis on vérifie que néanmoins cette ligne du dessous ne possède pas de vide (en colonne) pour les autres éléments fromages qui tomberont
-          while(this.getCharat(mapStatic, ligne, col) == AFF_VIDE || this.getCharat(mapStatic, ligne, col+1) == AFF_VIDE ) { ligne++; } // Si il existe du vide on passe à la prochaine ligne, ligne++
-          modifieCaseDynamiqueBurger(ligne, col-1, '~');
-        }
+          if( c == 'q')                                                                                // Ici on vérifie quel déplacement à été effectuer (q ou d), sur cette ligne c'est q pour la gauche
+          {
+            modifieCaseDynamiqueBurger(ligne, col-1, AFF_VIDE);                                           // Si c'est le cas on enlève le caractère '=' de sa position actuel
+            ligne++;                                                                                    // On incrémente la variable ligne pour passer à la ligne du dessous
+            if(lig<this.getNbLigne())                              // On vérifie quand faisant "tomber"l'élément fromage, la ligne existe
+            {                                                                                           // Puis on vérifie que néanmoins cette ligne du dessous ne possède pas de vide (en colonne) pour les autres éléments fromages qui tomberont
+              while(this.getCharat(mapStatic, ligne, col-1) == AFF_VIDE ) { ligne++; }                   // Si il existe du vide on passe à la prochaine ligne, ligne++
+              modifieCaseDynamiqueBurger(ligne, col-1, '~');
+            }
 
+          }
+          else if( c == 'd')                                       // Ici on vérifie quel déplacement à été effectuer (z, q, s, d), sur cette ligne c'est q pour la gauche
+          {
+            modifieCaseDynamiqueBurger(ligne, col+1, AFF_VIDE);                                         // Si c'est le cas on enlève le caractère '=' de sa position actuel
+            ligne++;                                                                                    // On incrémente la variable ligne pour passer à la ligne du dessous
+            if(lig<this.getNbLigne())                                                                   // On vérifie quand faisant "tomber"l'élément fromage, la ligne existe
+            {                                                                                           // Puis on vérifie que néanmoins cette ligne du dessous ne possède pas de vide (en colonne) pour les autres éléments fromages qui tomberont
+              while(this.getCharat(mapStatic, ligne, col+1) == AFF_VIDE ) { ligne++; } // Si il existe du vide on passe à la prochaine ligne, ligne++
+              modifieCaseDynamiqueBurger(ligne, col+1, '~');
+            }
+          }
       }
-      else if( c == 'd' && mapDynamBurger[lig][col+1] == '~')                                            // Ici on vérifie quel déplacement à été effectuer (z, q, s, d), sur cette ligne c'est q pour la gauche
+      else if(mapDynamBurger[ligne][col-1] == '=' )                                                     // La case à la gauche du cuisinier est un élement fromage
       {
-        modifieCaseDynamiqueBurger(lig, col+1, AFF_VIDE);                                             // Si c'est le cas on enlève le caractère '=' de sa position actuel
-        ligne++;                                                                                    // On incrémente la variable ligne pour passer à la ligne du dessous
-        if(lig<this.getNbLigne())                                                                 // On vérifie quand faisant "tomber"l'élément fromage, la ligne existe
-        {                                                                                           // Puis on vérifie que néanmoins cette ligne du dessous ne possède pas de vide (en colonne) pour les autres éléments fromages qui tomberont
-          while(this.getCharat(mapStatic, ligne, col) == AFF_VIDE || this.getCharat(mapStatic, ligne, col-1) == AFF_VIDE ) { ligne++; } // Si il existe du vide on passe à la prochaine ligne, ligne++
-          modifieCaseDynamiqueBurger(ligne, col+1, '~');
-        }
+          if( c == 'q' && this.verifSteack(c, ligne, col-1))                                            // Ici on vérifie quel déplacement à été effectuer (q ou d), sur cette ligne c'est q pour la gauche
+          {
+            modifieCaseDynamiqueBurger(ligne, col-1, AFF_VIDE);                                         // Si c'est le cas on enlève le caractère '=' de sa position actuel
+            ligne++;                                                                                    // On incrémente la variable ligne pour passer à la ligne du dessous
+            if(lig<this.getNbLigne() && mapDynamBurger[ligne][col-1] == '=')                            // On vérifie quand faisant "tomber"l'élément fromage, la ligne existe
+            {                                                                                           // Puis on vérifie que néanmoins cette ligne du dessous ne possède pas de vide (en colonne) pour les autres éléments fromages qui tomberont
+              while(this.getCharat(mapStatic, ligne, col-1) == AFF_VIDE ) { ligne++; }                  // Si il existe du vide on passe à la prochaine ligne, ligne++
+              modifieCaseDynamiqueBurger(ligne, col-1, '=');
+            }
+
+          }
+          else if( c == 'd' && this.verifSteack(c, ligne, col+1))                                       // Ici on vérifie quel déplacement à été effectuer (z, q, s, d), sur cette ligne c'est q pour la gauche
+          {
+            modifieCaseDynamiqueBurger(ligne, col+1, AFF_VIDE);                                         // Si c'est le cas on enlève le caractère '=' de sa position actuel
+            ligne++;                                                                                    // On incrémente la variable ligne pour passer à la ligne du dessous
+            if(lig<this.getNbLigne())                                                                   // On vérifie quand faisant "tomber"l'élément fromage, la ligne existe
+            {                                                                                           // Puis on vérifie que néanmoins cette ligne du dessous ne possède pas de vide (en colonne) pour les autres éléments fromages qui tomberont
+              while(this.getCharat(mapStatic, ligne, col+1) == AFF_VIDE ) { ligne++; }                  // Si il existe du vide on passe à la prochaine ligne, ligne++
+              modifieCaseDynamiqueBurger(ligne, col+1, '=');
+            }
+          }
       }
+   }
+
+   public boolean verifSteack(char touche, int lig, int col)                                      // touche pour le déplacement efectuer, lig et col pour l'élément fromage dont on cherche l'existence (possible) de steack
+   {
+     boolean v = true;
+     int ligne = lig;                                                                              // On stocke la ligne lig dans une nouvelle variable ligne
+     ligne ++;                                                                                     // ligne prend pour numéro la ligne en-dessous de la ligne du fromage acuel dont on effectue la vérification
+     if( touche == 'q')                                                                            // Si on se déplace sur la gauche
+     {
+       if( mapStatic[ligne][col] == AFF_SOL)                                                      // Alors on regarde si en-dessous du fromage on a du sol en static
+       {
+         if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col-1] == '~' || mapDynamBurger[ligne][col-2] == '~' )      // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la gauche
+         {
+           v = false;
+         }
+       }
+       else
+       {
+         while( mapStatic[ligne][col] == AFF_VIDE) { ligne++; }
+         if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col-1] == '~' || mapDynamBurger[ligne][col-2] == '~' )      // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la gauche
+         {
+           v = false;
+         }
+       }
+     }
+     else if (touche == 'd')                                                                      // Si on se déplace sur la droite
+     {
+       if( mapStatic[ligne][col] == AFF_SOL)                                                      // On regarde si en-dessous du fromage on a du sol en static
+       {
+         if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col+1] == '~' || mapDynamBurger[ligne][col+2] == '~' )      // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la droite
+         {
+           v = false;
+         }
+       }
+       else
+       {
+         while( mapStatic[ligne][col] == AFF_VIDE) { ligne++; }
+         if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col+1] == '~' || mapDynamBurger[ligne][col+2] == '~' )      // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la gauche
+         {
+           v = false;
+         }
+       }
+     }
+     return v;
    }
 
   public void affiche(Cuisinier c)                                     // Affiche l'état du jeu à chaque déplacement du joueur
@@ -233,7 +299,10 @@ public class Plateau
           else if( mapDynam[i][j] == "S" || mapDynam[i][j] == "O" || mapDynam[i][j] == "C" || mapDynam[i][j] == "J")
             System.out.print(mapDynam[i][j]);
           else if (mapDynamBurger[i][j] == '*' || mapDynamBurger[i][j] == '~' || mapDynamBurger[i][j] == '=')
+          {
             System.out.print(mapDynamBurger[i][j]);
+            this.mapDynam[i][j] = " ";
+          }
           else
             {
               this.mapDynam[i][j] = " ";
@@ -251,10 +320,10 @@ public class Plateau
 
   public void afficheBurger()
   {
-      for(int i=0; i<4; i++)  // Parcours des ligne du sous tableau (4 donc 0, 1, 2, 3, 4)
+      for(int i=0; i<4; i++)                                                                            // Parcours des ligne du sous tableau (4 donc 0, 1, 2, 3, 4)
       {
-          for(int j=0; j<this.getNbCol()+2; j++)   // Parcours de l'ensemble des colonnes du sous tableau au même nombre que le grand tableau du dessus
-          {
+          for(int j=0; j<this.getNbCol()+2; j++)
+          {      // Parcours de l'ensemble des colonnes du sous tableau au même nombre que le grand tableau du dessus
                 if (i== 3 && (j == this.getTabBurger(0).getColonne() || j == this.getTabBurger(1).getColonne() || j == this.getTabBurger(2).getColonne()))
                 {
                   this.petitTabBurger[i][j] = '*';
@@ -487,7 +556,6 @@ public class Plateau
       lig++;
     }
   }
-
 
 
     public  boolean verifPosBurgerLigne (int lig, int col)               // Fonction pour vérifier si la position du burger est possible

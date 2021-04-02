@@ -15,15 +15,14 @@ public class Monstre extends Thread
   private int posLigne; // Correspond à la ligne actuel de l'entité
   private int posColonne; // Correspond à la colonne actuel de l'entité
   private String StringMonstre; //Correspond au caractères du monstre sur le plateau
+  private Monstre TabMonstre[]; //tableau qui permet le stockage de tous les monstres
 
   char AFF_LIMITE = 'X';
   char AFF_SOL = '_';
   char AFF_ECHELLE = '#';
   String AFF_VIDE = " ";
 
-  //public Plateau p; //permet d'utiliser les accesseur de plateau
-
-  // méthode d'écriture et de lécture de la class mere Monstre
+  // méthode d'écriture et de lécture de la class Monstre
   public int getIndicePos(){ return this.indicePos; }
 
   //public int getCalculIndice(int ligne, int col) { return (p.getNbCol()*ligne)+col; } //a vérifier
@@ -46,6 +45,11 @@ public class Monstre extends Thread
 
   public void setStringMonstre(String c) {  this.StringMonstre = c; }
 
+  public Monstre[] getTabMonstre() { return this.TabMonstre; }
+
+  public Monstre getMonstre(int x) { return this.TabMonstre[x]; }
+
+
   public void run(Plateau p)
   {
     //a voir plus tard
@@ -55,7 +59,7 @@ public class Monstre extends Thread
   }
 
   public void DeplacementMonstre(Plateau p)
-    {
+  {
         int deplacement;
         boolean valide = true;
 
@@ -106,11 +110,11 @@ public class Monstre extends Thread
                 }
                 break;
           }
-        }
+      }
     }
 
   public boolean ValideDep(Plateau p, int val)
-    {
+  {
       char tab[][] = p.getMapStatic();
       String dyn[][] = p.getMapDynamic();
 
@@ -174,13 +178,46 @@ public class Monstre extends Thread
        int col = (int)(Math.random()*p.getNbCol());
        int lig = (int)(Math.random()*p.getNbLigne());
 
-       if( p.getCharat(map, lig, col) == AFF_SOL && p.getString(dyn, lig, col).equals(AFF_VIDE)) // && p.getCharat(bur, lig, col) == ' ' a rajouter quand burger sera finie
+
+       int x = (int)(Math.random()*3);
+
+       if( p.getCharat(map, lig, col) == AFF_SOL && AFF_VIDE.equals(p.getString(dyn, lig, col))) // && p.getCharat(bur, lig, col) == ' ' a rajouter quand burger sera finie
          {
-           p.modifieCaseDynamique(lig, col, this.getStringMonstre());
-           valide = true;
-         }
-     }
-   }
+           switch (x)
+           {
+             case 0:
+              {
+                this.TabMonstre[i] = new Oeuf(lig, col);
+                //p.modifieCaseDynamique(lig, col, this.getStringMonstre());
+                valide = true;
+                break;
+              }
+
+              case 1:
+              {
+                this.TabMonstre[i] = new Saucisse(lig, col);
+                //p.modifieCaseDynamique(lig, col, this.getStringMonstre());
+                valide = true;
+                break;
+              }
+
+              case 2:
+              {
+                this.TabMonstre[i] = new Cornichon(lig, col);
+                //p.modifieCaseDynamique(lig, col, this.getStringMonstre());
+                valide = true;
+                break;
+              }
+           } //end swtich
+         } //end if
+     } //end while
+   } //end for
+ } //end fonction
+
+ public Monstre(int nb)
+ {
+   setNbMonstre(nb);
+   this.TabMonstre = new Monstre[nb];
  }
 
   public static void main(String[] args)
@@ -189,59 +226,33 @@ public class Monstre extends Thread
 
 class Oeuf extends Monstre
 {
-  public Oeuf(int nb, int ligne, int col)
+  public Oeuf(int ligne, int col)
   {
-    super();
-    setNbMonstre(nb);
+    super(1);
     setPosLigne(ligne);
     setPosColonne(col);
-    setStringMonstre("O");
-  }
-
-  public Oeuf(int nb)
-  {
-    super();
-    setNbMonstre(nb);
     setStringMonstre("O");
   }
 }
 
 class Saucisse extends Monstre
 {
-  public Saucisse(int nb, int ligne, int col)
+  public Saucisse(int ligne, int col)
   {
-    super();
-    setNbMonstre(nb);
+    super(1);
     setPosLigne(ligne);
     setPosColonne(col);
-    //setIndicePos(getCalculIndice(ligne, col));
-    setStringMonstre("S");
-  }
-
-  public Saucisse(int nb)
-  {
-    super();
-    setNbMonstre(nb);
     setStringMonstre("S");
   }
 }
 
 class Cornichon extends Monstre
 {
-  public Cornichon(int nb, int ligne, int col)
+  public Cornichon(int ligne, int col)
   {
-    super();
-    setNbMonstre(nb);
+    super(1);
     setPosLigne(ligne);
     setPosColonne(col);
-    //setIndicePos(getCalculIndice(ligne, col));
-    setStringMonstre("C");
-  }
-
-  public Cornichon(int nb)
-  {
-    super();
-    setNbMonstre(nb);
     setStringMonstre("C");
   }
 }

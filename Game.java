@@ -21,18 +21,6 @@ class Game{
     p.addCuisinier(c);
     p.Complete();
 
-
-    p.addCuisinier(c);                          // Ajoute le cuisinier sur le plateau (test)
-
-    // Ajout de monstres dans le nouveau plateau dans lequel le joueur/cuisinier va jouer
-    Saucisse S = new Saucisse(1,1,15);
-    Cornichon C = new Cornichon(1,2,5);
-    Oeuf O  = new Oeuf(3);
-
-    p.addMonstre(S);
-    p.addMonstre(C);
-    p.addMonstre(O);
-
     p.addBurger(b1);
     p.addBurger(b2);
     p.addBurger(b3);
@@ -41,16 +29,24 @@ class Game{
     p.setTabBurger(1, b2);
     p.setTabBurger(2, b3);
 
+
     p.affiche(c);
-    O.SpawnRandom(p);
+
+    // Ajout de monstres dans le nouveau plateau dans lequel le joueur/cuisinier va jouer
+    Monstre m = new Monstre(8);
+    Monstre pig;
+    m.SpawnRandom(p);
 
     for(int i = 0; i<2000; i++)
     {
       p.affiche(c);
       p.DeplacementCuisinier(c);
-      O.DeplacementMonstre(p);
-      S.DeplacementMonstre(p);
-      C.DeplacementMonstre(p);
+
+      for(int j = 0; j < m.getNbMonstre(); j++)
+      {
+        pig = m.getMonstre(j);
+        pig.DeplacementMonstre(p);
+      }
     }
 
   }
