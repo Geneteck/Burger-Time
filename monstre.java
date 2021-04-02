@@ -184,10 +184,7 @@ public class Monstre extends Thread
  }
 
   public static void main(String[] args)
-  {
-    Oeuf o = new Oeuf(0, 0, 0);
-    Saucisse s = new Saucisse(0, 0, 0);
-  }
+  {}
 }
 
 class Oeuf extends Monstre

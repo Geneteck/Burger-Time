@@ -158,12 +158,13 @@ public class Plateau
 
       else if(touche == 'q' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
-        // this.tomber(b, touche, cuisto.getPosLigne(), cuisto.getPosColonne());
+        this.tomber(touche, cuisto.getPosLigne(), cuisto.getPosColonne());
         cuisto.setPosColonne(cuisto.getPosColonne()-1);
         verif = true;
       }
       else if(touche == 'd'  && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
+        this.tomber(touche, cuisto.getPosLigne(), cuisto.getPosColonne());
         cuisto.setPosColonne(cuisto.getPosColonne()+1);
         verif = true;
       }
@@ -181,15 +182,31 @@ public class Plateau
       modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getStringCuisinier());
 }
 
-  // public void tomber(Burger b, char c, int lig, int col)
-  //{
-  //    if( c == 'q' && mapDynam[lig][col-1] == 'F')
-  //    {
-  //      modifieCaseDynamique(lig, col-1, AFF_VIDE);
-  //      if(lig<=getNbLigne())
-  //        modifieCaseDynamique(lig+1, col-1, 'F');
-  //    }
-  // }
+   public void tomber(char c, int lig, int col)                                                     // le but est de faire tomber l'élément de burger fromage avec les déplacements à gauche
+   {
+      int ligne = lig;                                                                              // On stocke le numéro de la ligne en question dans une variable
+      if( c == 'q' && mapDynamBurger[lig][col-1] == '~')                                            // Ici on vérifie quel déplacement à été effectuer (z, q, s, d), sur cette ligne c'est q pour la gauche
+      {
+        modifieCaseDynamiqueBurger(lig, col-1, AFF_VIDE);                                             // Si c'est le cas on enlève le caractère '=' de sa position actuel
+        ligne++;                                                                                    // On incrémente la variable ligne pour passer à la ligne du dessous
+        if(lig<this.getNbLigne())                                                                 // On vérifie quand faisant "tomber"l'élément fromage, la ligne existe
+        {                                                                                           // Puis on vérifie que néanmoins cette ligne du dessous ne possède pas de vide (en colonne) pour les autres éléments fromages qui tomberont
+          while(this.getCharat(mapStatic, ligne, col) == AFF_VIDE || this.getCharat(mapStatic, ligne, col+1) == AFF_VIDE ) { ligne++; } // Si il existe du vide on passe à la prochaine ligne, ligne++
+          modifieCaseDynamiqueBurger(ligne, col-1, '~');
+        }
+
+      }
+      else if( c == 'd' && mapDynamBurger[lig][col+1] == '~')                                            // Ici on vérifie quel déplacement à été effectuer (z, q, s, d), sur cette ligne c'est q pour la gauche
+      {
+        modifieCaseDynamiqueBurger(lig, col+1, AFF_VIDE);                                             // Si c'est le cas on enlève le caractère '=' de sa position actuel
+        ligne++;                                                                                    // On incrémente la variable ligne pour passer à la ligne du dessous
+        if(lig<this.getNbLigne())                                                                 // On vérifie quand faisant "tomber"l'élément fromage, la ligne existe
+        {                                                                                           // Puis on vérifie que néanmoins cette ligne du dessous ne possède pas de vide (en colonne) pour les autres éléments fromages qui tomberont
+          while(this.getCharat(mapStatic, ligne, col) == AFF_VIDE || this.getCharat(mapStatic, ligne, col-1) == AFF_VIDE ) { ligne++; } // Si il existe du vide on passe à la prochaine ligne, ligne++
+          modifieCaseDynamiqueBurger(ligne, col+1, '~');
+        }
+      }
+   }
 
   public void affiche(Cuisinier c)                                     // Affiche l'état du jeu à chaque déplacement du joueur
   {
@@ -265,7 +282,6 @@ public class Plateau
       }
 
   }
-
 
   public Plateau(int lig, int col)                               // Constructeur(s) de la classe spécifique
   {
@@ -450,22 +466,33 @@ public class Plateau
       for(int j = 0; j < 3; j++)
       {
           // On part du principe que la ligne et la colonne choisis de départ sont possibles
+          // Tentons de les ajouter CORRECTEMENT
           if(i == 0)
-          {  modifieCaseDynamiqueBurger(lig, col, b.AFF_PAINH); col++; }
+          {
+            while(mapStatic[lig][col] ==  AFF_VIDE ||  mapStatic[lig][col+1] == AFF_VIDE || mapStatic[lig][col+2] == AFF_VIDE) { lig++; }
+            modifieCaseDynamiqueBurger(lig, col, b.AFF_PAINH); col++;
+          }
           else if (i == 1)
-          {  modifieCaseDynamiqueBurger(lig, col, b.AFF_FROMAGE); col++; }
+          {
+            while(mapStatic[lig][col] ==  AFF_VIDE ||  mapStatic[lig][col+1] == AFF_VIDE || mapStatic[lig][col+2] == AFF_VIDE) { lig++; }
+            modifieCaseDynamiqueBurger(lig, col, b.AFF_FROMAGE); col++;
+          }
           else
-          {  modifieCaseDynamiqueBurger(lig, col, b.AFF_STEACK); col++; }
+          {
+            while(mapStatic[lig][col] ==  AFF_VIDE ||  mapStatic[lig][col+1] == AFF_VIDE || mapStatic[lig][col+2] == AFF_VIDE) { lig++; }
+            modifieCaseDynamiqueBurger(lig, col, b.AFF_STEACK); col++;
+          }
       }
       col = b.getColonne();
       lig++;
     }
   }
 
-  public boolean verifPosBurger(int lig, int col)
-  {
-    boolean verif = true;
-    return true;
-  }
+
+
+    public  boolean verifPosBurgerLigne (int lig, int col)               // Fonction pour vérifier si la position du burger est possible
+    {
+        return true;
+    }
 
  }
