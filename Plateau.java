@@ -234,36 +234,37 @@ public class Plateau
 
   public void afficheBurger()
   {
-    for(int i=-1; i<=4;i++)                                   // Affichage des burgers qui se complèe au fur et à mesure, Tableau du bas
-    {
-      for(int j=-1; j<=this.getNbCol()+2; j++)
+      for(int i=0; i<4; i++)  // Parcours des ligne du sous tableau (4 donc 0, 1, 2, 3, 4)
       {
-        if(j == -1)
-          System.out.print(tabu1);
+          for(int j=0; j<this.getNbCol()+2; j++)   // Parcours de l'ensemble des colonnes du sous tableau au même nombre que le grand tableau du dessus
+          {
+                if (i== 3 && (j == this.getTabBurger(0).getColonne() || j == this.getTabBurger(1).getColonne() || j == this.getTabBurger(2).getColonne()))
+                {
+                  this.petitTabBurger[i][j] = '*';
+                  this.petitTabBurger[i][j+1] = '*';
+                  this.petitTabBurger[i][j+2] = '*';
+                }
+                else if (this.petitTabBurger[i][j] != '*')
+                this.petitTabBurger[i][j] = AFF_VIDE;
 
-        if (i == -1 || j == -1 || i == 4 || j == this.getNbCol()+2) // Permet l'affichage des bords du tableau
-          System.out.print(AFF_LIMITE);
-        else
-           System.out.print(AFF_VIDE);
-
+          }
       }
-      System.out.print("\n");
-    }
 
-      for(int w1 = 0; w1 < this.tabBurger.length; w1++)     //permet de parcourir tous les burgeurs du tableau
-      {
-        int col = this.getTabBurger(w1).getColonne();
-
-        for(int w2 = 0; w2 < 3; w2++)                          //boucle qui permet d'afficher les 3 pains inférieur de chaque burgeur qui sont par défaut dans le tableau du bas du jeux
+        for(int i=-1; i<=4;i++)                                   // Affichage des burgers qui se complèe au fur et à mesure, Tableau du bas
         {
-          this.petitTabBurger[3][col] = '*';
-          col++;
-        }
-        col = this.getTabBurger(w1).getColonne();
+            for(int j=-1; j<=this.getNbCol()+2; j++)
+            {
+              if(j == -1)
+                System.out.print(tabu1);
+              if (i == -1 || j == -1 || i == 4 || j == this.getNbCol()+2) // Permet l'affichage des bords du tableau
+                System.out.print(AFF_LIMITE);
+              else
+                System.out.print(this.petitTabBurger[i][j]);
+          }
+          System.out.print("\n");
       }
 
-      System.out.print("\n");
-    }
+  }
 
 
   public Plateau(int lig, int col)                               // Constructeur(s) de la classe spécifique

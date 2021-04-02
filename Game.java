@@ -14,8 +14,8 @@ class Game{
     this.j.setCuisinier(c);
 
     Plateau p = new Plateau();
-    Burger b1 = new Burger(3, 45);
-    Burger b2 = new Burger(3, 30);
+    Burger b1 = new Burger(2, 45);
+    Burger b2 = new Burger(1, 15);
     Burger b3 = new Burger(1, 53);
 
     p.addCuisinier(c);
