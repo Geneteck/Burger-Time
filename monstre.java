@@ -157,6 +157,32 @@ public class Monstre extends Thread
         return false;
   }
 
+  public void SpawnRandom(Plateau p)
+  {
+   System.out.println("Spawn random appeler");
+
+   for(int i = 0; i < this.getNbMonstre(); i++)
+   {
+     char map[][] = p.getMapStatic();
+     char bur[][] = p.getDynamBurgeur();
+     String dyn[][] = p.getMapDynamic();
+
+     boolean valide = false;
+
+     while(valide == false)
+     {
+       int col = (int)(Math.random()*p.getNbCol());
+       int lig = (int)(Math.random()*p.getNbLigne());
+
+       if( p.getCharat(map, lig, col) == AFF_SOL && p.getString(dyn, lig, col).equals(AFF_VIDE)) // && p.getCharat(bur, lig, col) == ' ' a rajouter quand burger sera finie
+         {
+           p.modifieCaseDynamique(lig, col, this.getStringMonstre());
+           valide = true;
+         }
+     }
+   }
+ }
+
   public static void main(String[] args)
   {
     Oeuf o = new Oeuf(0, 0, 0);
@@ -174,6 +200,13 @@ class Oeuf extends Monstre
     setPosColonne(col);
     setStringMonstre("O");
   }
+
+  public Oeuf(int nb)
+  {
+    super();
+    setNbMonstre(nb);
+    setStringMonstre("O");
+  }
 }
 
 class Saucisse extends Monstre
@@ -187,6 +220,13 @@ class Saucisse extends Monstre
     //setIndicePos(getCalculIndice(ligne, col));
     setStringMonstre("S");
   }
+
+  public Saucisse(int nb)
+  {
+    super();
+    setNbMonstre(nb);
+    setStringMonstre("S");
+  }
 }
 
 class Cornichon extends Monstre
@@ -198,6 +238,13 @@ class Cornichon extends Monstre
     setPosLigne(ligne);
     setPosColonne(col);
     //setIndicePos(getCalculIndice(ligne, col));
+    setStringMonstre("C");
+  }
+
+  public Cornichon(int nb)
+  {
+    super();
+    setNbMonstre(nb);
     setStringMonstre("C");
   }
 }

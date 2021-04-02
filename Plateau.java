@@ -16,24 +16,37 @@ public class Plateau
 {
   public static void main(String[] args)                        // Main de Plateau pour vérifier que le jeu fonctionne
   {
-     Burger b = new Burger();
-     Plateau p = new Plateau(4,14);
+     Burger b1 = new Burger(1,5);
+     Burger b2 = new Burger(1,1);
+     Burger b3 = new Burger(2,10);
+
+     Plateau p = new Plateau(5,14);
+
+     p.setTabBurger(0, b1);
+     p.setTabBurger(1, b2);
+     p.setTabBurger(2, b3);
+
      //Cuisinier cuisto = new Cuisinier(0, 4, 5);
      p.PlateauNiveau1();
      Cuisinier c = new Cuisinier(3, 0);
 
      Saucisse S = new Saucisse(1,0,0);
      Cornichon C = new Cornichon(1,2,0);
-     Oeuf O  = new Oeuf(1,2,8);
+     Oeuf O  = new Oeuf(1);
+
+     O.SpawnRandom(p);
 
      p.addMonstre(S);
      p.addMonstre(C);
      p.addMonstre(O);
+     p.addBurger(b1);
+     p.addBurger(b2);
+     p.addBurger(b3);
 
      for(int i = 0; i<200; i++)
      {
-       p.affiche(c, b);
-       p.DeplacementCuisinier(c, b);
+       p.affiche(c);
+       p.DeplacementCuisinier(c);
        O.DeplacementMonstre(p);
        S.DeplacementMonstre(p);
        C.DeplacementMonstre(p);
@@ -53,8 +66,11 @@ public class Plateau
   private int NB_LIGNES;                                        // Nombre de ligne du plateau
   private int NB_COLONNES;                                      // Nombre de colonne du plateau
   private char mapStatic[][];                                   // Le mapStatic du jeux representer par un tableau a 2 dimension
-  private String mapDynam[][];                                    // Genre pour les thread quoi
-  private char mapDynamBurger[][];
+  private String mapDynam[][];                                  // Map dynamique pour le déplacement des joueurs/monstre
+
+  private char mapDynamBurger[][];                              // Map dynamique pour différencier burger et monstre
+  private char petitTabBurger[][];                              // Tableau statique que l'on affiche/visualise (= sous tableau)
+  private Burger tabBurger[];                                   // Tableau ou chaque entité de burger est concaténer (utiliser dans l'affichage statique du sous tableau petitTabBurger)
 
   // Fonctions pour accéder aux attributs ou les retourner
 
@@ -70,7 +86,13 @@ public class Plateau
 
   public char[][] getMapStatic() { return this.mapStatic; }
 
+  public char[][] getDynamBurgeur() { return this.mapDynamBurger; }
+
   public String[][] getMapDynamic() { return this.mapDynam; }
+
+  public void setTabBurger(int x, Burger b) { this.tabBurger[x] = b; }
+
+  public Burger getTabBurger(int x) { return this.tabBurger[x]; }
 
   public char getCharat(char[][] c, int lig, int col) { return c[lig][col];}
 
@@ -116,7 +138,7 @@ public class Plateau
     return verif;
   }
 
-  public void DeplacementCuisinier(Cuisinier cuisto, Burger b)    // Fonction qui permet de déplacer le cuisinier de la partie
+  public void DeplacementCuisinier(Cuisinier cuisto)              // Fonction qui permet de déplacer le cuisinier de la partie
   {
     int t = 0;
     Scanner sc = new Scanner(System.in);      // Create a Scanner object
@@ -169,7 +191,7 @@ public class Plateau
   //    }
   // }
 
-  public void affiche(Cuisinier c, Burger b)                     // Affiche l'état du jeu à chaque déplacement du joueur
+  public void affiche(Cuisinier c)                                     // Affiche l'état du jeu à chaque déplacement du joueur
   {
       // Pour aérer à chaque actualisation de la partie
       System.out.println(tiret+"\n"+tiret+"\n");
@@ -191,8 +213,10 @@ public class Plateau
             System.out.print(tabu1);
           if (i == -1 || j == -1 || i == this.getNbLigne()+2 || j ==  this.getNbCol()+2) // Permet l'affichage des bords du tableau
             System.out.print(AFF_LIMITE);
-          else if( mapDynam[i][j] == "S" || mapDynam[i][j] == "O" || mapDynam[i][j] == "C" || mapDynam[i][j] == "J" || mapDynam[i][j] == "P" || mapDynam[i][j] == "K" || mapDynam[i][j] == "F" )
+          else if( mapDynam[i][j] == "S" || mapDynam[i][j] == "O" || mapDynam[i][j] == "C" || mapDynam[i][j] == "J")
             System.out.print(mapDynam[i][j]);
+          else if (mapDynamBurger[i][j] == '*' || mapDynamBurger[i][j] == '~' || mapDynamBurger[i][j] == '=')
+            System.out.print(mapDynamBurger[i][j]);
           else
             {
               this.mapDynam[i][j] = " ";
@@ -202,24 +226,45 @@ public class Plateau
         System.out.println("\n");
       }
 
-      for(int i=-1; i<=4;i++)                                   // Affichage des burgers qui se complèe au fur et à mesure
-      {
-        for(int j=-1; j<=this.getNbCol()+2; j++)
-        {
-          int col = 7;
-          if(j == -1)
-            System.out.print(tabu1);
-          if (i == -1 || j == -1 || i == 4 || j == this.getNbCol()+2) // Permet l'affichage des bords du tableau
-            System.out.print(AFF_LIMITE);
-          else
-            System.out.print(b.get);
-        }
-        System.out.print("\n");
-      }
+      this.afficheBurger();
 
       for(int i=0; i<12; i++) { System.out.println(""); }
       System.out.println(tiret+"\n"+tiret+"\n");
   }
+
+  public void afficheBurger()
+  {
+    for(int i=-1; i<=4;i++)                                   // Affichage des burgers qui se complèe au fur et à mesure, Tableau du bas
+    {
+      for(int j=-1; j<=this.getNbCol()+2; j++)
+      {
+        if(j == -1)
+          System.out.print(tabu1);
+
+        if (i == -1 || j == -1 || i == 4 || j == this.getNbCol()+2) // Permet l'affichage des bords du tableau
+          System.out.print(AFF_LIMITE);
+        else
+           System.out.print(AFF_VIDE);
+
+      }
+      System.out.print("\n");
+    }
+
+      for(int w1 = 0; w1 < this.tabBurger.length; w1++)     //permet de parcourir tous les burgeurs du tableau
+      {
+        int col = this.getTabBurger(w1).getColonne();
+
+        for(int w2 = 0; w2 < 3; w2++)                          //boucle qui permet d'afficher les 3 pains inférieur de chaque burgeur qui sont par défaut dans le tableau du bas du jeux
+        {
+          this.petitTabBurger[3][col] = '*';
+          col++;
+        }
+        col = this.getTabBurger(w1).getColonne();
+      }
+
+      System.out.print("\n");
+    }
+
 
   public Plateau(int lig, int col)                               // Constructeur(s) de la classe spécifique
   {
@@ -228,6 +273,8 @@ public class Plateau
     this.mapStatic = new char[lig+2][col+2];
     this.mapDynam = new String[lig+2][col+2];
     this.mapDynamBurger = new char[lig+2][col+2];
+    this.tabBurger = new Burger[3];
+    this.petitTabBurger = new char[4+2][col+2];
   }
 
   public Plateau()                                               // Constructeur par défaut du Plateau
@@ -237,6 +284,8 @@ public class Plateau
     this.mapStatic = new char[getNbLigne()+2][getNbCol()+2];
     this.mapDynam = new String[getNbLigne()+2][getNbCol()+2];
     this.mapDynamBurger = new char[getNbLigne()+2][getNbCol()+2];
+    this.tabBurger = new Burger[3];                              // 0, 1, 2 soit 3 burgers qui sont crées
+    this.petitTabBurger = new char[4+2][getNbCol()+2];           // Deuxième tableau static simplement pour l'affichage du sous tableau de burger qui se complète au cours de la partie
   }
 
   public void Complete()                                         // Complete un plateau du constructeur par défaut
@@ -388,4 +437,34 @@ public class Plateau
     String cuis = c.getStringCuisinier();
     modifieCaseDynamique(ligne, col, cuis);
   }
+
+  public void addBurger(Burger b)
+  {
+    int lig = b.getLigne();                                                // On récupère la ligne à partir de laquelle on veut commencer
+    int col = b.getColonne();                                              // On récupère la colonne à partir de laquelle on veut commencer
+
+    // Deux boucles pour placer sur ligne et colonne les éléments (caractères) des burgers
+    for(int i = 0; i < 3; i++ )
+    {
+      for(int j = 0; j < 3; j++)
+      {
+          // On part du principe que la ligne et la colonne choisis de départ sont possibles
+          if(i == 0)
+          {  modifieCaseDynamiqueBurger(lig, col, b.AFF_PAINH); col++; }
+          else if (i == 1)
+          {  modifieCaseDynamiqueBurger(lig, col, b.AFF_FROMAGE); col++; }
+          else
+          {  modifieCaseDynamiqueBurger(lig, col, b.AFF_STEACK); col++; }
+      }
+      col = b.getColonne();
+      lig++;
+    }
+  }
+
+  public boolean verifPosBurger(int lig, int col)
+  {
+    boolean verif = true;
+    return true;
+  }
+
  }
