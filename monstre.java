@@ -124,7 +124,7 @@ public class Monstre extends Thread
         // Vérification à gauche
         if( val == 0 && col != 0)
         {
-          if( (p.getCharat(tab, lig, col-1) != AFF_SOL || p.getCharat(tab, lig, col-1) != AFF_ECHELLE) && p.getString(dyn, lig, col-1).equals(AFF_VIDE) )
+          if( (p.getCharat(tab, lig, col-1) == AFF_SOL || p.getCharat(tab, lig, col-1) == AFF_ECHELLE) && p.getString(dyn, lig, col-1).equals(AFF_VIDE) )
             return true;
           else
             return false;
@@ -133,7 +133,7 @@ public class Monstre extends Thread
         // Vérification à droite
         if( val == 1 && col != p.getNbCol()-1)
         {
-          if ( (p.getCharat(tab, lig, col+1) != AFF_SOL || p.getCharat(tab, lig, col+1) != AFF_ECHELLE) && p.getString(dyn, lig, col+1).equals(AFF_VIDE) )
+          if ( (p.getCharat(tab, lig, col+1) == AFF_SOL || p.getCharat(tab, lig, col+1) == AFF_ECHELLE) && p.getString(dyn, lig, col+1).equals(AFF_VIDE) )
             return true;
           else
             return false;
