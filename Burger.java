@@ -87,23 +87,6 @@ public class Burger
     setColonne(colonne);
     this.Burger = new char[4][3];                  // Colonne à laquelle on commencer à placer les élements de burger dans le plateau
 
-
-
-    this.modifieBurger(3, 0, AFF_PAINB);
-    this.modifieBurger(3, 1, AFF_PAINB);
-    this.modifieBurger(3, 2, AFF_PAINB);
-
-    this.modifieBurger(2, 0, AFF_STEACK);
-    this.modifieBurger(2, 1, AFF_STEACK);
-    this.modifieBurger(2, 2, AFF_STEACK);
-
-    this.modifieBurger(1, 0, AFF_FROMAGE);
-    this.modifieBurger(1, 1, AFF_FROMAGE);
-    this.modifieBurger(1, 2, AFF_FROMAGE);
-
-    this.modifieBurger(0, 0, AFF_PAINH);
-    this.modifieBurger(0, 1, AFF_PAINH);
-    this.modifieBurger(0, 2, AFF_PAINH);
   }
 
 }
