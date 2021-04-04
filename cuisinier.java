@@ -53,5 +53,6 @@ public class Cuisinier extends Thread
     setPosColonne(col);
     setPosLigne(lig);
     setStringCuisinier("J");
+    setScore(0);
   }
 }
