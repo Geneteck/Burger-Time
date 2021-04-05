@@ -16,37 +16,29 @@ public class Plateau
 {
   public static void main(String[] args)                        // Main de Plateau pour vérifier que le jeu fonctionne
   {
-     Burger b1 = new Burger(1,5);
-     Burger b2 = new Burger(1,1);
-     Burger b3 = new Burger(2,10);
 
      Plateau p = new Plateau(5,14);
-
-     p.setTabBurger(0, b1);
-     p.setTabBurger(1, b2);
-     p.setTabBurger(2, b3);
-
-     //Cuisinier cuisto = new Cuisinier(0, 4, 5);
      p.PlateauNiveau1();
+
      Cuisinier c = new Cuisinier(3, 0);
+     p.addCuisinier(c);
 
-     Monstre m = new Monstre(8);
-     m.SpawnRandom(p);
-
+     Burger b1 = new Burger(1,6);
      p.addBurger(b1);
-     p.addBurger(b2);
-     p.addBurger(b3);
+     p.setTabBurger(0, b1);
+
+     p.affiche(c);
+
+     Monstre m = new Monstre(1);
+     m.SpawnRandom(p);
 
      for(int i = 0; i<200; i++)
      {
        p.affiche(c);
        p.DeplacementCuisinier(c);
-       //O.DeplacementMonstre(p);
-       //S.DeplacementMonstre(p);
-       //C.DeplacementMonstre(p);
-       m.DeplacementMonstre(p);
-     }
 
+       m.DeplacementMonstre(p, c);
+     }
   }
 
   char AFF_LIMITE = 'X';
@@ -356,18 +348,15 @@ public class Plateau
             System.out.print(tabu1);
           if (i == -1 || j == -1 || i == this.getNbLigne()+2 || j ==  this.getNbCol()+2) // Permet l'affichage des bords du tableau
             System.out.print(AFF_LIMITE);
-          else if( mapDynam[i][j] == "S" || mapDynam[i][j] == "O" || mapDynam[i][j] == "C" || mapDynam[i][j] == "J")
+
+          else if( mapDynam[i][j] == "J" || mapDynam[i][j] == "S" || mapDynam[i][j] == "O" || mapDynam[i][j] == "C" )
             System.out.print(mapDynam[i][j]);
+
           else if (mapDynamBurger[i][j] == '*' || mapDynamBurger[i][j] == '~' || mapDynamBurger[i][j] == '=')
-          {
             System.out.print(mapDynamBurger[i][j]);
-            this.mapDynam[i][j] = " ";
-          }
+
           else
-            {
-              this.mapDynam[i][j] = " ";
               System.out.print(mapStatic[i][j]);
-            }
         }
         System.out.println("\n");
       }
@@ -443,23 +432,50 @@ public class Plateau
       {
         if(i == 0 || j == 0 || i == getNbLigne()+1 || j == getNbCol()+1) modifieCaseStatic(i, j, AFF_VIDE);
         else if ( i == 1 && ( j > 20 && j < 50))
+        {
             modifieCaseStatic(i, j, AFF_VIDE);
+            modifieCaseDynamique(i,j,"!");
+        }
         else if ( i == 3 && ( j > 52 && j <= 70))
+        {
             modifieCaseStatic(i, j, AFF_VIDE);
+            modifieCaseDynamique(i,j,"!");
+        }
         else if ( i == 4 && ( j > 25 && j < 42))
+        {
             modifieCaseStatic(i, j, AFF_VIDE);
+            modifieCaseDynamique(i,j,"!");
+        }
         else if ( i == 3 &&  j <10)
+        {
             modifieCaseStatic(i, j, AFF_VIDE);
+            modifieCaseDynamique(i,j,"!");
+        }
         else if ( i == this.getNbLigne() && j <= 15)   //permet de faire le vide dans le coin inferieur droit du décor
-            modifieCaseStatic(i, j, AFF_VIDE);
+        {
+              modifieCaseStatic(i, j, AFF_VIDE);
+              modifieCaseDynamique(i,j,"!");
+        }
         else if ( i == this.getNbLigne()-1 && (j >= 17 && j <= 36))
+        {
             modifieCaseStatic(i, j, AFF_VIDE);
+            modifieCaseDynamique(i,j,"!");
+        }
         else if ( i == this.getNbLigne()-1 && (j >= 60 && j <= 70))
+        {
             modifieCaseStatic(i, j, AFF_VIDE);
+            modifieCaseDynamique(i,j,"!");
+        }
         else if ( i == this.getNbLigne()-2 && (j >= 10 && j <= 25))
+        {
             modifieCaseStatic(i, j, AFF_VIDE);
+            modifieCaseDynamique(i,j,"!");
+        }
         else
+          {
             modifieCaseStatic(i, j, AFF_SOL);
+            modifieCaseDynamique(i,j," ");
+          }
       }
     }
 

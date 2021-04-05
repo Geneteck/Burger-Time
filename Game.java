@@ -37,16 +37,16 @@ class Game{
     Monstre pig;
     m.SpawnRandom(p);
 
-    for(int i = 0; i<2000; i++)
+    while(c.PartieFinie() == false)
     {
-      p.affiche(c);
       p.DeplacementCuisinier(c);
 
       for(int j = 0; j < m.getNbMonstre(); j++)
       {
         pig = m.getMonstre(j);
-        pig.DeplacementMonstre(p);
+        pig.DeplacementMonstre(p, c);
       }
+      p.affiche(c);
     }
 
   }

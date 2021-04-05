@@ -58,7 +58,7 @@ public class Monstre extends Thread
     //ne pas oublier de start les monstre avec .start dans le jeu
   }
 
-  public void DeplacementMonstre(Plateau p)
+  public void DeplacementMonstre(Plateau p, Cuisinier c)
   {
         int deplacement;
         boolean valide = true;
@@ -72,7 +72,7 @@ public class Monstre extends Thread
           {
               case 0:  // Pour aller à gauche
                 // Vérification à gauche
-                if(this.ValideDep(p,0) == true)
+                if(this.ValideDep(p, 0) == true)
                 {
                   p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()-1, this.getStringMonstre());
                   this.setPosColonne(this.getPosColonne()-1);
@@ -82,7 +82,7 @@ public class Monstre extends Thread
 
               case 1:       // Pour aller à droite
                 // Vérification à droite
-                if(this.ValideDep(p,1) == true)
+                if(this.ValideDep(p, 1) == true)
                 {
                   p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()+1, this.getStringMonstre());
                   this.setPosColonne(this.getPosColonne()+1);
@@ -92,7 +92,7 @@ public class Monstre extends Thread
 
               case 2:       // Pour aller en haut
                 // Vérification en haut
-                if(this.ValideDep(p,2) == true)
+                if(this.ValideDep(p, 2) == true)
                 {
                   p.modifieCaseDynamique(this.getPosLigne()-1, this.getPosColonne(), this.getStringMonstre());
                   this.setPosLigne(this.getPosLigne()-1);
@@ -102,7 +102,7 @@ public class Monstre extends Thread
 
               case 3:      // Pour aller en bas
                 // Vérification en bas
-                if(this.ValideDep(p,3) == true)
+                if(this.ValideDep(p, 3) == true)
                 {
                   p.modifieCaseDynamique(this.getPosLigne()+1, this.getPosColonne(), this.getStringMonstre());
                   this.setPosLigne(this.getPosLigne()+1);
@@ -111,6 +111,9 @@ public class Monstre extends Thread
                 break;
           }
       }
+
+      if(c.RencontreMonstre(this.getPosLigne(), this.getPosColonne()))
+        c.setVie(c.getVie()-1);
     }
 
   public boolean ValideDep(Plateau p, int val)
@@ -124,7 +127,7 @@ public class Monstre extends Thread
         // Vérification à gauche
         if( val == 0 && col != 0)
         {
-          if( (p.getCharat(tab, lig, col-1) == AFF_SOL || p.getCharat(tab, lig, col-1) == AFF_ECHELLE) && p.getString(dyn, lig, col-1).equals(AFF_VIDE) )
+          if( (p.getCharat(tab, lig, col-1) == AFF_SOL || p.getCharat(tab, lig, col-1) == AFF_ECHELLE) && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig, col-1).equals(AFF_VIDE)) )
             return true;
           else
             return false;
@@ -133,7 +136,7 @@ public class Monstre extends Thread
         // Vérification à droite
         if( val == 1 && col != p.getNbCol()-1)
         {
-          if ( (p.getCharat(tab, lig, col+1) == AFF_SOL || p.getCharat(tab, lig, col+1) == AFF_ECHELLE) && p.getString(dyn, lig, col+1).equals(AFF_VIDE) )
+          if ( (p.getCharat(tab, lig, col+1) == AFF_SOL || p.getCharat(tab, lig, col+1) == AFF_ECHELLE) && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig, col+1).equals(AFF_VIDE)) )
             return true;
           else
             return false;
@@ -142,7 +145,7 @@ public class Monstre extends Thread
         // Vérification en haut
         if( val == 2 && lig != 0)
         {
-          if ( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig-1, col) == AFF_ECHELLE && p.getString(dyn, lig-1, col).equals(AFF_VIDE) )
+          if ( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig-1, col) == AFF_ECHELLE && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig-1, col).equals(AFF_VIDE)) )
             return true;
           else
             return false;
@@ -151,7 +154,7 @@ public class Monstre extends Thread
         // Vérification en bas
         if( val == 3 && lig != p.getNbLigne()-1)
         {
-           if( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig+1, col) == AFF_ECHELLE && p.getString(dyn, lig+1, col).equals(AFF_VIDE) )
+           if( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig+1, col) == AFF_ECHELLE && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig+1, col).equals(AFF_VIDE)) )
              return true;
            else
              return false;

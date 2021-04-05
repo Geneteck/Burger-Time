@@ -43,7 +43,32 @@ public class Cuisinier extends Thread
 
   public void setScore(int score) { this.Score =  score; }
 
-  public void Affichage() { System.out.print(" SCORE : "+this.getScore()); }
+  public boolean RencontreMonstre(int ligne, int col)
+  {
+    int ligneC = this.getPosLigne();
+    int colC = this.getPosColonne();
+
+    System.out.println("ligneC = " + ligneC );
+    System.out.println("ligne = " + ligne );
+    System.out.println("colC = " + colC );
+    System.out.println("col = " + col );
+
+
+    if(ligne == ligneC && col == colC)
+       return true;
+    else
+       return false;
+  }
+
+  public boolean PartieFinie()
+  {
+    if(this.getVie() < 0)
+      return true;
+    else
+      return false;
+  }
+  
+  public void Affichage() { System.out.print(" SCORE : "+this.getScore() + "\n                                                " + "Vie du cuisinier : "+ this.getVie()); }
   // Méthode possible du cuisinier
   // public void jetPoivre()
 
