@@ -137,6 +137,7 @@ public class Plateau
     {
       char touche = sc.next().charAt(0);  // Read user input
       modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), " ");
+
       if(touche == 'z' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
         cuisto.setPosLigne(cuisto.getPosLigne()-1);

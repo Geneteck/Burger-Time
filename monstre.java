@@ -66,6 +66,7 @@ public class Monstre extends Thread
         while(valide)
         {
           p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
+
           deplacement = (int)(Math.random()*4);
 
           switch(deplacement)
@@ -110,10 +111,33 @@ public class Monstre extends Thread
                 }
                 break;
           }
-      }
 
-      if(c.RencontreMonstre(this.getPosLigne(), this.getPosColonne()))
-        c.setVie(c.getVie()-1);
+          if(c.RencontreMonstre(this.getPosLigne(), this.getPosColonne()))
+            c.setVie(c.getVie()-1);
+      }
+    }
+
+    public void test(Plateau p)
+    {
+      String dyn[][] = p.getMapDynamic();
+
+      int col = this.getPosColonne();
+      int lig = this.getPosLigne();
+
+      if( p.getString(dyn, lig, col-1) == "C" || p.getString(dyn, lig, col-1) == "J" || p.getString(dyn, lig, col-1) == "O" || p.getString(dyn, lig, col-1) == "S" )
+        if( p.getString(dyn, lig, col+1) == "C" || p.getString(dyn, lig, col+1) == "J" || p.getString(dyn, lig, col+1) == "O" || p.getString(dyn, lig, col-1) == "S" )
+        p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
+
+    }
+
+    public void test2(Plateau p)
+    {
+      String dyn[][] = p.getMapDynamic();
+
+      int col = this.getPosColonne();
+      int lig = this.getPosLigne();
+
+
     }
 
   public boolean ValideDep(Plateau p, int val)
@@ -134,7 +158,7 @@ public class Monstre extends Thread
         }
 
         // Vérification à droite
-        if( val == 1 && col != p.getNbCol()-1)
+        if( val == 1 && col != p.getNbCol()-2)
         {
           if ( (p.getCharat(tab, lig, col+1) == AFF_SOL || p.getCharat(tab, lig, col+1) == AFF_ECHELLE) && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig, col+1).equals(AFF_VIDE)) )
             return true;
@@ -152,7 +176,7 @@ public class Monstre extends Thread
         }
 
         // Vérification en bas
-        if( val == 3 && lig != p.getNbLigne()-1)
+        if( val == 3 && lig != p.getNbLigne()-2)
         {
            if( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig+1, col) == AFF_ECHELLE && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig+1, col).equals(AFF_VIDE)) )
              return true;

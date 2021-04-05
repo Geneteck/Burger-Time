@@ -62,12 +62,12 @@ public class Cuisinier extends Thread
 
   public boolean PartieFinie()
   {
-    if(this.getVie() < 0)
+    if(this.getVie() < 1)
       return true;
     else
       return false;
   }
-  
+
   public void Affichage() { System.out.print(" SCORE : "+this.getScore() + "\n                                                " + "Vie du cuisinier : "+ this.getVie()); }
   // Méthode possible du cuisinier
   // public void jetPoivre()
