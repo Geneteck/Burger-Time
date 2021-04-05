@@ -65,8 +65,8 @@ public class Monstre extends Thread
 
         while(valide)
         {
-          p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
-
+          //p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
+          this.ClearMonstre(p);
           deplacement = (int)(Math.random()*4);
 
           switch(deplacement)
@@ -117,29 +117,6 @@ public class Monstre extends Thread
       }
     }
 
-    public void test(Plateau p)
-    {
-      String dyn[][] = p.getMapDynamic();
-
-      int col = this.getPosColonne();
-      int lig = this.getPosLigne();
-
-      if( p.getString(dyn, lig, col-1) == "C" || p.getString(dyn, lig, col-1) == "J" || p.getString(dyn, lig, col-1) == "O" || p.getString(dyn, lig, col-1) == "S" )
-        if( p.getString(dyn, lig, col+1) == "C" || p.getString(dyn, lig, col+1) == "J" || p.getString(dyn, lig, col+1) == "O" || p.getString(dyn, lig, col-1) == "S" )
-        p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
-
-    }
-
-    public void test2(Plateau p)
-    {
-      String dyn[][] = p.getMapDynamic();
-
-      int col = this.getPosColonne();
-      int lig = this.getPosLigne();
-
-
-    }
-
   public boolean ValideDep(Plateau p, int val)
   {
       char tab[][] = p.getMapStatic();
@@ -151,7 +128,7 @@ public class Monstre extends Thread
         // Vérification à gauche
         if( val == 0 && col != 0)
         {
-          if( (p.getCharat(tab, lig, col-1) == AFF_SOL || p.getCharat(tab, lig, col-1) == AFF_ECHELLE) && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig, col-1).equals(AFF_VIDE)) )
+          if( (p.getCharat(tab, lig, col-1) == AFF_SOL || p.getCharat(tab, lig, col-1) == AFF_ECHELLE) && (("J").equals(p.getString(dyn, lig, col-1)) || p.getString(dyn, lig, col-1).equals(AFF_VIDE)) )
             return true;
           else
             return false;
@@ -160,7 +137,7 @@ public class Monstre extends Thread
         // Vérification à droite
         if( val == 1 && col != p.getNbCol()-2)
         {
-          if ( (p.getCharat(tab, lig, col+1) == AFF_SOL || p.getCharat(tab, lig, col+1) == AFF_ECHELLE) && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig, col+1).equals(AFF_VIDE)) )
+          if ( (p.getCharat(tab, lig, col+1) == AFF_SOL || p.getCharat(tab, lig, col+1) == AFF_ECHELLE) && (("J").equals(p.getString(dyn, lig, col-1)) || p.getString(dyn, lig, col+1).equals(AFF_VIDE)) )
             return true;
           else
             return false;
@@ -169,7 +146,7 @@ public class Monstre extends Thread
         // Vérification en haut
         if( val == 2 && lig != 0)
         {
-          if ( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig-1, col) == AFF_ECHELLE && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig-1, col).equals(AFF_VIDE)) )
+          if ( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig-1, col) == AFF_ECHELLE && (("J").equals(p.getString(dyn, lig, col-1)) || p.getString(dyn, lig-1, col).equals(AFF_VIDE)) )
             return true;
           else
             return false;
@@ -178,7 +155,7 @@ public class Monstre extends Thread
         // Vérification en bas
         if( val == 3 && lig != p.getNbLigne()-2)
         {
-           if( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig+1, col) == AFF_ECHELLE && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig+1, col).equals(AFF_VIDE)) )
+           if( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig+1, col) == AFF_ECHELLE && (("J").equals(p.getString(dyn, lig, col-1)) || p.getString(dyn, lig+1, col).equals(AFF_VIDE)) )
              return true;
            else
              return false;
@@ -188,10 +165,19 @@ public class Monstre extends Thread
         return false;
   }
 
+  public void ClearMonstre(Plateau p)
+  {
+    String dyn[][] = p.getMapDynamic();
+
+    int col = this.getPosColonne();
+    int lig = this.getPosLigne();
+
+    if( p.getString(dyn, lig, col-1) != "C" || p.getString(dyn, lig, col-1) != "O" || p.getString(dyn, lig, col-1) != "S" || p.getString(dyn, lig, col+1) != "C" || p.getString(dyn, lig, col+1) != "O" || p.getString(dyn, lig, col-1) != "S" )
+      p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
+  }
+
   public void SpawnRandom(Plateau p)
   {
-   System.out.println("Spawn random appeler");
-
    for(int i = 0; i < this.getNbMonstre(); i++)
    {
      char map[][] = p.getMapStatic();
@@ -208,14 +194,13 @@ public class Monstre extends Thread
 
        int x = (int)(Math.random()*3);
 
-       if( p.getCharat(map, lig, col) == AFF_SOL && AFF_VIDE.equals(p.getString(dyn, lig, col))) // && p.getCharat(bur, lig, col) == ' ' a rajouter quand burger sera finie
+       if( p.getCharat(map, lig, col) == AFF_SOL && AFF_VIDE.equals(p.getString(dyn, lig, col)) ) 
          {
            switch (x)
            {
              case 0:
               {
                 this.TabMonstre[i] = new Oeuf(lig, col);
-                //p.modifieCaseDynamique(lig, col, this.getStringMonstre());
                 valide = true;
                 break;
               }
@@ -223,7 +208,6 @@ public class Monstre extends Thread
               case 1:
               {
                 this.TabMonstre[i] = new Saucisse(lig, col);
-                //p.modifieCaseDynamique(lig, col, this.getStringMonstre());
                 valide = true;
                 break;
               }
@@ -231,7 +215,6 @@ public class Monstre extends Thread
               case 2:
               {
                 this.TabMonstre[i] = new Cornichon(lig, col);
-                //p.modifieCaseDynamique(lig, col, this.getStringMonstre());
                 valide = true;
                 break;
               }

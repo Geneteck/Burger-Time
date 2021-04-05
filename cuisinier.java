@@ -43,6 +43,17 @@ public class Cuisinier extends Thread
 
   public void setScore(int score) { this.Score =  score; }
 
+  public void ClearCuisier(Plateau p)
+  {
+    String dyn[][] = p.getMapDynamic();
+
+    int col = this.getPosColonne();
+    int lig = this.getPosLigne();
+
+    if( p.getString(dyn, lig, col-1) != "C" || p.getString(dyn, lig, col-1) != "O" || p.getString(dyn, lig, col-1) != "S" || p.getString(dyn, lig, col+1) != "C" || p.getString(dyn, lig, col+1) != "O" || p.getString(dyn, lig, col-1) != "S" )
+      p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
+  }
+
   public boolean RencontreMonstre(int ligne, int col)
   {
     int ligneC = this.getPosLigne();

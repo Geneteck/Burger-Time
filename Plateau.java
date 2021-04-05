@@ -27,8 +27,6 @@ public class Plateau
      p.addBurger(b1);
      p.setTabBurger(0, b1);
 
-     p.affiche(c);
-
      Monstre m = new Monstre(1);
      m.SpawnRandom(p);
 
@@ -129,14 +127,16 @@ public class Plateau
   {
     int t = 0;
     Scanner sc = new Scanner(System.in);      // Create a Scanner object
-    System.out.println("Deplacer le cuisto :");
+    System.out.println("Deplacer le cuisinier :");
+
+    //this.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), " ");
+    cuisto.ClearCuisier(this);
 
     boolean verif = false;
 
     while( verif == false)
     {
       char touche = sc.next().charAt(0);  // Read user input
-      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), " ");
 
       if(touche == 'z' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
@@ -166,8 +166,7 @@ public class Plateau
       else
         System.out.println("Mauvaise touche, pour rappel Z pour monter, S pour descendre, Q pour aller a gauche, et S pour descendre !");
     }
-
-      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getStringCuisinier());
+    this.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getStringCuisinier());
 }
 
   public void tomber(char c, int lig, int col)
@@ -348,6 +347,7 @@ public class Plateau
         {
           if(j == -1)
             System.out.print(tabu1);
+
           if (i == -1 || j == -1 || i == this.getNbLigne()+2 || j ==  this.getNbCol()+2) // Permet l'affichage des bords du tableau
             System.out.print(AFF_LIMITE);
 
@@ -359,6 +359,24 @@ public class Plateau
 
           else
               System.out.print(mapStatic[i][j]);
+
+          //int ligne ;
+          //int col ;
+
+          //for(int j2 = 0; j2 < m.getNbMonstre(); j2++)
+          //{
+          //  ligne = m.getPosLigne();
+          //  col = m.getPosColonne();
+          //  this.mapDynam[ligne][col] = m.getMontre(j2).getStringMonstre();
+          //  System.out.print(this.getString(this.mapDynam,ligne,col));
+          //}
+
+          //ligne = c.getPosLigne();
+          //col = c.getPosColonne();
+
+          //this.mapDynam[ligne][col] = c.getStringCuisinier();
+          //System.out.print(this.getString(this.mapDynam,ligne,col));
+
         }
         System.out.println("\n");
       }
@@ -481,8 +499,8 @@ public class Plateau
         }
         else if ( i == this.getNbLigne() && j <= 15)   //permet de faire le vide dans le coin inferieur droit du décor
         {
-              modifieCaseStatic(i, j, AFF_VIDE);
-              modifieCaseDynamique(i,j,"!");
+            modifieCaseStatic(i, j, AFF_VIDE);
+            modifieCaseDynamique(i,j,"!");
         }
         else if ( i == this.getNbLigne()-1 && (j >= 17 && j <= 36))
         {
