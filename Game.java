@@ -40,6 +40,7 @@ class Game{
     while(c.PartieFinie() == false)
     {
       p.DeplacementCuisinier(c);
+      p.score();
 
       for(int j = 0; j < m.getNbMonstre(); j++)
       {

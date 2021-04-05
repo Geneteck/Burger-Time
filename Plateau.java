@@ -330,6 +330,7 @@ public class Plateau
   {
       // Pour aérer à chaque actualisation de la partie
       System.out.println(tiret+"\n"+tiret+"\n");
+      this.score(c);
       for(int i=0; i<15; i++)
       {
         if(i == 9)
@@ -401,6 +402,32 @@ public class Plateau
       }
 
   }
+
+  public void score(Cuisinier c)
+  {
+    int x = 0;
+    int point = 0;
+    for(int z = 0; z<3; z++)
+    {
+      Burger b = this.getTabBurger(z);
+      for(int i=0; i<4; i++)
+      {
+          for(int j=0; j<this.getNbCol()+2; j++)
+          {
+              if (j == this.getTabBurger(z).getColonne())
+              {
+                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 10;}
+                if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 10; }
+                if( i == 2 && b.steack(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 10; }
+                if( x == 3) { point = point + 30; }
+              }
+          }
+      }
+      c.setScore(point);
+      x = 0;
+    }
+  }
+
 
   public Plateau(int lig, int col)                               // Constructeur(s) de la classe spécifique
   {
@@ -639,5 +666,4 @@ public class Plateau
     {
         return true;
     }
-
  }
