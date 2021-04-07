@@ -13,7 +13,7 @@ public class Cuisinier extends Thread
   private int posLigne; // Correspond à la ligne actuel de cuisto
   private int posColonne; // Correspond à la colonne actuel du cuisto
   private int indicePos;  // Correspond à l'indice du cuisinier (calculé en fonction de ligne et de la colonne actuel)
-  private String StringCuisto;
+  private char CharCuisto;
   private int Score;
 
   // Acceseur Setter & Getter des attributs
@@ -35,9 +35,9 @@ public class Cuisinier extends Thread
 
   public int getIndicePos() { return this.indicePos; }
 
-  public void setStringCuisinier(String c) { this.StringCuisto = c;}
+  public void setCharCuisinier(char c) { this.CharCuisto = c;}
 
-  public String getStringCuisinier() { return this.StringCuisto;}
+  public char getCharCuisinier() { return this.CharCuisto;}
 
   public int getScore(){ return this.Score; }
 
@@ -45,25 +45,19 @@ public class Cuisinier extends Thread
 
   public void ClearCuisier(Plateau p)
   {
-    String dyn[][] = p.getMapDynamic();
+    char dyn[][] = p.getMapDynamic();
 
     int col = this.getPosColonne();
     int lig = this.getPosLigne();
 
-    if( p.getString(dyn, lig, col-1) != "C" || p.getString(dyn, lig, col-1) != "O" || p.getString(dyn, lig, col-1) != "S" || p.getString(dyn, lig, col+1) != "C" || p.getString(dyn, lig, col+1) != "O" || p.getString(dyn, lig, col-1) != "S" )
-      p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
+    if( p.getCharat(dyn, lig, col-1) != 'C' || p.getCharat(dyn, lig, col-1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' || p.getCharat(dyn, lig, col+1) != 'C' || p.getCharat(dyn, lig, col+1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' )
+      p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
   }
 
   public boolean RencontreMonstre(int ligne, int col)
   {
     int ligneC = this.getPosLigne();
     int colC = this.getPosColonne();
-
-    System.out.println("ligneC = " + ligneC );
-    System.out.println("ligne = " + ligne );
-    System.out.println("colC = " + colC );
-    System.out.println("col = " + col );
-
 
     if(ligne == ligneC && col == colC)
        return true;
@@ -88,7 +82,7 @@ public class Cuisinier extends Thread
     setVie(3);
     setPosColonne(col);
     setPosLigne(lig);
-    setStringCuisinier("J");
+    setCharCuisinier('J');
     setScore(0);
   }
 }

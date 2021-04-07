@@ -48,6 +48,7 @@ class Game{
         pig.DeplacementMonstre(p, c);
       }
       p.affiche(c);
+
     }
 
     System.out.println("END GAME, THE PLAYER IS DEAD !!");
