@@ -1,39 +1,49 @@
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
 
-public class LocalServ {
-   static final int port;
+class LocalServ {
+	 // Déclaration des attributs de la classes LocalServ
+   private static final int port = 8080;
+	 private ServerSocket s;
+	 private Socket soc;
+
+	 // BufferedReader permet de lire par ligne
+	 private BufferedReader sisr;
+
+	 // Un PrintWriter possede toutes les operations print classiques.
+	 private PrintWriter sisw;
 
    public static void main(String[] args) throws Exception {
+        LocalServ ls = new LocalServ();
    }
 
-   public start(Plateau p)
-   {
-     Socket socket = new Socket(args[0], port);
-     System.out.println("SOCKET = " + socket);
-     // illustration des capacites bidirectionnelles du flux
-     BufferedReader sisr = new BufferedReader(
-                            new InputStreamReader(socket.getInputStream()));
+	// Pour fermer le serveur (si besoin)
+	public void fin() throws Exception
+	{
+		this.sisr.close();
+		this.sisw.close();
+		this.soc.close();
+	}
 
-     PrintWriter sisw = new PrintWriter(new BufferedWriter(
-                             new OutputStreamWriter(socket.getOutputStream())),true);
-     String str = "bonjour ";
-     for (int i = 0; i < 10; i++) {
-        sisw.println(str+i);          // envoi d'un message
-        str = sisr.readLine();      // lecture de la reponse
-        System.out.println(str);
-     }
-     System.out.println("END");     // message de fermeture
-     //sisw.println("END") ;
-     sisr.close();
-     sisw.close();
-     socket.close();
-   }
+	// Pour lancer le LocalServ
+	public void start() throws Exception
+	{
+		String str;
+		do{
+		 str = sisr.readLine();          // lecture du message
+		 // System.out.println("ECHO = " + str);   // trace locale
+	 	}while("END".equals(str));
+		// this.fin();											// Permet de fermet le serveur une fois qu'on a reçus un score hors ce n'est pas ce que l'on veut
+	}
 
-   public LocalServ(int port)
-   {
+	public LocalServ() throws Exception
+	{
+		 this.s = new ServerSocket(port);
+		 this.soc = s.accept();
 
-     this.port = port;
-   }
+		 this.sisr = new BufferedReader( new InputStreamReader(soc.getInputStream()));
+		 this.sisw = new PrintWriter( new BufferedWriter(new OutputStreamWriter(soc.getOutputStream())),true);
+		 this.start();
+	}
+
 }

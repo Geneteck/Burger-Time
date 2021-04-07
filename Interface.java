@@ -9,6 +9,7 @@ class Interface
   String tiret = "------------------------------------------------------------------------------------";
   String tabu1 = "                            ";         // 12 tabulations
   String tabu2 = "              ";                        // 7 tabulations
+  private LocalServ ls;
 
   public static void main(String[] args)
   {
@@ -83,6 +84,7 @@ class Interface
   {
     Scanner sc = new Scanner(System.in);                                        // Pour la saisie du pseudo du joueur
     String pseudo;
+ 
 
     for(int i=0; i<50; i++) { System.out.println(""); }
     int v = this.Menu1();                                                       // Affiche le menu principal du jeu
@@ -91,6 +93,7 @@ class Interface
       System.out.println(" SAISISSEZ VOTRE PSEUDO ");
       pseudo = sc.next();
       Game g = new Game(pseudo);
+      g.start();
     }
     else if (v == 2)
     {
@@ -121,5 +124,7 @@ class Interface
 
 
 
-  public Interface(){}
+  public Interface(){
+    this.ls = new LocalServ();
+  }
 }

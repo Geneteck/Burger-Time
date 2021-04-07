@@ -14,32 +14,7 @@ import java.io.*;
 
 public class Plateau
 {
-  public static void main(String[] args)                        // Main de Plateau pour vérifier que le jeu fonctionne
-  {
 
-     Plateau p = new Plateau(5,14);
-     p.PlateauNiveau1();
-
-     Cuisinier c = new Cuisinier(3, 0);
-     p.addCuisinier(c);
-
-     Burger b1 = new Burger(1,6);
-     p.addBurger(b1);
-     p.setTabBurger(0, b1);
-
-     p.affiche(c);
-
-     Monstre m = new Monstre(1);
-     m.SpawnRandom(p);
-
-     for(int i = 0; i<200; i++)
-     {
-       p.affiche(c);
-       p.DeplacementCuisinier(c);
-
-       m.DeplacementMonstre(p, c);
-     }
-  }
 
   char AFF_LIMITE = 'X';
   char AFF_SOL = '_';
@@ -406,7 +381,6 @@ public class Plateau
 
   public void score(Cuisinier c)
   {
-    int x = 0;
     int point = 0;
     for(int z = 0; z<3; z++)
     {
@@ -417,15 +391,13 @@ public class Plateau
           {
               if (j == this.getTabBurger(z).getColonne())
               {
-                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 10;}
-                if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 10; }
+                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 40;}
+                if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 20; }
                 if( i == 2 && b.steack(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 10; }
-                if( x == 3) { point = point + 30; }
+                c.setScore(point);
               }
           }
       }
-      c.setScore(point);
-      x = 0;
     }
   }
 

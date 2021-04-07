@@ -130,15 +130,7 @@ public class Monstre extends Thread
 
     }
 
-    public void test2(Plateau p)
-    {
-      String dyn[][] = p.getMapDynamic();
 
-      int col = this.getPosColonne();
-      int lig = this.getPosLigne();
-
-
-    }
 
   public boolean ValideDep(Plateau p, int val)
   {

@@ -41,7 +41,7 @@ public class Cuisinier extends Thread
 
   public int getScore(){ return this.Score; }
 
-  public void setScore(int score) { this.Score =  score; }
+  public void setScore(int score) { this.Score = score; }
 
   public boolean RencontreMonstre(int ligne, int col)
   {
