@@ -28,7 +28,7 @@ public class Plateau
   private int NB_LIGNES;                                        // Nombre de ligne du plateau
   private int NB_COLONNES;                                      // Nombre de colonne du plateau
   private char mapStatic[][];                                   // Le mapStatic du jeux representer par un tableau a 2 dimension
-  private String mapDynam[][];                                  // Map dynamique pour le déplacement des joueurs/monstre
+  private char mapDynam[][];                                  // Map dynamique pour le déplacement des joueurs/monstre
 
   private char mapDynamBurger[][];                              // Map dynamique pour différencier burger et monstre
   private char petitTabBurger[][];                              // Tableau statique que l'on affiche/visualise (= sous tableau)
@@ -50,7 +50,7 @@ public class Plateau
 
   public char[][] getDynamBurgeur() { return this.mapDynamBurger; }
 
-  public String[][] getMapDynamic() { return this.mapDynam; }
+  public char[][] getMapDynamic() { return this.mapDynam; }
 
   public void setTabBurger(int x, Burger b) { this.tabBurger[x] = b; }
 
@@ -100,7 +100,7 @@ public class Plateau
     return verif;
   }
 
-  public void DeplacementCuisinier(Cuisinier cuisto)              // Fonction qui permet de déplacer le cuisinier de la partie
+  public void deplaceCuisinier(Cuisinier cuisto)              // Fonction qui permet de déplacer le cuisinier de la partie
   {
     int t = 0;
     Scanner sc = new Scanner(System.in);      // Create a Scanner object
@@ -142,7 +142,7 @@ public class Plateau
         System.out.println("Mauvaise touche, pour rappel Z pour monter, S pour descendre, Q pour aller a gauche, et S pour descendre !");
     }
 
-      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getStringCuisinier());
+      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
 }
 
   public void tomber(char c, int lig, int col)
@@ -312,7 +312,7 @@ public class Plateau
         if(i == 9)
         {
           System.out.print("                                                ");
-          c.Affichage();
+          c.afficheScorePv();
         }
         else System.out.println("");
       }
@@ -382,6 +382,7 @@ public class Plateau
   public void score(Cuisinier c)
   {
     int point = 0;
+
     for(int z = 0; z<3; z++)
     {
       Burger b = this.getTabBurger(z);
@@ -391,9 +392,9 @@ public class Plateau
           {
               if (j == this.getTabBurger(z).getColonne())
               {
-                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 40;}
-                if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 20; }
-                if( i == 2 && b.steack(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 10; }
+                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) {  point = point + 40;}
+                if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { point = point + 20; }
+                if( i == 2 && b.steack(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) {  point = point + 10; }
                 c.setScore(point);
               }
           }
@@ -520,76 +521,13 @@ public class Plateau
 
     modifieCaseStatic(this.getNbLigne()-1, 50, AFF_ECHELLE);
     modifieCaseStatic(this.getNbLigne()-2, 50, AFF_ECHELLE);
-}
-
-  public void PlateauNiveau1()                                   // Modifie les cases d'un Plateau(4, 14) (Spécifique)
-  {
-    modifieCaseStatic(0,0,AFF_SOL);
-    modifieCaseStatic(0,1,AFF_SOL);
-    modifieCaseStatic(0,2,AFF_SOL);
-    modifieCaseStatic(0,3,AFF_SOL);
-    modifieCaseStatic(0,4,AFF_ECHELLE);
-    modifieCaseStatic(0,5,AFF_SOL);
-    modifieCaseStatic(0,6,AFF_SOL);
-    modifieCaseStatic(0,7,AFF_SOL);
-    modifieCaseStatic(0,8,AFF_SOL);
-    modifieCaseStatic(0,9,AFF_SOL);
-    modifieCaseStatic(0,10,AFF_SOL);
-    modifieCaseStatic(0,11,AFF_SOL);
-    modifieCaseStatic(0,12,AFF_SOL);
-    modifieCaseStatic(0,13,AFF_ECHELLE);
-
-    modifieCaseStatic(1,0,AFF_SOL);
-    modifieCaseStatic(1,1,AFF_SOL);
-    modifieCaseStatic(1,2,AFF_SOL);
-    modifieCaseStatic(1,3,AFF_SOL);
-    modifieCaseStatic(1,4,AFF_ECHELLE);
-    modifieCaseStatic(1,5,AFF_SOL);
-    modifieCaseStatic(1,6,AFF_SOL);
-    modifieCaseStatic(1,7,AFF_SOL);
-    modifieCaseStatic(1,8,AFF_VIDE);
-    modifieCaseStatic(1,9,AFF_VIDE);
-    modifieCaseStatic(1,10,AFF_SOL);
-    modifieCaseStatic(1,11,AFF_SOL);
-    modifieCaseStatic(1,12,AFF_SOL);
-    modifieCaseStatic(1,13,AFF_ECHELLE);
-
-    modifieCaseStatic(2,0,AFF_ECHELLE);
-    modifieCaseStatic(2,1,AFF_SOL);
-    modifieCaseStatic(2,2,AFF_SOL);
-    modifieCaseStatic(2,3,AFF_SOL);
-    modifieCaseStatic(2,4,AFF_ECHELLE);
-    modifieCaseStatic(2,5,AFF_SOL);
-    modifieCaseStatic(2,6,AFF_SOL);
-    modifieCaseStatic(2,7,AFF_SOL);
-    modifieCaseStatic(2,8,AFF_SOL);
-    modifieCaseStatic(2,9,AFF_SOL);
-    modifieCaseStatic(2,10,AFF_SOL);
-    modifieCaseStatic(2,11,AFF_SOL);
-    modifieCaseStatic(2,12,AFF_SOL);
-    modifieCaseStatic(2,13,AFF_SOL);
-
-    modifieCaseStatic(3,0,AFF_ECHELLE);
-    modifieCaseStatic(3,1,AFF_SOL);
-    modifieCaseStatic(3,2,AFF_SOL);
-    modifieCaseStatic(3,3,AFF_SOL);
-    modifieCaseStatic(3,4,AFF_SOL);
-    modifieCaseStatic(3,5,AFF_SOL);
-    modifieCaseStatic(3,6,AFF_SOL);
-    modifieCaseStatic(3,7,AFF_SOL);
-    modifieCaseStatic(3,8,AFF_SOL);
-    modifieCaseStatic(3,9,AFF_SOL);
-    modifieCaseStatic(3,10,AFF_SOL);
-    modifieCaseStatic(3,11,AFF_SOL);
-    modifieCaseStatic(3,12,AFF_SOL);
-    modifieCaseStatic(3,13,AFF_SOL);
   }
 
   public void addMonstre(Monstre m)                              // Ajoute un monstre m sur le plateau pour qu'il puisse être visualiser
   {
     int ligne = m.getPosLigne();
     int col = m.getPosColonne();
-    String c = m.getStringMonstre();
+    String c = m.getStrMonstre();
     modifieCaseDynamique(ligne, col, c);
   }
 
@@ -597,7 +535,7 @@ public class Plateau
   {
     int ligne = c.getPosLigne();
     int col = c.getPosColonne();
-    String cuis = c.getStringCuisinier();
+    String cuis = c.getCharCuisinier();
     modifieCaseDynamique(ligne, col, cuis);
   }
 
@@ -634,9 +572,4 @@ public class Plateau
     }
   }
 
-
-    public  boolean verifPosBurgerLigne (int lig, int col)               // Fonction pour vérifier si la position du burger est possible
-    {
-        return true;
-    }
  }

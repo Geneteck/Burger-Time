@@ -66,44 +66,7 @@ public class Burger
     this.Burger[lig][col] = c;
   }
 
-  //public boolean valideBurger()
-  //{
-  //  boolean verif = false;
-  //  int nbrPain = 0;
-  //  int nbrFromage = 0;
-  //  int nbrSteack = 0;
-
-  //  for(int i=0; i<this.getNbLigne(); i++)
-  //  {
-  //    for(int j=0; j<this.getNbColonne(); j++)
-  //    {
-  //    if( (i == 0 || i == 3) && this.getTabBurger(i, j) == AFF_PAIN )
-  //          nbrPain = nbrPain + 1;
-  //      else if ( i == 1 && this.getTabBurger(i, j) == AFF_FROMAGE)
-  //          nbrFromage = nbrFromage + 1;
-  //      else if (i == 2 && this.getTabBurger(i, j) == AFF_STEACK)
-  //          nbrSteack = nbrSteack + 1;
-  //    }
-  //  }
-  //  System.out.println(" nbSteack : "+nbrSteack +" nbrPain : "+nbrPain+" nbrFromage : "+ nbrFromage);
-  //  if(nbrPain == 6 && nbrFromage == 3 && nbrSteack == 3) verif=true;
-
-  //  return verif;
-  //}
-
-  // public void affichageBurger()
-  // {
-  //  for(int i=0; i<4; i++)
-  //  {
-  //    for(int j=0; j<3; j++)
-  //    {
-  //      System.out.print(getTabBurger(i, j));
-  //    }
-  //    System.out.print("\n");
-  // }
-  // }ffff
-  // Burger(int lig, int col), est le constructeur définit avec des paramètres
-
+  // Constructeurs de la classe par défaut
 
   public Burger(int lig, int colonne)
   {

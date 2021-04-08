@@ -1,49 +1,36 @@
 /*
     Projet Info4B - Burger Time
     Auteurs : Pinon Alexandre, Salaï Loïc
-
-    (Mettre à jour le numéro de version à chaque modification de Cuisinier)
-    Version : V.1.00
 */
 
 
 public class Cuisinier extends Thread
 {
-  private int ptVie; // Point de vie de l'entité
-  private int posLigne; // Correspond à la ligne actuel de cuisto
-  private int posColonne; // Correspond à la colonne actuel du cuisto
-  private int indicePos;  // Correspond à l'indice du cuisinier (calculé en fonction de ligne et de la colonne actuel)
-  private char CharCuisto;
+  // Déclaration des attributs de la classe Cuisinier
+
+  private int pv;                                                              // Indique le nombre de poits de vie d'un cuisnier
+  private int posLigne;                                                        // Correspond à la ligne actuel d'un Cuisinier
+  private int posColonne;                                                      // Correspond à la colonne actuel du Cuisinier
+  private char charCuis;
   private int Score;
 
-  // Acceseur Setter & Getter des attributs
+  // Méthodes d'accès
 
   // Renvoie les poits de vie du cuisto
-  public int getVie() { return this.ptVie; } // Renvoie les points de vie
-
-  public void setVie(int v) { this.ptVie = v; }
-
+  public int getVie() { return this.pv; }
+  public void setVie(int v) { this.pv = v; }
   public int getPosLigne(){ return this.posLigne; }
-
   public void setPosLigne(int lig) { this.posLigne = lig; }
-
   public int getPosColonne(){ return this.posColonne; }
-
   public void setPosColonne(int col) { this.posColonne = col; }
-
-  public void setIndicePos(int ind) { this.indicePos = ind;}
-
-  public int getIndicePos() { return this.indicePos; }
-
-  public void setCharCuisinier(char c) { this.CharCuisto = c;}
-
-  public char getCharCuisinier() { return this.CharCuisto;}
-
+  public void setCharCuis(char c) { this.charCuis = c;}
   public int getScore(){ return this.Score; }
-
   public void setScore(int score) { this.Score = score; }
 
-  public void ClearCuisier(Plateau p)
+  // Méthodes principales de la classe Cuisinier
+
+  // Méthode qui 
+  public void clrCuisinier(Plateau p)
   {
     char dyn[][] = p.getMapDynamic();
 
@@ -54,7 +41,8 @@ public class Cuisinier extends Thread
       p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
   }
 
-  public boolean RencontreMonstre(int ligne, int col)
+  // Méthode qui vérifie si le cuisinier à rencontrer/toucher un monstre
+  public boolean meetMonstre(int ligne, int col)
   {
     int ligneC = this.getPosLigne();
     int colC = this.getPosColonne();
@@ -65,7 +53,8 @@ public class Cuisinier extends Thread
        return false;
   }
 
-  public boolean PartieFinie()
+  // Méthode qui vérifie les points de vie restat d'un cuisinier
+  public boolean partieFinie()
   {
     if(this.getVie() < 1)
       return true;
@@ -73,16 +62,20 @@ public class Cuisinier extends Thread
       return false;
   }
 
-  public void Affichage() { System.out.print(" SCORE : "+this.getScore() + "\n                                                " + "Vie du cuisinier : "+ this.getVie()); }
-  // Méthode possible du cuisinier
-  // public void jetPoivre()
+  // Méthode qui affiche le score et les points de vies du joueur
+  public void afficheScorePv()
+  {
+    System.out.print(" SCORE : "+this.getScore() + "\n                                                    " + " PV Cuisinier "+ this.getVie());
+  }
 
+  // Constructeur de la classe Cuisinier
   public Cuisinier(int lig, int col)
   {
     setVie(3);
     setPosColonne(col);
     setPosLigne(lig);
-    setCharCuisinier('J');
+    setCharCuis('J');
     setScore(0);
   }
+
 }

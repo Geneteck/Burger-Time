@@ -13,8 +13,10 @@ class Interface
 
   public static void main(String[] args)
   {
-    Interface i = new Interface();
-    i.start();
+    try{
+      Interface i = new Interface();
+      i.start();
+    }catch (Exception e) { e.printStackTrace();}
   }
 
 
@@ -84,7 +86,7 @@ class Interface
   {
     Scanner sc = new Scanner(System.in);                                        // Pour la saisie du pseudo du joueur
     String pseudo;
- 
+
 
     for(int i=0; i<50; i++) { System.out.println(""); }
     int v = this.Menu1();                                                       // Affiche le menu principal du jeu
@@ -92,8 +94,9 @@ class Interface
     {
       System.out.println(" SAISISSEZ VOTRE PSEUDO ");
       pseudo = sc.next();
-      Game g = new Game(pseudo);
-      g.start();
+      try{
+        Game g = new Game(pseudo);
+      }catch (Exception e) { e.printStackTrace();}
     }
     else if (v == 2)
     {
@@ -124,7 +127,8 @@ class Interface
 
 
 
-  public Interface(){
-    this.ls = new LocalServ();
+  public Interface() throws Exception
+  {
+    // this.ls = new LocalServ();
   }
 }
