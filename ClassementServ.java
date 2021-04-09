@@ -12,8 +12,6 @@ class ClassementServ
   private ArrayList<String> lesPseudos;
   private ArrayList<Integer> lesScores;
 
-  
-
   // Méthodes d'accès
 
   public ArrayList<String> getLesPseudos() { return this.lesPseudos; }
@@ -79,88 +77,87 @@ class ClassementServ
     }
   }
 
-  // Il faut appeler le fichier s'il existe sinon on le crée
-  // S'il est déjà créer il faut récupérer un a un les pseudos du fichier concerner et les affecter dans getLesPseudos, de même pour lesScores avec son fichier propre
-  // d'une instance de classement de Serv
-  // Sinon on crée 2 fichiers, un pour les pseudos et un autre pour les scores
-  // scores.txt et pseudos.txt
-
   // Permet de lire le fichier score.txt et de concaténer les valeurs lu
-  public void lectureFichScore()
+  public void lectureFich()
   {
-     int i = 0;
+
+    // Ici on va lire le fichier score.txt et concaténer dans le tableau lesPseudos
+    try {
+          // Le fichier d'entrée
+          FileInputStream file = new FileInputStream("score.txt");
+          Scanner scanner = new Scanner(file);
+
+          //renvoie true s'il y a une autre ligne à lire
+          while(scanner.hasNextLine())
+          {
+            this.getLesScores().add(Integer.parseInt(scanner.nextLine()));
+          }
+          scanner.close();
+
+      }catch(Exception e) { e.getStackTrace(); }
+
+
+
+     // Ici on va lire le fichier pseudo.txt et concaténer dans le tableau lesPseudos
      try {
-       FileReader fichier = new FileReader("score.txt");
-       StreamTokenizer entree = new StreamTokenizer(fichier);
-       while(entree.nextToken() == StreamTokenizer.TT_NUMBER)
-       {
-         this.getLesScores().set(i, (int)entree.nval);
-         i++;
-       }
-       fichier.close();
+         // FileReader p = new FileReader("pseudo.txt");
+         FileInputStream file = new FileInputStream("pseudo.txt");
+         Scanner scanner2 = new Scanner(file);
+
+         //renvoie true s'il y a une autre ligne à lire
+         while(scanner2.hasNextLine())
+         {
+           this.getLesPseudos().add(scanner2.nextLine());
+         }
+         scanner2.close();
      }catch(Exception e) { e.getStackTrace(); }
   }
 
-  public void ecritFichScore()
+  // Permet d'écrire dans les fichier score.txt et pseudo.txt, les éléments des tableaux respectifs
+  public void ecritFich()
   {
+    // Ici on va écrire dans le fichier score.txt, les scores du tableau lesScores
     try
     {
-       FileWriter score;
-       score = new FileWriter("score.txt");
+       FileWriter s;
+       s = new FileWriter("score.txt");
        for(int i=0; i<this.getLesScores().size();i++ )
        {
          String str = this.getLesScores().get(i)+"\n";
-         score.write(str);
+         s.write(str);
        }
-       score.close();
+       s.close();
      }catch(Exception e) { e.getStackTrace(); }
+
+     // Ici on va écrire dans le fichier pseudo.txt, les pseudos du tableau lesPseudos
+     try
+     {
+        FileWriter p;
+        p = new FileWriter("pseudo.txt");
+        for(int i=0; i<this.getLesPseudos().size();i++ ) { p.write(this.getLesPseudos().get(i)+"\n"); }
+        p.close();
+      }catch(Exception e) { e.getStackTrace(); }
   }
 
-  public void lectureFichPseudo()
+  // Supprime les données actuelles des fichiers score.txt et pseudos.txt
+  public void clean()
   {
-     int i = 0;
-     try {
-       FileReader fichier = new FileReader("pseudo.txt");
-       StreamTokenizer entree = new StreamTokenizer(fichier);
-       while(entree.nextToken() == StreamTokenizer.TT_NUMBER)
-       {
-         this.getLesScores().set(i, (int)entree.nval);
-         i++;
-       }
-       fichier.close();
-     }catch(Exception e) { e.getStackTrace(); }
-  }
-
-  public void ecritFichScore()
-  {
+    // Ici on va effacer les données du fichier score.txt
     try
     {
-       FileWriter score;
-       score = new FileWriter("score.txt");
-       for(int i=0; i<this.getLesScores().size();i++ )
-       {
-         String str = this.getLesScores().get(i)+"\n";
-         score.write(str);
-       }
-       score.close();
+       PrintWriter writer = new PrintWriter("score.txt");
+       writer.print("");
+       writer.close();
      }catch(Exception e) { e.getStackTrace(); }
+
+     // Ici on va effacer les données du fichier pseudo.txt
+     try
+     {
+        PrintWriter writer = new PrintWriter("pseudo.txt");
+        writer.print("");
+        writer.close();
+      }catch(Exception e) { e.getStackTrace(); }
   }
-
-  public void clean(String namefichier)
-  {
-    try
-    {
-       FileWriter score;
-       score = new FileWriter("score.txt");
-       for(int i=0; i<this.getLesScores().size();i++ )
-       {
-         score.write("");
-       }
-       score.close();
-     }catch(Exception e) { e.getStackTrace(); }
-  }
-
-
 
   // Constructeurs de la classe ClassementServ
   public ClassementServ()
@@ -172,20 +169,8 @@ class ClassementServ
   // Main
   public static void main(String[] args) {
     ClassementServ classement = new ClassementServ();
-    classement.getLesPseudos().add("POPEY");
-    classement.getLesScores().add(550);
-    classement.getLesPseudos().add("MAX");
-    classement.getLesScores().add(70);
-    classement.getLesPseudos().add("ALEX");
-    classement.getLesScores().add(60);
-    classement.trie();
-    classement.afficheClassement();
 
-    classement.clean("score.txt");
-    classement.ecritFichScore();
-    classement.getLesScores().remove(0);
-    classement.getLesScores().remove(1);
-    classement.lectureFichScore();
+    classement.lectureFich();
     classement.afficheClassement();
   }
 }

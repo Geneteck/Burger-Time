@@ -33,70 +33,73 @@ public class Serveur extends Thread {
 
  public int lance() throws Exception
  {
-     Scanner sc = new Scanner(System.in);
-     System.out.println(" Choisir votre Pseudo");
-     String pseudo1 = sc.nextLine();
+     GameMulti game = new GameMulti();
+     //Scanner sc = new Scanner(System.in);
+     //System.out.println(" Choisir votre Pseudo");
+     //String pseudo1 = sc.nextLine();
      // Création du premier Joueur
 
-     this.j1 = new Joueur(pseudo1);
-     String str = this.sisr.readLine();                                           // Lecture du pseudo du 2ème joueur
-     this.j2 = new Joueur(str);
+     //Plateau p = new Plateau();
 
-     Cuisinier c1 = new Cuisinier(1, 14);
-     Cuisinier c2 = new Cuisinier(5, 45);
-     this.j1.setCuisinier(c1);
-     this.j2.setCuisinier(c2);
-     System.out.println(" Second joueur connecter !");
-     sisw.println(" Votre joueur "+j2.getPseudo() +" a ete ajoute a la partie ");                                                     // envoi d'un message
+     //this.j1 = new Joueur(pseudo1);
+     //String str = this.sisr.readLine();                                           // Lecture du pseudo du 2ème joueur
+     //this.j2 = new Joueur(str);
 
+     //Cuisinier c1 = new Cuisinier(p);
+     //Cuisinier c2 = new Cuisinier(p);
+     //this.j1.setCuisinier(c1);
+     //this.j2.setCuisinier(c2);
+     //System.out.println(" Second joueur connecter !");
+     //sisw.println(" Votre joueur "+j2.getPseudo() +" a ete ajoute a la partie ");                                                     // envoi d'un message
 
-     Plateau p = new Plateau();
-     Burger b1 = new Burger(1, 45);
-     Burger b2 = new Burger(2, 19);
-     Burger b3 = new Burger(4, 53);
+     //SimulationPartieMulti partie = new SimulationPartieMulti(5, p, c1, c2);
+     //partie.start();
 
-     p.addCuisinier(c1);
-     p.addCuisinier(c2);
-     p.Complete();
+     //Burger b1 = new Burger(1, 45);
+     //Burger b2 = new Burger(2, 19);
+     //Burger b3 = new Burger(4, 53);
 
-     p.addBurger(b1);
-     p.addBurger(b2);
-     p.addBurger(b3);
+     //p.addCuisinier(c1);
+     //p.addCuisinier(c2);
+     //p.Complete();
 
-     p.setTabBurger(0, b1);
-     p.setTabBurger(1, b2);
-     p.setTabBurger(2, b3);
+     //p.addBurger(b1);
+     //p.addBurger(b2);
+     //p.addBurger(b3);
+
+     //p.setTabBurger(0, b1);
+     //p.setTabBurger(1, b2);
+     //p.setTabBurger(2, b3);
 
      // Ajout de monstres dans le nouveau plateau dans lequel le joueur/cuisinier va jouer
-     Monstre m = new Monstre(1);
-     Monstre leMonstre;
-     char carac;
-     boolean verif;
-     m.spawnRandom(p);
-     while(c1.partieFinie() == false || c1.getScore() != 210)
-     {
-       sisw.println(" Deplace ton cuisinier");
-       p.affiche(c1);
-       p.deplaceCuisinier(c1);
-       str = this.sisr.readLine();
-       carac = str.charAt(0);
+     //Monstre m = new Monstre(1);
+     //Monstre leMonstre;
+     //char carac;
+     //m.spawnRandom(p);
+     //while(c1.partieFinie() == false)
+     //{
+       //sisw.println(" Deplace ton cuisinier");
+       //p.affiche(c1);
+       //p.deplaceCuisinier();
+       //str = this.sisr.readLine();
+       //carac = str.charAt(0);
 
+       //partie.toucheDeplace(carac);
 
-       p.deplaceCuisinier2(c2, carac);
+       //p.deplaceCuisinier2(carac);
 
-       for(int i = 0; i < m.getNbMonstre(); i++)
-       {
-         leMonstre = m.getMonstre(i);
-         leMonstre.deplaceMonstre(p, c1);
-       }
+       //for(int i = 0; i < m.getNbMonstre(); i++)
+       //{
+         //leMonstre = m.getMonstre(i);
+         //leMonstre.deplaceMonstre(p, c1);
+       //}
 
-       p.calcScore(c1);
-       System.out.println("Je suis passé la");
-       p.affiche(c1);
-     }
-     this.sisw.println("END");
-     System.out.println("END GAME, THE PLAYER IS DEAD !!");
-     return c1.getScore();
+       //p.calcScore(c1);
+       //p.affiche(c1);
+     //}
+     //this.sisw.println("END");
+     //System.out.println("END GAME, THE PLAYER IS DEAD !!");
+     //return c1.getScore();
  }
 
  public String fermer() throws Exception

@@ -80,7 +80,7 @@ public class Cuisinier extends Thread
     plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), this.getCharCuisinier());
   }
 
-  public void deplaceCuisinier2(Cuisinier cuisto, char touche)                  // Fonction qui permet de déplacer le cuisinier de la partie pour le client
+  public void deplaceCuisinier2(char touche)                  // Fonction qui permet de déplacer le cuisinier de la partie pour le client
   {
     this.clearCuisinier(this.plat);
 
@@ -144,7 +144,15 @@ public class Cuisinier extends Thread
   public boolean partieFinie()
   {
     if(this.getVie() < 1)
-      return true;
+      {
+        System.out.println("END GAME, THE PLAYER IS DEAD !!");
+        return true;
+      }
+    else if (this.getScore() <= 210)
+      {
+        System.out.println("END GAME, ALL BURGER IS READY!!");
+        return true;
+      }
     else
       return false;
   }
@@ -158,9 +166,9 @@ public class Cuisinier extends Thread
   // Méthode qui permet de faire apparaitre le cuisinier aleatoirement dans la map
   public void spawnCuisinier()
   {
-    char map[][] = this.plat.getMapStatic();
-    char bur[][] = this.plat.getDynamBurgeur();
-    char dyn[][] = this.plat.getMapDynamic();
+    char map[][] = this.tabMonstre.getMapStatic();
+    char bur[][] = this.tabMonstre.getDynamBurgeur();
+    char dyn[][] = this.tabMonstre.getMapDynamic();
 
     boolean valide = false;
     int col;
@@ -183,13 +191,14 @@ public class Cuisinier extends Thread
   }
 
   // Constructeur de la classe Cuisinier
-  public Cuisinier(int lig, int col)
+  public Cuisinier(int lig, int col, Plateau p)
   {
     setVie(3);
     setPosColonne(col);
     setPosLigne(lig);
     setCharCuis('J');
     setScore(0);
+    this.plat = p;
   }
 
   public Cuisinier(Plateau p)
