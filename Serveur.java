@@ -9,6 +9,9 @@ public class Serveur extends Thread {
    private ServerSocket s;
    private Socket soc;
 
+   private Joueur j1;
+   private Joueur j2;
+
 
 
   // Appeler quand on choisis dans la section multijoueur : "Créer une partie"
@@ -36,13 +39,14 @@ public class Serveur extends Thread {
      String pseudo1 = sc.nextLine();
      // Création du premier Joueur
 
-     Joueur j1 = new Joueur(pseudo1);
+     this.j1 = new Joueur(pseudo1);
      String str = this.sisr.readLine();                                           // Lecture du pseudo du 2ème joueur
-     Joueur j2 = new Joueur(str);
+     this.j2 = new Joueur(str);
+
      Cuisinier c1 = new Cuisinier(1, 14);
      Cuisinier c2 = new Cuisinier(5, 45);
-     j1.setCuisinier(c1);
-     j2.setCuisinier(c2);
+     this.j1.setCuisinier(c1);
+     this.j2.setCuisinier(c2);
      System.out.println(" Second joueur connecter !");
      sisw.println(" Votre joueur "+j2.getPseudo() +" a ete ajoute a la partie ");                                                     // envoi d'un message
 
@@ -70,7 +74,7 @@ public class Serveur extends Thread {
      char carac;
      boolean verif;
      m.spawnRandom(p);
-     while(c1.partieFinie() == false)
+     while(c1.partieFinie() == false || c1.getScore() != 210)
      {
        sisw.println(" Deplace ton cuisinier");
        p.affiche(c1);
@@ -91,17 +95,18 @@ public class Serveur extends Thread {
        System.out.println("Je suis passé la");
        p.affiche(c1);
      }
-     this.sisw.println("Vous avez gagné");
+     this.sisw.println("END");
      System.out.println("END GAME, THE PLAYER IS DEAD !!");
-
-     this.fermer();
+     return c1.getScore();
  }
 
- public void fermer() throws Exception
+ public String fermer() throws Exception
  {
+   String msg = this.j1.getPseudo()+" , "+this.j2.getPseudo();
    this.sisr.close();
    this.sisw.close();
    this.soc.close();
+   return msg;
  }
 
 }

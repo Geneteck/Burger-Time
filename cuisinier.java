@@ -66,7 +66,7 @@ public class Cuisinier extends Thread
   // Méthode qui affiche le score et les points de vies du joueur
   public void afficheScorePv()
   {
-    System.out.print(" SCORE : "+this.getScore() + "\n                                              " + " PV Cuisinier "+ this.getVie());
+    System.out.print(" SCORE : "+this.getScore() + "\n                                             " + " PV Cuisinier : "+ this.getVie());
   }
 
   // Constructeur de la classe Cuisinier

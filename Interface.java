@@ -5,24 +5,38 @@ import java.io.*;
 
 class Interface
 {
+  // Déclaration des attributs
+
+  private int scoreFinal;                                                              // Variable qui contient le score à stocker dans le serveur
+  private String pseudoS;                                                       // Variable qui stocke les pseudos des joueurs
+
+  // Méthodes d'accès
+
+  public int getScoreFinal()
+
   String tiret = "------------------------------------------------------------------------------------";
   String tabu1 = "                            ";                                // 12 tabulations
   String tabu2 = "              ";                                              // 7 tabulations
 
+
+  // Main
   public static void main(String[] args)
   {
       Interface i = new Interface();
       i.start();
   }
 
+  // Méthode principales de classe Interface
 
-  public int Menu1()                                                           // Interface appeler au lancement du programme
+  // Le menu1 est affiche le menu principal du jeu lorsque le programme est lancer
+  public int Menu1()
   {
     int choix = 0;
     Scanner sc = new Scanner(System.in);
 
-    System.out.println(tiret+"\n"+tiret+"\n");                                  // Affiche un max de tirets
+    System.out.println(tiret+"\n"+tiret+"\n");
     System.out.println(this.tabu1+"BIENVENUE DANS BURGER TIME !\n");
+    System.out.println(tiret+"\n"+tiret+"\n");
     System.out.println("Choisissez un mode : \n");
     System.out.println(this.tabu2+" 1 - Solo   ");
     System.out.println(this.tabu2+" 2 - Coop ");                         // lance une partie à deux joueurs
@@ -38,47 +52,71 @@ class Interface
     return choix;
   }
 
-  public int Menu2()                                                            // Appeler si l'utilisateur choisir de jouer en multi, il aura alors le choix du mode multijoueur
+  // La méthode Menu3 est appeler quand l'utilisateur à choisi s'il souhaite créer ou rejoindre une partie
+  public int Menu2()
   {
     int choix = 0;
     Scanner sc = new Scanner(System.in);
 
-    System.out.println(tiret+"\n"+tiret+"\n");                                  // Affiche un max de tirets
+    System.out.println(tiret+"\n"+tiret+"\n");
     System.out.println(this.tabu1+" Choisissez une action \n");
     System.out.println(this.tabu2+" 1 - Creer une partie (2 Joueurs) ");
     System.out.println(this.tabu2+" 2 - Rejoindre une partie (2 Joueurs) ");
     System.out.println(this.tabu2+" 3 - Retour ");
 
+    // On récupère le choix de l'utilisateur et on la retourne
     System.out.println("Votre choix :");
     do {
       choix = sc.nextInt();
-    } while(choix<0 && choix>2);
+    } while(choix<0 && choix>3);
 
     System.out.println(tiret+"\n"+tiret+"\n");
     return choix;
   }
 
-  public void Menu3(int val)                                                   // En fonction de la valeur du paramètre val, le switch va appeler les élements nécessaire au mode de jeu sélectionner
+  // La méthode Menu3 est appeler quand l'utilisateur à choisi s'il souhaite créer ou rejoindre une partie
+  public void Menu3(int val)
   {
-      int val = 0;
-      boolean verif;
+      Scanner sc = new Scanner(System.in);
+
+      for(int i=0; i<50; i++) { System.out.println(""); }
       System.out.println(tiret+"\n"+tiret+"\n");
+
+      // Si le choix est de créer une partie, alors l'utilisateur lance un serveur
       if(val == 1)
       {
         try{
-          Serveur s = new Serveur();
-          val = s.lance();
-          S.fermer();
+          Serveur s = new Serveur();                                            // Création du serveur
+          this.scoreFinal = s.lance();
+          this.pseudoS = s.fermer();
+          s.fermer();
         }catch(Exception e) {	e.printStackTrace(); }
-
       }
+
+      // Si le choix est de rejoindre une partie, alors l'utilisateur lance un client
       if( val == 2)
       {
         try
         {
-          Client c = new Client(8080);
+          Client c = new Client(8080);                                          // Création du client
         }catch(Exception e) {	e.printStackTrace(); }
       }
+
+      for(int i=0; i<50; i++) { System.out.println(""); }
+      System.out.println(tiret+"\n"+tiret+"\n");
+
+      // Affichage de fin de mode jeu, afficher pour le serveur et le client
+      System.out.println(this.tabu1+" Voulez-vous revenir au menu principal ? \n ");
+      System.out.println(this.tabu2+" 1 - Oui  ");
+      System.out.println(this.tabu2+" 2 - Non (Quitter le programme) \n ");
+
+      System.out.print(this.tabu2+" CHOIX : ");
+      // En fonction du choix, soit l'utilisateur est rediriger au menu principal, soit le programme(ou l'instance d'interface ?) se ferme
+      do {
+        if(sc.nextInt() == 1)  this.start();
+        else { System.exit(0); }
+      } while(sc.nextInt()<0 && sc.nextInt()>2);
+
       System.out.println(tiret+"\n"+tiret+"\n");
   }
 

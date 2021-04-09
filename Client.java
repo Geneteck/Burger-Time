@@ -49,6 +49,8 @@ public void lance() throws Exception
 		this.fermer();
 }
 
+
+
 public void fermer() throws Exception
 {
 	this.sisr.close();
