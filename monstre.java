@@ -139,8 +139,8 @@ public class Monstre
     }
 
   // Méthode pour disposer de manière aléatoire les monstres (au préalable déjà crée), sur un plateau
-  public void spawnRandom()
-  {
+ public void spawnRandom()
+ {
    for(int i = 0; i < this.getNbMonstre(); i++)
    {
      char map[][] = this.plat.getMapStatic();

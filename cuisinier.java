@@ -35,7 +35,7 @@ public class Cuisinier extends Thread
 
   // Méthodes principales de la classe Cuisinier
 
-  public synchronized void DeplacementCuisinier()                               // Fonction qui permet de déplacer le cuisinier de la partie
+  public void deplaceCuisinier()                               // Fonction qui permet de déplacer le cuisinier de la partie
   {
     Scanner sc = new Scanner(System.in);      // Create a Scanner object
     System.out.println("Deplacer le cuisinier :");
@@ -76,7 +76,6 @@ public class Cuisinier extends Thread
       else
         System.out.println("Mauvaise touche, pour rappel Z pour monter, S pour descendre, Q pour aller a gauche, et S pour descendre !");
     }
-    notifyAll();
     plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), this.getCharCuisinier());
   }
 
@@ -112,7 +111,7 @@ public class Cuisinier extends Thread
         verif = true;
       }
 
-      plat.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
+      plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), this.getCharCuisinier());
     }
   }
 
@@ -148,7 +147,7 @@ public class Cuisinier extends Thread
         System.out.println("END GAME, THE PLAYER IS DEAD !!");
         return true;
       }
-    else if (this.getScore() <= 210)
+    else if (this.getScore() == 210)
       {
         System.out.println("END GAME, ALL BURGER IS READY!!");
         return true;
@@ -166,9 +165,9 @@ public class Cuisinier extends Thread
   // Méthode qui permet de faire apparaitre le cuisinier aleatoirement dans la map
   public void spawnCuisinier()
   {
-    char map[][] = this.tabMonstre.getMapStatic();
-    char bur[][] = this.tabMonstre.getDynamBurgeur();
-    char dyn[][] = this.tabMonstre.getMapDynamic();
+    char map[][] = this.plat.getMapStatic();
+    char bur[][] = this.plat.getDynamBurgeur();
+    char dyn[][] = this.plat.getMapDynamic();
 
     boolean valide = false;
     int col;
@@ -178,8 +177,6 @@ public class Cuisinier extends Thread
     {
       col = (int)(Math.random()*this.plat.getNbCol());
       lig = (int)(Math.random()*this.plat.getNbLigne());
-      System.out.println(col);
-      System.out.println(lig);
 
       if( this.plat.getCharat(map, lig, col) == this.plat.AFF_SOL && plat.getCharat(dyn, lig, col) == this.plat.AFF_VIDE && plat.getCharat(bur, lig, col) == this.plat.AFF_VIDE)
         {
@@ -204,8 +201,11 @@ public class Cuisinier extends Thread
   public Cuisinier(Plateau p)
   {
     setVie(3);
+    setPosLigne(1);
+    setPosColonne(1);
     setCharCuis('J');
     setScore(0);
     this.plat = p;
   }
+
 }

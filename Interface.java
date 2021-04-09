@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.util.*;
 import java.io.*;
 
+package tmp;
+
 class Interface
 {
   // Déclaration des attributs
@@ -119,7 +121,6 @@ class Interface
 
       System.out.println(tiret+"\n"+tiret+"\n");
   }
-
 
 
   public void start()
