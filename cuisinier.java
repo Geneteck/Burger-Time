@@ -3,6 +3,10 @@
     Auteurs : Pinon Alexandre, Salaï Loïc
 */
 
+import java.awt.*;
+import javax.swing.*;
+import java.util.*;
+import java.io.*;
 
 public class Cuisinier extends Thread
 {
@@ -13,6 +17,7 @@ public class Cuisinier extends Thread
   private int posColonne;                                                      // Correspond à la colonne actuel du Cuisinier
   private char charCuis;
   private int Score;
+  private Plateau plat;
 
   // Méthodes d'accès
 
@@ -29,6 +34,87 @@ public class Cuisinier extends Thread
   public void setScore(int score) { this.Score = score; }
 
   // Méthodes principales de la classe Cuisinier
+
+  public synchronized void DeplacementCuisinier()                               // Fonction qui permet de déplacer le cuisinier de la partie
+  {
+    Scanner sc = new Scanner(System.in);      // Create a Scanner object
+    System.out.println("Deplacer le cuisinier :");
+
+    this.clearCuisinier(this.plat);
+
+    boolean verif = false;
+
+    while( verif == false)
+    {
+      char touche = sc.next().charAt(0);  // Read user input
+
+      if(touche == 'z' && plat.valide(touche, this.getPosLigne(),this.getPosColonne()))
+      {
+        this.setPosLigne(this.getPosLigne()-1);
+        verif = true;
+      }
+
+      else if(touche == 'q' && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
+      {
+        plat.tomber(touche, this.getPosLigne(), this.getPosColonne());
+        this.setPosColonne(this.getPosColonne()-1);
+        verif = true;
+      }
+      else if(touche == 'd'  && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
+      {
+        plat.tomber(touche, this.getPosLigne(), this.getPosColonne());
+        this.setPosColonne(this.getPosColonne()+1);
+        verif = true;
+      }
+
+      else if(touche == 's'  && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
+      {
+        this.setPosLigne(this.getPosLigne()+1);
+        verif = true;
+      }
+
+      else
+        System.out.println("Mauvaise touche, pour rappel Z pour monter, S pour descendre, Q pour aller a gauche, et S pour descendre !");
+    }
+    notifyAll();
+    plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), this.getCharCuisinier());
+  }
+
+  public void deplaceCuisinier2(Cuisinier cuisto, char touche)                  // Fonction qui permet de déplacer le cuisinier de la partie pour le client
+  {
+    this.clearCuisinier(this.plat);
+
+    boolean verif = false;
+    while( verif == false )
+    {
+      if(touche == 'z' && plat.valide(touche, this.getPosLigne(),this.getPosColonne()))
+      {
+        this.setPosLigne(this.getPosLigne()-1);
+        verif = true;
+      }
+
+      else if(touche == 'q' && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
+      {
+        plat.tomber(touche, this.getPosLigne(), this.getPosColonne());
+        this.setPosColonne(this.getPosColonne()-1);
+        verif = true;
+      }
+      else if(touche == 'd'  && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
+      {
+        plat.tomber(touche, this.getPosLigne(), this.getPosColonne());
+        this.setPosColonne(this.getPosColonne()+1);
+        verif = true;
+      }
+
+      else if(touche == 's'  && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
+      {
+        this.setPosLigne(this.getPosLigne()+1);
+        verif = true;
+      }
+
+      plat.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
+    }
+  }
 
   // Méthode qui
   public void clearCuisinier(Plateau p)
@@ -69,6 +155,33 @@ public class Cuisinier extends Thread
     System.out.print(" SCORE : "+this.getScore() + "\n                                             " + " PV Cuisinier : "+ this.getVie());
   }
 
+  // Méthode qui permet de faire apparaitre le cuisinier aleatoirement dans la map
+  public void spawnCuisinier()
+  {
+    char map[][] = this.plat.getMapStatic();
+    char bur[][] = this.plat.getDynamBurgeur();
+    char dyn[][] = this.plat.getMapDynamic();
+
+    boolean valide = false;
+    int col;
+    int lig;
+
+    while(valide == false)
+    {
+      col = (int)(Math.random()*this.plat.getNbCol());
+      lig = (int)(Math.random()*this.plat.getNbLigne());
+      System.out.println(col);
+      System.out.println(lig);
+
+      if( this.plat.getCharat(map, lig, col) == this.plat.AFF_SOL && plat.getCharat(dyn, lig, col) == this.plat.AFF_VIDE && plat.getCharat(bur, lig, col) == this.plat.AFF_VIDE)
+        {
+           this.setPosLigne(lig);
+           this.setPosColonne(col);
+           valide = true;
+        }
+    }
+  }
+
   // Constructeur de la classe Cuisinier
   public Cuisinier(int lig, int col)
   {
@@ -79,4 +192,11 @@ public class Cuisinier extends Thread
     setScore(0);
   }
 
+  public Cuisinier(Plateau p)
+  {
+    setVie(3);
+    setCharCuis('J');
+    setScore(0);
+    this.plat = p;
+  }
 }

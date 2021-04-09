@@ -13,7 +13,6 @@ public class Serveur extends Thread {
    private Joueur j2;
 
 
-
   // Appeler quand on choisis dans la section multijoueur : "Créer une partie"
   public Serveur() throws Exception
   {

@@ -7,44 +7,70 @@ class Game{
   public void setBurger() { this.tabBurger = new Burger[2];}
 
 
-    public Game(String pseudo)
-    {
-      setJoueur(pseudo);
-      Cuisinier c = new Cuisinier(1, 14);
-      this.j.setCuisinier(c);
+  public Game(String pseudo)
+  {
+    Plateau p = new Plateau();
 
-      Plateau p = new Plateau();
+    setJoueur(pseudo);
+    Cuisinier c = new Cuisinier(p);
+    this.j.setCuisinier(c);
+
+    SimulationPartie partie = new SimulationPartie(5, p, c);
+    partie.start();
+
+    System.out.println("END GAME, THE PLAYER IS DEAD !!");
+  }
+
+  class SimulationPartie extends Thread
+  {
+     private int nbMonstre;
+     private Plateau plat;
+     private Cuisinier cuis;
+
+     public SimulationPartie(int nb, Plateau p, Cuisinier c)
+     {
+       this.nbMonstre = nb;
+       this.plat = p;
+       this.cuis = c;
+     }
+
+     public void run()
+     {
       Burger b1 = new Burger(1, 45);
       Burger b2 = new Burger(2, 19);
       Burger b3 = new Burger(4, 53);
 
-      p.addCuisinier(c);
-      p.Complete();
+      this.plat.addCuisinier(this.cuis);
+      this.plat.Complete();
 
-      p.addBurger(b1);
-      p.addBurger(b2);
-      p.addBurger(b3);
+      this.plat.addBurger(b1);
+      this.plat.addBurger(b2);
+      this.plat.addBurger(b3);
 
-      p.setTabBurger(0, b1);
-      p.setTabBurger(1, b2);
-      p.setTabBurger(2, b3);
+      this.plat.setTabBurger(0, b1);
+      this.plat.setTabBurger(1, b2);
+      this.plat.setTabBurger(2, b3);
+
+      this.cuis.spawnCuisinier();
 
       // Ajout de monstres dans le nouveau plateau dans lequel le joueur/cuisinier va jouer
-      Monstre m = new Monstre(1);
-      Monstre leMonstre;
-      m.spawnRandom(p);
-      while(c.partieFinie() == false)
-      {
-        p.deplaceCuisinier(c);
-        p.calcScore(c);
+      Monstre m = new Monstre(this.nbMonstre, this.plat, this.cuis);
 
-        for(int i = 0; i < m.getNbMonstre(); i++)
-        {
-          leMonstre = m.getMonstre(i);
-          leMonstre.deplaceMonstre(p, c);
-        }
-        p.affiche(c);
+      MouvementMonstre mouv1 = new MouvementMonstre(m, plat, cuis);
+      mouv1.start();
+
+      this.plat.affiche(this.cuis);
+
+      while(this.cuis.partieFinie() == false)
+      {
+        this.cuis.DeplacementCuisinier();
+
+        //on dit au thread que le cuisinier a bouger et qu'il peuvement bouger a leurs tours
+        mouv1.notif();
+
+        this.plat.calcScore(this.cuis);
+        this.plat.affiche(this.cuis);
       }
-      System.out.println("END GAME, THE PLAYER IS DEAD !!");
+    }
   }
 }

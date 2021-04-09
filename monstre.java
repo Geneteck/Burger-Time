@@ -3,7 +3,7 @@
     Auteurs : Pinon Alexandre, Salaï Loïc
 */
 
-public class Monstre extends Thread
+public class Monstre
 {
   // Déclaration des attributs de la classe Monstre
 
@@ -13,13 +13,8 @@ public class Monstre extends Thread
   private int posColonne;                                                      // Correspond à la colonne actuel d'un monstre
   private char charMonstre;                                                   // Variable qui contient le caractère d'un monstre : permet de savoir de quel type de monstre il s'agit
   private Monstre tabMonstre[];                                                // Structure qui contient l'ensemble des monstres crée lors d'une partie
-
-
-  // Permet les vérifications dans la méthode valideDep
-
-  char AFF_SOL = '_';
-  char AFF_ECHELLE = '#';
-  char AFF_VIDE = ' ';
+  private Plateau plat;
+  private Cuisinier cuis;
 
   // Méthode d'accès
 
@@ -47,7 +42,7 @@ public class Monstre extends Thread
         // Vérification à gauche
         if( val == 0 && col != 0)
         {
-          if( (p.getCharat(tab, lig, col-1) == AFF_SOL || p.getCharat(tab, lig, col-1) == AFF_ECHELLE) && (p.getCharat(dyn, lig, col-1) == 'J' || p.getCharat(dyn, lig, col-1) == AFF_VIDE) )
+          if( (p.getCharat(tab, lig, col-1) == this.plat.AFF_SOL || p.getCharat(tab, lig, col-1) == this.plat.AFF_ECHELLE) && (p.getCharat(dyn, lig, col-1) == 'J' || p.getCharat(dyn, lig, col-1) == this.plat.AFF_VIDE) )
             return true;
           else
             return false;
@@ -56,7 +51,7 @@ public class Monstre extends Thread
         // Vérification à droite
         if( val == 1 && col != p.getNbCol()-2)
         {
-          if ( (p.getCharat(tab, lig, col+1) == AFF_SOL || p.getCharat(tab, lig, col+1) == AFF_ECHELLE) && (p.getCharat(dyn, lig, col+1) == 'J' || p.getCharat(dyn, lig, col+1) == AFF_VIDE) )
+          if ( (p.getCharat(tab, lig, col+1) == this.plat.AFF_SOL || p.getCharat(tab, lig, col+1) == this.plat.AFF_ECHELLE) && (p.getCharat(dyn, lig, col+1) == 'J' || p.getCharat(dyn, lig, col+1) == this.plat.AFF_VIDE) )
             return true;
           else
             return false;
@@ -65,7 +60,7 @@ public class Monstre extends Thread
         // Vérification en haut
         if( val == 2 && lig != 0)
         {
-          if ( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig-1, col) == AFF_ECHELLE && (p.getCharat(dyn, lig-1, col) == 'J' || p.getCharat(dyn, lig-1, col) == AFF_VIDE) )
+          if ( p.getCharat(tab, lig, col) == this.plat.AFF_ECHELLE && p.getCharat(tab, lig-1, col) == this.plat.AFF_ECHELLE && (p.getCharat(dyn, lig-1, col) == 'J' || p.getCharat(dyn, lig-1, col) == this.plat.AFF_VIDE) )
             return true;
           else
             return false;
@@ -74,7 +69,7 @@ public class Monstre extends Thread
         // Vérification en bas
         if( val == 3 && lig != p.getNbLigne()-2)
         {
-           if( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig+1, col) == AFF_ECHELLE && (p.getCharat(dyn, lig+1, col) == 'J' || p.getCharat(dyn, lig+1, col) == AFF_VIDE) )
+           if( p.getCharat(tab, lig, col) == this.plat.AFF_ECHELLE && p.getCharat(tab, lig+1, col) == this.plat.AFF_ECHELLE && (p.getCharat(dyn, lig+1, col) == 'J' || p.getCharat(dyn, lig+1, col) == this.plat.AFF_VIDE) )
              return true;
            else
              return false;
@@ -89,12 +84,13 @@ public class Monstre extends Thread
   {
         int deplacement;
         boolean valide = true;
+        int pasBoucleInfinie = 0;
 
         while(valide)
         {
-          //p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
           this.clearMonstre(p);
           deplacement = (int)(Math.random()*4);
+          pasBoucleInfinie++;
 
           switch(deplacement)
           {
@@ -137,51 +133,49 @@ public class Monstre extends Thread
                 break;
           }
 
-          if(c.meetMonstre(this.getPosLigne(), this.getPosColonne()))
-            c.setVie(c.getVie()-1);
+          if(pasBoucleInfinie > 50)
+            valide = false;
       }
     }
 
   // Méthode pour disposer de manière aléatoire les monstres (au préalable déjà crée), sur un plateau
-  public void spawnRandom(Plateau p)
+  public void spawnRandom()
   {
    for(int i = 0; i < this.getNbMonstre(); i++)
    {
-     char map[][] = p.getMapStatic();
-     char bur[][] = p.getDynamBurgeur();
-     char dyn[][] = p.getMapDynamic();
+     char map[][] = this.plat.getMapStatic();
+     char dyn[][] = this.plat.getMapDynamic();
 
      boolean valide = false;
 
      while(valide == false)
      {
-       int col = (int)(Math.random()*p.getNbCol());
-       int lig = (int)(Math.random()*p.getNbLigne());
-
+       int col = (int)(Math.random()*this.plat.getNbCol());
+       int lig = (int)(Math.random()*this.plat.getNbLigne());
 
        int x = (int)(Math.random()*3);
 
-       if( p.getCharat(map, lig, col) == AFF_SOL && p.getCharat(dyn, lig, col) == AFF_VIDE )
+       if( this.plat.getCharat(map, lig, col) == this.plat.AFF_SOL && this.plat.getCharat(dyn, lig, col) == this.plat.AFF_VIDE )
          {
            switch (x)
            {
              case 0:
               {
-                this.tabMonstre[i] = new Oeuf(lig, col);
+                this.tabMonstre[i] = new Oeuf(lig, col, plat, cuis);
                 valide = true;
                 break;
               }
 
               case 1:
               {
-                this.tabMonstre[i] = new Saucisse(lig, col);
+                this.tabMonstre[i] = new Saucisse(lig, col, plat, cuis);
                 valide = true;
                 break;
               }
 
               case 2:
               {
-                this.tabMonstre[i] = new Cornichon(lig, col);
+                this.tabMonstre[i] = new Cornichon(lig, col, plat, cuis);
                 valide = true;
                 break;
               }
@@ -202,21 +196,20 @@ public class Monstre extends Thread
      p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
  }
 
- public Monstre(int nb)
+ public Monstre(int nb, Plateau plat, Cuisinier c)
  {
    setNbMonstre(nb);
    this.tabMonstre = new Monstre[nb];
+   this.plat = plat;
+   this.cuis = c;
  }
-
-  public static void main(char[] args)
-  {}
 }
 
 class Oeuf extends Monstre
 {
-  public Oeuf(int ligne, int col)
+  public Oeuf(int ligne, int col, Plateau plat, Cuisinier c)
   {
-    super(1);
+    super(1, plat, c);
     setPosLigne(ligne);
     setPosColonne(col);
     setCharMonstre('O');
@@ -225,9 +218,9 @@ class Oeuf extends Monstre
 
 class Saucisse extends Monstre
 {
-  public Saucisse(int ligne, int col)
+  public Saucisse(int ligne, int col, Plateau plat, Cuisinier c)
   {
-    super(1);
+    super(1, plat, c);
     setPosLigne(ligne);
     setPosColonne(col);
     setCharMonstre('S');
@@ -236,11 +229,48 @@ class Saucisse extends Monstre
 
 class Cornichon extends Monstre
 {
-  public Cornichon(int ligne, int col)
+  public Cornichon(int ligne, int col, Plateau plat, Cuisinier c)
   {
-    super(1);
+    super(1, plat, c);
     setPosLigne(ligne);
     setPosColonne(col);
     setCharMonstre('C');
+  }
+}
+
+class MouvementMonstre extends Thread
+{
+  private Monstre m;
+  private Plateau plat;
+  private Cuisinier cuis;
+
+  public MouvementMonstre(Monstre m, Plateau p, Cuisinier c){
+   this.m = m;
+   this.plat = p;
+   this.cuis = c;
+   m.spawnRandom();
+  }
+
+  public synchronized void run(){
+    Monstre monstre;
+    while(this.cuis.partieFinie() == false)
+    {
+      for(int j = 0; j < m.getNbMonstre(); j++)
+      {
+        monstre = m.getMonstre(j);
+        monstre.deplaceMonstre(this.plat, this.cuis);
+
+        if(cuis.meetMonstre(monstre.getPosLigne(), monstre.getPosColonne()))
+          cuis.setVie(cuis.getVie()-1);
+      }
+
+      try{
+       wait();
+      }catch(InterruptedException e){e.printStackTrace();}
+    }
+  }
+
+  public synchronized void notif(){
+    notifyAll();
   }
 }

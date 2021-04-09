@@ -99,91 +99,6 @@ public class Plateau
     return verif;
   }
 
-  public void deplaceCuisinier(Cuisinier cuisto)              // Fonction qui permet de déplacer le cuisinier de la partie
-  {
-    int t = 0;
-    Scanner sc = new Scanner(System.in);      // Create a Scanner object
-    System.out.println("Deplacer le cuisinier :");
-
-    //this.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), " ");
-    cuisto.clearCuisinier(this);
-
-    boolean verif = false;
-
-    while( verif == false)
-    {
-      char touche = sc.next().charAt(0);  // Read user input
-
-      if(touche == 'z' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
-      {
-        cuisto.setPosLigne(cuisto.getPosLigne()-1);
-        verif = true;
-      }
-
-      else if(touche == 'q' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
-      {
-        this.tomber(touche, cuisto.getPosLigne(), cuisto.getPosColonne());
-        cuisto.setPosColonne(cuisto.getPosColonne()-1);
-        verif = true;
-      }
-      else if(touche == 'd'  && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
-      {
-        this.tomber(touche, cuisto.getPosLigne(), cuisto.getPosColonne());
-        cuisto.setPosColonne(cuisto.getPosColonne()+1);
-        verif = true;
-      }
-
-      else if(touche == 's'  && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
-      {
-        cuisto.setPosLigne(cuisto.getPosLigne()+1);
-        verif = true;
-      }
-
-      else
-        System.out.println("Mauvaise touche, pour rappel Z pour monter, S pour descendre, Q pour aller a gauche, et S pour descendre !");
-    }
-    this.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
-  }
-
-  public void deplaceCuisinier2(Cuisinier cuisto, char touche)              // Fonction qui permet de déplacer le cuisinier de la partie
-  {
-    int t = 0;
-
-    //this.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), " ");
-    cuisto.clearCuisinier(this);
-
-    boolean verif = false;
-    while( verif == false )
-    {
-      if(touche == 'z' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
-      {
-        cuisto.setPosLigne(cuisto.getPosLigne()-1);
-        verif = true;
-      }
-
-      else if(touche == 'q' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
-      {
-        this.tomber(touche, cuisto.getPosLigne(), cuisto.getPosColonne());
-        cuisto.setPosColonne(cuisto.getPosColonne()-1);
-        verif = true;
-      }
-      else if(touche == 'd'  && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
-      {
-        this.tomber(touche, cuisto.getPosLigne(), cuisto.getPosColonne());
-        cuisto.setPosColonne(cuisto.getPosColonne()+1);
-        verif = true;
-      }
-
-      else if(touche == 's'  && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
-      {
-        cuisto.setPosLigne(cuisto.getPosLigne()+1);
-        verif = true;
-      }
-
-      this.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
-    }
-  }
-
   public void tomber(char c, int lig, int col)
   {
       int ligne = lig;
@@ -477,6 +392,8 @@ public class Plateau
     {
       for(int j=0; j<=getNbCol()+1; j++)
       {
+        modifieCaseDynamiqueBurger(i, j, AFF_VIDE); //map du burger mis par défaut a vide
+
         if(i == 0 || j == 0 || i == getNbLigne()+1 || j == getNbCol()+1) modifieCaseStatic(i, j, AFF_VIDE);
         else if ( i == 1 && ( j > 20 && j < 50))
         {
@@ -680,6 +597,4 @@ public class Plateau
       lig++;
     }
   }
-
-
 }

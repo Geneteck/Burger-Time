@@ -7,12 +7,12 @@ class Interface
 {
   // Déclaration des attributs
 
-  private int scoreFinal;                                                              // Variable qui contient le score à stocker dans le serveur
+  private int scoreFinal;                                                       // Variable qui contient le score à stocker dans le serveur
   private String pseudoS;                                                       // Variable qui stocke les pseudos des joueurs
 
   // Méthodes d'accès
 
-  public int getScoreFinal()
+  public int getScoreFinal() { return this.scoreFinal; }
 
   String tiret = "------------------------------------------------------------------------------------";
   String tabu1 = "                            ";                                // 12 tabulations
@@ -39,8 +39,8 @@ class Interface
     System.out.println(tiret+"\n"+tiret+"\n");
     System.out.println("Choisissez un mode : \n");
     System.out.println(this.tabu2+" 1 - Solo   ");
-    System.out.println(this.tabu2+" 2 - Coop ");                         // lance une partie à deux joueurs
-    System.out.println(this.tabu2+" 3 - Classement ");                        // Réseaux avec le score des meilleurs joueurs + type (solo ou local)
+    System.out.println(this.tabu2+" 2 - Coop ");                                // lance une partie à deux joueurs
+    System.out.println(this.tabu2+" 3 - Classement ");                          // Réseaux avec le score des meilleurs joueurs + type (solo ou local)
     System.out.println(this.tabu2+" 4 - Touche du jeux \n");
 
     System.out.println("Votre choix :");
@@ -163,12 +163,5 @@ class Interface
       this.start();
     }
                                                                                 // Pour la partie serveur avec la liste des meilleurs joueurs et leurs scores
-  }
-
-
-
-  public Interface()
-  {
-
   }
 }

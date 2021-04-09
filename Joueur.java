@@ -10,10 +10,6 @@ class Joueur
     private int score;
     private Cuisinier cuisto;
 
-    String tiret = "------------------------------------------------------------------------------------";
-    String tabu1 = "                      ";         // 12 tabulations
-    String tabu2 = "              ";
-
     // Méthodes d'accès
 
     public String getPseudo() { return this.pseudo; }
@@ -29,5 +25,4 @@ class Joueur
       this.pseudo = pseudo;
       this.score = 0;
     }
-
 }
