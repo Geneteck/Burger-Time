@@ -11,7 +11,7 @@ public class Monstre extends Thread
   private int indicePos;                                                       // Indice d'un monstre sur un plateau
   private int posLigne;                                                        // Correspond à la ligne actuel d'un monstre
   private int posColonne;                                                      // Correspond à la colonne actuel d'un monstre
-  private String strMonstre;                                                   // Variable qui contient le caractère d'un monstre : permet de savoir de quel type de monstre il s'agit
+  private char charMonstre;                                                   // Variable qui contient le caractère d'un monstre : permet de savoir de quel type de monstre il s'agit
   private Monstre tabMonstre[];                                                // Structure qui contient l'ensemble des monstres crée lors d'une partie
 
 
@@ -19,7 +19,7 @@ public class Monstre extends Thread
 
   char AFF_SOL = '_';
   char AFF_ECHELLE = '#';
-  String AFF_VIDE = " ";
+  char AFF_VIDE = ' ';
 
   // Méthode d'accès
 
@@ -29,8 +29,8 @@ public class Monstre extends Thread
   public void setPosColonne(int col) {  this.posColonne = col; }
   public int getNbMonstre() { return this.NbMonstre; }
   public void setNbMonstre(int nb) {  this.NbMonstre = nb; }
-  public String getStrMonstre() { return this.strMonstre; }
-  public void setStrMonstre(String c) {  this.strMonstre = c; }
+  public char getCharMonstre() { return this.charMonstre; }
+  public void setCharMonstre(char c) {  this.charMonstre = c; }
   public Monstre getMonstre(int x) { return this.tabMonstre[x]; }
 
   // Méthodes principales de la classe Monstre
@@ -39,46 +39,49 @@ public class Monstre extends Thread
   public boolean valideDep(Plateau p, int val)
   {
       char tab[][] = p.getMapStatic();
-      String dyn[][] = p.getMapDynamic();
+      char dyn[][] = p.getMapDynamic();
+
       int col = this.getPosColonne();
       int lig = this.getPosLigne();
 
-      // La suite de la méthode consiste à vérifier si dans les tableaux statiques et dynamiques les mouvements sont réalisable
+        // Vérification à gauche
+        if( val == 0 && col != 0)
+        {
+          if( (p.getCharat(tab, lig, col-1) == AFF_SOL || p.getCharat(tab, lig, col-1) == AFF_ECHELLE) && (p.getCharat(dyn, lig, col-1) == 'J' || p.getCharat(dyn, lig, col-1) == AFF_VIDE) )
+            return true;
+          else
+            return false;
+        }
 
-      if( val == 0 && col != 0)                                                // Vérification à gauche
-      {
-        if( (p.getCharat(tab, lig, col-1) == AFF_SOL || p.getCharat(tab, lig, col-1) == AFF_ECHELLE) && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig, col-1).equals(AFF_VIDE)) )
-          return true;
-        else
-          return false;
-      }
+        // Vérification à droite
+        if( val == 1 && col != p.getNbCol()-2)
+        {
+          if ( (p.getCharat(tab, lig, col+1) == AFF_SOL || p.getCharat(tab, lig, col+1) == AFF_ECHELLE) && (p.getCharat(dyn, lig, col+1) == 'J' || p.getCharat(dyn, lig, col+1) == AFF_VIDE) )
+            return true;
+          else
+            return false;
+        }
 
-      if( val == 1 && col != p.getNbCol()-2)                                   // Vérification à droite
-      {
-        if ( (p.getCharat(tab, lig, col+1) == AFF_SOL || p.getCharat(tab, lig, col+1) == AFF_ECHELLE) && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig, col+1).equals(AFF_VIDE)) )
-          return true;
-        else
-          return false;
-      }
+        // Vérification en haut
+        if( val == 2 && lig != 0)
+        {
+          if ( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig-1, col) == AFF_ECHELLE && (p.getCharat(dyn, lig-1, col) == 'J' || p.getCharat(dyn, lig-1, col) == AFF_VIDE) )
+            return true;
+          else
+            return false;
+        }
 
-      if( val == 2 && lig != 0)                                                // Vérification en haut
-      {
-        if ( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig-1, col) == AFF_ECHELLE && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig-1, col).equals(AFF_VIDE)) )
-          return true;
-        else
-          return false;
-      }
+        // Vérification en bas
+        if( val == 3 && lig != p.getNbLigne()-2)
+        {
+           if( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig+1, col) == AFF_ECHELLE && (p.getCharat(dyn, lig+1, col) == 'J' || p.getCharat(dyn, lig+1, col) == AFF_VIDE) )
+             return true;
+           else
+             return false;
+        }
 
-      if( val == 3 && lig != p.getNbLigne()-2)                                 // Vérification en bas
-      {
-         if( p.getCharat(tab, lig, col) == AFF_ECHELLE && p.getCharat(tab, lig+1, col) == AFF_ECHELLE && (p.getString(dyn, lig, col-1).equals("J") || p.getString(dyn, lig+1, col).equals(AFF_VIDE)) )
-           return true;
-         else
-           return false;
-      }
-
-      // Par défaut (dans le cas où nous sommes rentrés dans aucuns des if), on retourne false
-      return false;
+        //Si on ne rentre dans aucun if alors on retourne false
+        return false;
   }
 
   // Méthode qui permet aux monstres d'un plateau de se déplacer sur celui-ci
@@ -87,10 +90,10 @@ public class Monstre extends Thread
         int deplacement;
         boolean valide = true;
 
-        // Tant que valide = true, on génère une valeur aléatoire pour déplacer le monstre  tant que celle-ci est fausse
         while(valide)
         {
-          p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
+          //p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), " ");
+          this.clearMonstre(p);
           deplacement = (int)(Math.random()*4);
 
           switch(deplacement)
@@ -98,41 +101,43 @@ public class Monstre extends Thread
               case 0:                                                          // Déplacement vers la gauche
                   if(this.valideDep(p, 0) == true)                             // Vérification
                   {
-                    p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()-1, this.getStrMonstre());
+                    p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()-1, this.getCharMonstre());
                     this.setPosColonne(this.getPosColonne()-1);
                     valide = false;
                   }
                   break;
 
-              case 1:                                                          // Déplacement vers la droite
+              case 1:                                                          // Pour aller à droite
                   if(this.valideDep(p, 1) == true)                             // Vérification
                   {
-                    p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()+1, this.getStrMonstre());
+                    p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()+1, this.getCharMonstre());
                     this.setPosColonne(this.getPosColonne()+1);
                     valide = false;
                   }
                   break;
 
-              case 2:                                                          // Déplacement pour monter
-                  if(this.valideDep(p, 2) == true)                             // Vérification
-                  {
-                    p.modifieCaseDynamique(this.getPosLigne()-1, this.getPosColonne(), this.getStrMonstre());
-                    this.setPosLigne(this.getPosLigne()-1);
-                    valide = false;
-                  }
-                  break;
+              case 2:       // Pour aller en haut
+                // Vérification en haut
+                if(this.valideDep(p, 2) == true)
+                {
+                  p.modifieCaseDynamique(this.getPosLigne()-1, this.getPosColonne(), this.getCharMonstre());
+                  this.setPosLigne(this.getPosLigne()-1);
+                  valide = false;
+                }
+                break;
 
-              case 3:                                                          // Déplacement pour descendre
-                  if(this.valideDep(p, 3) == true)                             // Vérification
-                  {
-                    p.modifieCaseDynamique(this.getPosLigne()+1, this.getPosColonne(), this.getStrMonstre());
-                    this.setPosLigne(this.getPosLigne()+1);
-                    valide = false;
-                  }
-                  break;
+              case 3:      // Pour aller en bas
+                // Vérification en bas
+                if(this.valideDep(p, 3) == true)
+                {
+                  p.modifieCaseDynamique(this.getPosLigne()+1, this.getPosColonne(), this.getCharMonstre());
+                  this.setPosLigne(this.getPosLigne()+1);
+                  valide = false;
+                }
+                break;
           }
 
-          if(c.RencontreMonstre(this.getPosLigne(), this.getPosColonne()))
+          if(c.meetMonstre(this.getPosLigne(), this.getPosColonne()))
             c.setVie(c.getVie()-1);
       }
     }
@@ -140,90 +145,102 @@ public class Monstre extends Thread
   // Méthode pour disposer de manière aléatoire les monstres (au préalable déjà crée), sur un plateau
   public void spawnRandom(Plateau p)
   {
-     for(int i = 0; i < this.getNbMonstre(); i++)
+   for(int i = 0; i < this.getNbMonstre(); i++)
+   {
+     char map[][] = p.getMapStatic();
+     char bur[][] = p.getDynamBurgeur();
+     char dyn[][] = p.getMapDynamic();
+
+     boolean valide = false;
+
+     while(valide == false)
      {
-       char map[][] = p.getMapStatic();
-       char bur[][] = p.getDynamBurgeur();
-       String dyn[][] = p.getMapDynamic();
-       boolean valide = false;
+       int col = (int)(Math.random()*p.getNbCol());
+       int lig = (int)(Math.random()*p.getNbLigne());
 
-         while(valide == false)
+
+       int x = (int)(Math.random()*3);
+
+       if( p.getCharat(map, lig, col) == AFF_SOL && p.getCharat(dyn, lig, col) == AFF_VIDE )
          {
-           int col = (int)(Math.random()*p.getNbCol());
-           int lig = (int)(Math.random()*p.getNbLigne());
-           int x = (int)(Math.random()*3);
-
-            // && p.getCharat(bur, lig, col) == ' ' a rajouter quand burger sera finie
-           if( p.getCharat(map, lig, col) == AFF_SOL && AFF_VIDE.equals(p.getString(dyn, lig, col)))
+           switch (x)
            {
-               // En fonction de la valeur de x, on aura un type de monstre choisi aléatoirement
-               switch (x)
-               {
-                 case 0: {
-                            this.tabMonstre[i] = new Oeuf(lig, col);
-                            valide = true;
-                            break;
-                         }                                                    // Génère un monstre qui est un oeuf
+             case 0:
+              {
+                this.tabMonstre[i] = new Oeuf(lig, col);
+                valide = true;
+                break;
+              }
 
-                 case 1: {
-                            this.tabMonstre[i] = new Saucisse(lig, col);
-                            valide = true;
-                            break;
-                         }                                                    // Génère un monstre qui est une saucisse
+              case 1:
+              {
+                this.tabMonstre[i] = new Saucisse(lig, col);
+                valide = true;
+                break;
+              }
 
-                 case 2: {
-                            this.tabMonstre[i] = new Cornichon(lig, col);
-                            valide = true;
-                            break;
-                         }
-                                                                               // Génère un monstre qui est une saucisse
-               } //end switch
-           } //end if
-         } //end while
-     } //end for
+              case 2:
+              {
+                this.tabMonstre[i] = new Cornichon(lig, col);
+                valide = true;
+                break;
+              }
+           } //end swtich
+         } //end if
+     } //end while
+   } //end for
  }
 
-  // Constructeur de la classe Monstre
-  public Monstre(int nb)
-  {
-    setNbMonstre(nb);
-    this.tabMonstre = new Monstre[nb];
-  }
+ public void clearMonstre(Plateau p)
+ {
+   char dyn[][] = p.getMapDynamic();
 
+   int col = this.getPosColonne();
+   int lig = this.getPosLigne();
+
+   if( p.getCharat(dyn, lig, col-1) != 'C' || p.getCharat(dyn, lig, col-1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' || p.getCharat(dyn, lig, col+1) != 'C' || p.getCharat(dyn, lig, col+1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' )
+     p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
+ }
+
+ public Monstre(int nb)
+ {
+   setNbMonstre(nb);
+   this.tabMonstre = new Monstre[nb];
+ }
+
+  public static void main(char[] args)
+  {}
 }
 
-  // Classes filles qui hérite de la classe Monstre : les types de monstres
-  // Elles ne contiennent que des constructeurs, avec pour seul différence leur caractère
-
-  class Oeuf extends Monstre
+class Oeuf extends Monstre
+{
+  public Oeuf(int ligne, int col)
   {
-    public Oeuf(int ligne, int col)
-    {
-      super(1);
-      setPosLigne(ligne);
-      setPosColonne(col);
-      setStrMonstre("O");
-    }
+    super(1);
+    setPosLigne(ligne);
+    setPosColonne(col);
+    setCharMonstre('O');
   }
+}
 
-  class Saucisse extends Monstre
+class Saucisse extends Monstre
+{
+  public Saucisse(int ligne, int col)
   {
-    public Saucisse(int ligne, int col)
-    {
-      super(1);
-      setPosLigne(ligne);
-      setPosColonne(col);
-      setStrMonstre("S");
-    }
+    super(1);
+    setPosLigne(ligne);
+    setPosColonne(col);
+    setCharMonstre('S');
   }
+}
 
-  class Cornichon extends Monstre
+class Cornichon extends Monstre
+{
+  public Cornichon(int ligne, int col)
   {
-    public Cornichon(int ligne, int col)
-    {
-      super(1);
-      setPosLigne(ligne);
-      setPosColonne(col);
-      setStrMonstre("C");
-    }
+    super(1);
+    setPosLigne(ligne);
+    setPosColonne(col);
+    setCharMonstre('C');
   }
+}

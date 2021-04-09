@@ -14,6 +14,16 @@ import java.io.*;
 
 public class Plateau
 {
+  // Déclaration des attributs
+
+  private int NB_LIGNES;                                                       // Nombre de ligne du plateau
+  private int NB_COLONNES;                                                     // Nombre de colonne du plateau
+  private char mapStatic[][];                                                  // Tableau static dans lequel est diposé le décor
+  private char mapDynam[][];                                                   // Map dynamique pour le déplacement des joueurs/monstre
+
+  private char mapDynamBurger[][];                                             // Map dynamique pour différencier burger et monstre
+  private char petitTabBurger[][];                                             // Tableau statique que l'on affiche/visualise (= sous tableau)
+  private Burger tabBurger[];                                                  // Tableau ou chaque entité de burger est concaténer (utiliser dans l'affichage statique du sous tableau petitTabBurger)
 
 
   char AFF_LIMITE = 'X';
@@ -24,15 +34,6 @@ public class Plateau
 
   String tiret = "-------------------------------------------------------------------------------------------------------------------------------------------";
   String tabu1 = "                ";
-
-  private int NB_LIGNES;                                        // Nombre de ligne du plateau
-  private int NB_COLONNES;                                      // Nombre de colonne du plateau
-  private char mapStatic[][];                                   // Le mapStatic du jeux representer par un tableau a 2 dimension
-  private char mapDynam[][];                                  // Map dynamique pour le déplacement des joueurs/monstre
-
-  private char mapDynamBurger[][];                              // Map dynamique pour différencier burger et monstre
-  private char petitTabBurger[][];                              // Tableau statique que l'on affiche/visualise (= sous tableau)
-  private Burger tabBurger[];                                   // Tableau ou chaque entité de burger est concaténer (utiliser dans l'affichage statique du sous tableau petitTabBurger)
 
   // Fonctions pour accéder aux attributs ou les retourner
 
@@ -58,11 +59,9 @@ public class Plateau
 
   public char getCharat(char[][] c, int lig, int col) { return c[lig][col];}
 
-  public String getString(String[][] c, int lig, int col) { return c[lig][col];}
-
   public void modifieCaseStatic(int lig, int col, char c) { mapStatic[lig][col] = c; }
 
-  public void modifieCaseDynamique(int lig, int col, String c){ mapDynam[lig][col] = c; }
+  public void modifieCaseDynamique(int lig, int col, char c){ mapDynam[lig][col] = c; }
 
   public void modifieCaseDynamiqueBurger(int lig, int col, char c){ mapDynamBurger[lig][col] = c; }
 
@@ -104,14 +103,16 @@ public class Plateau
   {
     int t = 0;
     Scanner sc = new Scanner(System.in);      // Create a Scanner object
-    System.out.println("Deplacer le cuisto :");
+    System.out.println("Deplacer le cuisinier :");
+
+    //this.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), " ");
+    cuisto.clearCuisinier(this);
 
     boolean verif = false;
 
     while( verif == false)
     {
       char touche = sc.next().charAt(0);  // Read user input
-      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), " ");
 
       if(touche == 'z' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
       {
@@ -141,9 +142,47 @@ public class Plateau
       else
         System.out.println("Mauvaise touche, pour rappel Z pour monter, S pour descendre, Q pour aller a gauche, et S pour descendre !");
     }
+    this.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
+  }
 
-      modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
-}
+  public void deplaceCuisinier2(Cuisinier cuisto, char touche)              // Fonction qui permet de déplacer le cuisinier de la partie
+  {
+    int t = 0;
+
+    //this.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), " ");
+    cuisto.clearCuisinier(this);
+
+    boolean verif = false;
+    while( verif == false )
+    {
+      if(touche == 'z' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
+      {
+        cuisto.setPosLigne(cuisto.getPosLigne()-1);
+        verif = true;
+      }
+
+      else if(touche == 'q' && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
+      {
+        this.tomber(touche, cuisto.getPosLigne(), cuisto.getPosColonne());
+        cuisto.setPosColonne(cuisto.getPosColonne()-1);
+        verif = true;
+      }
+      else if(touche == 'd'  && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
+      {
+        this.tomber(touche, cuisto.getPosLigne(), cuisto.getPosColonne());
+        cuisto.setPosColonne(cuisto.getPosColonne()+1);
+        verif = true;
+      }
+
+      else if(touche == 's'  && this.valide(touche, cuisto.getPosLigne(), cuisto.getPosColonne()))
+      {
+        cuisto.setPosLigne(cuisto.getPosLigne()+1);
+        verif = true;
+      }
+
+      this.modifieCaseDynamique(cuisto.getPosLigne(), cuisto.getPosColonne(), cuisto.getCharCuisinier());
+    }
+  }
 
   public void tomber(char c, int lig, int col)
   {
@@ -304,9 +343,14 @@ public class Plateau
 
   public void affiche(Cuisinier c)                                     // Affiche l'état du jeu à chaque déplacement du joueur
   {
+      //commande utiliser pour l'éxecution sous windows afin de clear l'invite de commande
+      try{
+        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+      }catch (Exception e) { e.printStackTrace();}
+
       // Pour aérer à chaque actualisation de la partie
       System.out.println(tiret+"\n"+tiret+"\n");
-      this.score(c);
+      this.calcScore(c);
       for(int i=0; i<15; i++)
       {
         if(i == 9)
@@ -317,16 +361,17 @@ public class Plateau
         else System.out.println("");
       }
 
-      for(int i=-1; i<=this.getNbLigne()+2; i++)                       // Affichage du terrain dans lequel les monstres et le cuisinier évolue
+      for(int i=-1; i<=this.getNbLigne()+2; i++)                       // afficheScorePV du terrain dans lequel les monstres et le cuisinier évolue
       {
         for(int j=-1; j<=this.getNbCol()+2; j++)
         {
           if(j == -1)
             System.out.print(tabu1);
+
           if (i == -1 || j == -1 || i == this.getNbLigne()+2 || j ==  this.getNbCol()+2) // Permet l'affichage des bords du tableau
             System.out.print(AFF_LIMITE);
 
-          else if( mapDynam[i][j] == "J" || mapDynam[i][j] == "S" || mapDynam[i][j] == "O" || mapDynam[i][j] == "C" )
+          else if( mapDynam[i][j] == 'J'|| mapDynam[i][j] == 'S' || mapDynam[i][j] == 'O' || mapDynam[i][j] == 'C' )
             System.out.print(mapDynam[i][j]);
 
           else if (mapDynamBurger[i][j] == '*' || mapDynamBurger[i][j] == '~' || mapDynamBurger[i][j] == '=')
@@ -379,10 +424,10 @@ public class Plateau
 
   }
 
-  public void score(Cuisinier c)
+  public void calcScore(Cuisinier c)
   {
+    int x = 0;
     int point = 0;
-
     for(int z = 0; z<3; z++)
     {
       Burger b = this.getTabBurger(z);
@@ -392,12 +437,13 @@ public class Plateau
           {
               if (j == this.getTabBurger(z).getColonne())
               {
-                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) {  point = point + 40;}
-                if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { point = point + 20; }
-                if( i == 2 && b.steack(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) {  point = point + 10; }
-                c.setScore(point);
+                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 40;}
+                if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 20; }
+                if( i == 2 && b.steack(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 10; }
+
               }
           }
+          c.setScore(point);
       }
     }
   }
@@ -408,7 +454,7 @@ public class Plateau
     this.setNbLigne(lig);
     this.setNbCol(col);
     this.mapStatic = new char[lig+2][col+2];
-    this.mapDynam = new String[lig+2][col+2];
+    this.mapDynam = new char[lig+2][col+2];
     this.mapDynamBurger = new char[lig+2][col+2];
     this.tabBurger = new Burger[3];
     this.petitTabBurger = new char[4+2][col+2];
@@ -419,7 +465,7 @@ public class Plateau
     this.NB_LIGNES = 8;
     this.NB_COLONNES = 70;
     this.mapStatic = new char[getNbLigne()+2][getNbCol()+2];
-    this.mapDynam = new String[getNbLigne()+2][getNbCol()+2];
+    this.mapDynam = new char[getNbLigne()+2][getNbCol()+2];
     this.mapDynamBurger = new char[getNbLigne()+2][getNbCol()+2];
     this.tabBurger = new Burger[3];                              // 0, 1, 2 soit 3 burgers qui sont crées
     this.petitTabBurger = new char[4+2][getNbCol()+2];           // Deuxième tableau static simplement pour l'affichage du sous tableau de burger qui se complète au cours de la partie
@@ -435,47 +481,47 @@ public class Plateau
         else if ( i == 1 && ( j > 20 && j < 50))
         {
             modifieCaseStatic(i, j, AFF_VIDE);
-            modifieCaseDynamique(i,j,"!");
+            modifieCaseDynamique(i,j, '!');
         }
         else if ( i == 3 && ( j > 52 && j <= 70))
         {
             modifieCaseStatic(i, j, AFF_VIDE);
-            modifieCaseDynamique(i,j,"!");
+            modifieCaseDynamique(i,j,'!');
         }
         else if ( i == 4 && ( j > 25 && j < 42))
         {
             modifieCaseStatic(i, j, AFF_VIDE);
-            modifieCaseDynamique(i,j,"!");
+            modifieCaseDynamique(i,j, '!');
         }
         else if ( i == 3 &&  j <10)
         {
             modifieCaseStatic(i, j, AFF_VIDE);
-            modifieCaseDynamique(i,j,"!");
+            modifieCaseDynamique(i,j, '!');
         }
         else if ( i == this.getNbLigne() && j <= 15)   //permet de faire le vide dans le coin inferieur droit du décor
         {
-              modifieCaseStatic(i, j, AFF_VIDE);
-              modifieCaseDynamique(i,j,"!");
+            modifieCaseStatic(i, j, AFF_VIDE);
+            modifieCaseDynamique(i,j, '!');
         }
         else if ( i == this.getNbLigne()-1 && (j >= 17 && j <= 36))
         {
             modifieCaseStatic(i, j, AFF_VIDE);
-            modifieCaseDynamique(i,j,"!");
+            modifieCaseDynamique(i,j, '!');
         }
         else if ( i == this.getNbLigne()-1 && (j >= 60 && j <= 70))
         {
             modifieCaseStatic(i, j, AFF_VIDE);
-            modifieCaseDynamique(i,j,"!");
+            modifieCaseDynamique(i,j, '!');
         }
         else if ( i == this.getNbLigne()-2 && (j >= 10 && j <= 25))
         {
             modifieCaseStatic(i, j, AFF_VIDE);
-            modifieCaseDynamique(i,j,"!");
+            modifieCaseDynamique(i,j, '!');
         }
         else
           {
             modifieCaseStatic(i, j, AFF_SOL);
-            modifieCaseDynamique(i,j," ");
+            modifieCaseDynamique(i,j, ' ');
           }
       }
     }
@@ -523,11 +569,74 @@ public class Plateau
     modifieCaseStatic(this.getNbLigne()-2, 50, AFF_ECHELLE);
   }
 
+  public void PlateauNiveau1()                                   // Modifie les cases d'un Plateau(4, 14) (Spécifique)
+  {
+    modifieCaseStatic(0,0,AFF_SOL);
+    modifieCaseStatic(0,1,AFF_SOL);
+    modifieCaseStatic(0,2,AFF_SOL);
+    modifieCaseStatic(0,3,AFF_SOL);
+    modifieCaseStatic(0,4,AFF_ECHELLE);
+    modifieCaseStatic(0,5,AFF_SOL);
+    modifieCaseStatic(0,6,AFF_SOL);
+    modifieCaseStatic(0,7,AFF_SOL);
+    modifieCaseStatic(0,8,AFF_SOL);
+    modifieCaseStatic(0,9,AFF_SOL);
+    modifieCaseStatic(0,10,AFF_SOL);
+    modifieCaseStatic(0,11,AFF_SOL);
+    modifieCaseStatic(0,12,AFF_SOL);
+    modifieCaseStatic(0,13,AFF_ECHELLE);
+
+    modifieCaseStatic(1,0,AFF_SOL);
+    modifieCaseStatic(1,1,AFF_SOL);
+    modifieCaseStatic(1,2,AFF_SOL);
+    modifieCaseStatic(1,3,AFF_SOL);
+    modifieCaseStatic(1,4,AFF_ECHELLE);
+    modifieCaseStatic(1,5,AFF_SOL);
+    modifieCaseStatic(1,6,AFF_SOL);
+    modifieCaseStatic(1,7,AFF_SOL);
+    modifieCaseStatic(1,8,AFF_VIDE);
+    modifieCaseStatic(1,9,AFF_VIDE);
+    modifieCaseStatic(1,10,AFF_SOL);
+    modifieCaseStatic(1,11,AFF_SOL);
+    modifieCaseStatic(1,12,AFF_SOL);
+    modifieCaseStatic(1,13,AFF_ECHELLE);
+
+    modifieCaseStatic(2,0,AFF_ECHELLE);
+    modifieCaseStatic(2,1,AFF_SOL);
+    modifieCaseStatic(2,2,AFF_SOL);
+    modifieCaseStatic(2,3,AFF_SOL);
+    modifieCaseStatic(2,4,AFF_ECHELLE);
+    modifieCaseStatic(2,5,AFF_SOL);
+    modifieCaseStatic(2,6,AFF_SOL);
+    modifieCaseStatic(2,7,AFF_SOL);
+    modifieCaseStatic(2,8,AFF_SOL);
+    modifieCaseStatic(2,9,AFF_SOL);
+    modifieCaseStatic(2,10,AFF_SOL);
+    modifieCaseStatic(2,11,AFF_SOL);
+    modifieCaseStatic(2,12,AFF_SOL);
+    modifieCaseStatic(2,13,AFF_SOL);
+
+    modifieCaseStatic(3,0,AFF_ECHELLE);
+    modifieCaseStatic(3,1,AFF_SOL);
+    modifieCaseStatic(3,2,AFF_SOL);
+    modifieCaseStatic(3,3,AFF_SOL);
+    modifieCaseStatic(3,4,AFF_SOL);
+    modifieCaseStatic(3,5,AFF_SOL);
+    modifieCaseStatic(3,6,AFF_SOL);
+    modifieCaseStatic(3,7,AFF_SOL);
+    modifieCaseStatic(3,8,AFF_SOL);
+    modifieCaseStatic(3,9,AFF_SOL);
+    modifieCaseStatic(3,10,AFF_SOL);
+    modifieCaseStatic(3,11,AFF_SOL);
+    modifieCaseStatic(3,12,AFF_SOL);
+    modifieCaseStatic(3,13,AFF_SOL);
+  }
+
   public void addMonstre(Monstre m)                              // Ajoute un monstre m sur le plateau pour qu'il puisse être visualiser
   {
     int ligne = m.getPosLigne();
     int col = m.getPosColonne();
-    String c = m.getStrMonstre();
+    char c = m.getCharMonstre();
     modifieCaseDynamique(ligne, col, c);
   }
 
@@ -535,8 +644,8 @@ public class Plateau
   {
     int ligne = c.getPosLigne();
     int col = c.getPosColonne();
-    String cuis = c.getCharCuisinier();
-    modifieCaseDynamique(ligne, col, cuis);
+    char cuis = c.getCharCuisinier();
+    this.modifieCaseDynamique(ligne, col, cuis);
   }
 
   public void addBurger(Burger b)
@@ -572,4 +681,5 @@ public class Plateau
     }
   }
 
- }
+
+}

@@ -23,14 +23,15 @@ public class Cuisinier extends Thread
   public void setPosLigne(int lig) { this.posLigne = lig; }
   public int getPosColonne(){ return this.posColonne; }
   public void setPosColonne(int col) { this.posColonne = col; }
+  public char getCharCuisinier() { return this.charCuis; }
   public void setCharCuis(char c) { this.charCuis = c;}
   public int getScore(){ return this.Score; }
   public void setScore(int score) { this.Score = score; }
 
   // Méthodes principales de la classe Cuisinier
 
-  // Méthode qui 
-  public void clrCuisinier(Plateau p)
+  // Méthode qui
+  public void clearCuisinier(Plateau p)
   {
     char dyn[][] = p.getMapDynamic();
 
@@ -65,7 +66,7 @@ public class Cuisinier extends Thread
   // Méthode qui affiche le score et les points de vies du joueur
   public void afficheScorePv()
   {
-    System.out.print(" SCORE : "+this.getScore() + "\n                                                    " + " PV Cuisinier "+ this.getVie());
+    System.out.print(" SCORE : "+this.getScore() + "\n                                              " + " PV Cuisinier "+ this.getVie());
   }
 
   // Constructeur de la classe Cuisinier

@@ -5,18 +5,14 @@ import java.io.*;
 
 class Interface
 {
-
   String tiret = "------------------------------------------------------------------------------------";
-  String tabu1 = "                            ";         // 12 tabulations
-  String tabu2 = "              ";                        // 7 tabulations
-  private LocalServ ls;
+  String tabu1 = "                            ";                                // 12 tabulations
+  String tabu2 = "              ";                                              // 7 tabulations
 
   public static void main(String[] args)
   {
-    try{
       Interface i = new Interface();
       i.start();
-    }catch (Exception e) { e.printStackTrace();}
   }
 
 
@@ -29,8 +25,8 @@ class Interface
     System.out.println(this.tabu1+"BIENVENUE DANS BURGER TIME !\n");
     System.out.println("Choisissez un mode : \n");
     System.out.println(this.tabu2+" 1 - Solo   ");
-    System.out.println(this.tabu2+" 2 - Multijoueur ");                         // lance une partie à deux joueurs
-    System.out.println(this.tabu2+" 3 - Classement \n");                        // Réseaux avec le score des meilleurs joueurs + type (solo ou local)
+    System.out.println(this.tabu2+" 2 - Coop ");                         // lance une partie à deux joueurs
+    System.out.println(this.tabu2+" 3 - Classement ");                        // Réseaux avec le score des meilleurs joueurs + type (solo ou local)
     System.out.println(this.tabu2+" 4 - Touche du jeux \n");
 
     System.out.println("Votre choix :");
@@ -48,16 +44,15 @@ class Interface
     Scanner sc = new Scanner(System.in);
 
     System.out.println(tiret+"\n"+tiret+"\n");                                  // Affiche un max de tirets
-    System.out.println(this.tabu1+" QUEL MODE DE JEU MULTIJOUEUR ? \n");
-    System.out.println(this.tabu2+" 1 - Cooperatif (2 Joueurs) ");
-    System.out.println(this.tabu2+" 2 - Cooperatif Versus (4 Joueurs) ");
-    System.out.println(this.tabu2+" 3 - Solo contre TOUS  (1 vs 2)\n ");
-    System.out.println(this.tabu2+" 4 - Retour ");
+    System.out.println(this.tabu1+" Choisissez une action \n");
+    System.out.println(this.tabu2+" 1 - Creer une partie (2 Joueurs) ");
+    System.out.println(this.tabu2+" 2 - Rejoindre une partie (2 Joueurs) ");
+    System.out.println(this.tabu2+" 3 - Retour ");
 
     System.out.println("Votre choix :");
     do {
       choix = sc.nextInt();
-    } while(choix<0 && choix>4);
+    } while(choix<0 && choix>2);
 
     System.out.println(tiret+"\n"+tiret+"\n");
     return choix;
@@ -65,17 +60,24 @@ class Interface
 
   public void Menu3(int val)                                                   // En fonction de la valeur du paramètre val, le switch va appeler les élements nécessaire au mode de jeu sélectionner
   {
+      int val = 0;
+      boolean verif;
       System.out.println(tiret+"\n"+tiret+"\n");
-      switch(val)
+      if(val == 1)
       {
-        case 1 :
-        {  break; }
+        try{
+          Serveur s = new Serveur();
+          val = s.lance();
+          S.fermer();
+        }catch(Exception e) {	e.printStackTrace(); }
 
-        case 2 :
-        {  break; }
-
-        case 3 :
-        {  break; }
+      }
+      if( val == 2)
+      {
+        try
+        {
+          Client c = new Client(8080);
+        }catch(Exception e) {	e.printStackTrace(); }
       }
       System.out.println(tiret+"\n"+tiret+"\n");
   }
@@ -102,12 +104,12 @@ class Interface
     {
       v = this.Menu2();
       if( v == 4) this.start();
-      // else this.Menu3(v);
+      else this.Menu3(v);
     }
     else if (v == 4)
     {
 
-      System.out.println(tiret+"\n"+tiret+"\n");                                  // Affiche un max de tirets
+      System.out.println(tiret+"\n"+tiret+"\n");                                // Affiche un max de tirets
       System.out.println(this.tabu1+"BIENVENUE DANS BURGER TIME !\n");
       System.out.println("Voici les touches du jeux : \n");
       System.out.println(this.tabu2+" Z - Permet d'effectuer un déplacement en haut. ");
@@ -122,13 +124,13 @@ class Interface
         }while( !(verif.equals("OUI") || verif.equals("oui") || verif.equals("ui")) );
       this.start();
     }
-                                                               // Pour la partie serveur avec la liste des meilleurs joueurs et leurs scores
+                                                                                // Pour la partie serveur avec la liste des meilleurs joueurs et leurs scores
   }
 
 
 
-  public Interface() throws Exception
+  public Interface()
   {
-    // this.ls = new LocalServ();
+
   }
 }

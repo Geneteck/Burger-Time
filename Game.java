@@ -31,17 +31,17 @@ class Game{
 
       // Ajout de monstres dans le nouveau plateau dans lequel le joueur/cuisinier va jouer
       Monstre m = new Monstre(1);
-      Monstre LesMonstres;
+      Monstre leMonstre;
       m.spawnRandom(p);
       while(c.partieFinie() == false)
       {
         p.deplaceCuisinier(c);
-        p.score(c);
+        p.calcScore(c);
 
         for(int i = 0; i < m.getNbMonstre(); i++)
         {
-          LesMonstres = m.getMonstre(i);
-          LesMonstres.deplaceMonstre(p, c);
+          leMonstre = m.getMonstre(i);
+          leMonstre.deplaceMonstre(p, c);
         }
         p.affiche(c);
       }
