@@ -12,6 +12,7 @@ class ClassementServ
   private ArrayList<String> lesPseudos;
   private ArrayList<Integer> lesScores;
 
+  String tabu1 = "                                    ";                                // 12 tabulations
   // Méthodes d'accès
 
   public ArrayList<String> getLesPseudos() { return this.lesPseudos; }
@@ -62,7 +63,7 @@ class ClassementServ
     String txt;
     if( i < this.getLesScores().size())
     {
-      txt = this.getLesPseudos().get(i)+" Score : "+this.getLesScores().get(i);
+      txt = this.getLesPseudos().get(i)+" "+this.getLesScores().get(i)+"\n";
       System.out.println(txt);
     }
     else System.out.println(" Il n'y a pas de score ");
@@ -71,9 +72,16 @@ class ClassementServ
   // Permet d'afficher l'ensemble du classement
   public void afficheClassement()
   {
-    for(int i = 0; i<this.getLesScores().size(); i++)
+    for(int i = -1; i<this.getLesScores().size(); i++)
     {
-      this.affichage(i);
+      if(i==-1)
+      {
+        System.out.println(this.tabu1+"   Pseudos/Score : \n");
+      }
+      else
+      {
+        System.out.print(this.tabu1+(i+1)+"- "); this.affichage(i);
+      }
     }
   }
 
@@ -159,6 +167,17 @@ class ClassementServ
       }catch(Exception e) { e.getStackTrace(); }
   }
 
+
+  public void start(String Pseudo, int score)
+  {
+    this.lectureFich();
+    this.clean();
+    this.getLesPseudos().add(Pseudo);
+    this.getLesScores().add(score);
+    this.trie();
+    this.ecritFich();
+  }
+
   // Constructeurs de la classe ClassementServ
   public ClassementServ()
   {
@@ -171,6 +190,8 @@ class ClassementServ
     ClassementServ classement = new ClassementServ();
 
     classement.lectureFich();
+    classement.clean();
+    classement.ecritFich();
     classement.afficheClassement();
   }
 }

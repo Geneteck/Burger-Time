@@ -5,10 +5,12 @@ import java.util.*;
 class Game{
   private Joueur j;
   private Burger tabBurger[];
+  private SimulationPartie partie;
 
   public Joueur getJoueur(){ return this.j; }
   public void setJoueur(String pseudo){ this.j = new Joueur(pseudo); }
-  public void setBurger() { this.tabBurger = new Burger[2];}
+  public void setBurger() { this.tabBurger = new Burger[2]; }
+  public SimulationPartie getSimulationPartie() { return this.partie; }
 
 
   public Game(String pseudo)
@@ -19,8 +21,8 @@ class Game{
     Cuisinier c = new Cuisinier(p);
     this.j.setCuisinier(c);
 
-    SimulationPartie partie = new SimulationPartie(0, p, c);
-    partie.start();
+    this.partie = new SimulationPartie(0, p, c);
+    this.partie.run();
   }
 
   class SimulationPartie extends Thread
@@ -34,6 +36,11 @@ class Game{
        this.nbMonstre = nb;
        this.plat = p;
        this.cuis = c;
+     }
+
+     public int getScoreFinal()
+     {
+       return this.cuis.getScore();
      }
 
      public void run()
