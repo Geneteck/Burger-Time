@@ -1,42 +1,35 @@
 /*
     Projet Info4B - Burger Time
     Auteurs : Pinon Alexandre, Salaï Loïc
+    Fichier : Burger
 
-    (Mettre à jour le numéro de version à chaque modification de Burger)
-    Version : V.1.00
 */
 
 
 public class Burger
 {
-  public static void main(String[] args)
-  {
-    Burger b = new Burger(5, 8);
-    // boolean verif = b.valideBurger();
-    // if( verif ) System.out.println(" VRAI ");
-    // else  System.out.println(" FAUX ");
-  }
+  // Déclaration des attributs
+
+  private int Ligne;
+  private int Colonne;
+  private char Burger[][];
 
   char AFF_PAINH = '*';      //représente les pains haut du burger
   char AFF_PAINB = '*';      //représente les pains bas du burger
   char AFF_STEACK = '~';    //représente le steak du burger
   char AFF_FROMAGE = '=';   //représente le fromage du burger
 
-
-  private int Ligne;
-  private int Colonne;
-  private char Burger[][];
+  // Méthodes d'accès aux attributs
 
   public int getLigne(){ return this.Ligne; }
-
   public void setLigne(int lig) { this.Ligne = lig; }
-
   public int getColonne(){ return this.Colonne; }
-
   public void setColonne(int col) { this.Colonne = col; }
-
   public char getTabBurger(int lig, int col) { return this.Burger[lig][col]; }
 
+  // Méthodes principales de la classe Burger
+
+  
   public boolean pain(char c1, char c2, char c3)
   {
     Burger ref = new Burger();
