@@ -15,6 +15,8 @@ public class Monstre
   private Monstre tabMonstre[];                                                 // Structure qui contient l'ensemble des monstres crée lors d'une partie
   private Plateau plat;                                                         //plateau courant
   private Cuisinier cuis;                                                       //cuisinier courant
+  private Cuisinier cuis2;                                                      //second cuisinier courant pour les partie multijoueur
+
 
   // Méthode d'accès
 
@@ -261,6 +263,15 @@ public class Monstre
    this.tabMonstre = new Monstre[nb];
    this.plat = plat;
    this.cuis = c;
+ }
+
+ public Monstre(int nb, Plateau plat, Cuisinier c1, Cuisinier c2)
+ {
+   setNbMonstre(nb);
+   this.tabMonstre = new Monstre[nb];
+   this.plat = plat;
+   this.cuis = c1;
+   this.cuis2 = c2;
  }
 }
 

@@ -131,6 +131,7 @@ public class Serveur extends Thread {
      }
      this.sisw.println("END");
      return c1.getScore();
+     
      //Scanner sc = new Scanner(System.in);
      //System.out.println(" Choisir votre Pseudo");
      //String pseudo1 = sc.nextLine();
