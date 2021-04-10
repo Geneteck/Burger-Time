@@ -1,8 +1,7 @@
-/*
-    Projet Info4B - Burger Time
-    Auteurs : Pinon Alexandre, Salaï Loïc
-    Fichier : BurgerTime
-*/
+import java.awt.*;
+import javax.swing.*;
+import java.util.*;
+import java.io.*;
 
 class BurgerTime
 {
