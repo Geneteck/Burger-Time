@@ -79,8 +79,8 @@ public class Serveur extends Thread {
    }
 
   // Appeler quand on choisis dans la section multijoueur : "Créer une partie"
-  public Serveur() throws Exception
-  {
+ public Serveur() throws Exception
+ {
 
     this.port = 8080;                                                           // Par défaut, le port sera 8080
     this.s = new ServerSocket(port);

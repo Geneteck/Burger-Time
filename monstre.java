@@ -7,14 +7,14 @@ public class Monstre
 {
   // Déclaration des attributs de la classe Monstre
 
-  private int NbMonstre;                                                       // Indique le nombre de monstres crée sur un plateau
-  private int indicePos;                                                       // Indice d'un monstre sur un plateau
-  private int posLigne;                                                        // Correspond à la ligne actuel d'un monstre
-  private int posColonne;                                                      // Correspond à la colonne actuel d'un monstre
-  private char charMonstre;                                                   // Variable qui contient le caractère d'un monstre : permet de savoir de quel type de monstre il s'agit
-  private Monstre tabMonstre[];                                                // Structure qui contient l'ensemble des monstres crée lors d'une partie
-  private Plateau plat;
-  private Cuisinier cuis;
+  private int NbMonstre;                                                        // Indique le nombre de monstres crée sur un plateau
+  private int indicePos;                                                        // Indice d'un monstre sur un plateau
+  private int posLigne;                                                         // Correspond à la ligne actuel d'un monstre
+  private int posColonne;                                                       // Correspond à la colonne actuel d'un monstre
+  private char charMonstre;                                                     // Variable qui contient le caractère d'un monstre : permet de savoir de quel type de monstre il s'agit
+  private Monstre tabMonstre[];                                                 // Structure qui contient l'ensemble des monstres crée lors d'une partie
+  private Plateau plat;                                                         //plateau courant
+  private Cuisinier cuis;                                                       //cuisinier courant
 
   // Méthode d'accès
 
@@ -31,10 +31,10 @@ public class Monstre
   // Méthodes principales de la classe Monstre
 
   // Méthode qui vérifie si le déplacement de monstre demandé est possible
-  public boolean valideDep(Plateau p, int val)
+  public boolean valideDep(int val)
   {
-      char tab[][] = p.getMapStatic();
-      char dyn[][] = p.getMapDynamic();
+      char tab[][] = this.plat.getMapStatic();
+      char dyn[][] = this.plat.getMapDynamic();
 
       int col = this.getPosColonne();
       int lig = this.getPosLigne();
@@ -42,16 +42,16 @@ public class Monstre
         // Vérification à gauche
         if( val == 0 && col != 0)
         {
-          if( (p.getCharat(tab, lig, col-1) == this.plat.AFF_SOL || p.getCharat(tab, lig, col-1) == this.plat.AFF_ECHELLE) && (p.getCharat(dyn, lig, col-1) == 'J' || p.getCharat(dyn, lig, col-1) == this.plat.AFF_VIDE) )
+          if( (this.plat.getCharat(tab, lig, col-1) == this.plat.AFF_SOL || this.plat.getCharat(tab, lig, col-1) == this.plat.AFF_ECHELLE) && (this.plat.getCharat(dyn, lig, col-1) == 'J' || this.plat.getCharat(dyn, lig, col-1) == this.plat.AFF_VIDE) )
             return true;
           else
             return false;
         }
 
         // Vérification à droite
-        if( val == 1 && col != p.getNbCol()-2)
+        if( val == 1 && col != this.plat.getNbCol()-2)
         {
-          if ( (p.getCharat(tab, lig, col+1) == this.plat.AFF_SOL || p.getCharat(tab, lig, col+1) == this.plat.AFF_ECHELLE) && (p.getCharat(dyn, lig, col+1) == 'J' || p.getCharat(dyn, lig, col+1) == this.plat.AFF_VIDE) )
+          if ( (this.plat.getCharat(tab, lig, col+1) == this.plat.AFF_SOL || this.plat.getCharat(tab, lig, col+1) == this.plat.AFF_ECHELLE) && (this.plat.getCharat(dyn, lig, col+1) == 'J' || this.plat.getCharat(dyn, lig, col+1) == this.plat.AFF_VIDE) )
             return true;
           else
             return false;
@@ -60,16 +60,16 @@ public class Monstre
         // Vérification en haut
         if( val == 2 && lig != 0)
         {
-          if ( p.getCharat(tab, lig, col) == this.plat.AFF_ECHELLE && p.getCharat(tab, lig-1, col) == this.plat.AFF_ECHELLE && (p.getCharat(dyn, lig-1, col) == 'J' || p.getCharat(dyn, lig-1, col) == this.plat.AFF_VIDE) )
+          if ( this.plat.getCharat(tab, lig, col) == this.plat.AFF_ECHELLE && this.plat.getCharat(tab, lig-1, col) == this.plat.AFF_ECHELLE && (this.plat.getCharat(dyn, lig-1, col) == 'J' || this.plat.getCharat(dyn, lig-1, col) == this.plat.AFF_VIDE) )
             return true;
           else
             return false;
         }
 
         // Vérification en bas
-        if( val == 3 && lig != p.getNbLigne()-2)
+        if( val == 3 && lig != this.plat.getNbLigne()-2)
         {
-           if( p.getCharat(tab, lig, col) == this.plat.AFF_ECHELLE && p.getCharat(tab, lig+1, col) == this.plat.AFF_ECHELLE && (p.getCharat(dyn, lig+1, col) == 'J' || p.getCharat(dyn, lig+1, col) == this.plat.AFF_VIDE) )
+           if( this.plat.getCharat(tab, lig, col) == this.plat.AFF_ECHELLE && this.plat.getCharat(tab, lig+1, col) == this.plat.AFF_ECHELLE && (this.plat.getCharat(dyn, lig+1, col) == 'J' || this.plat.getCharat(dyn, lig+1, col) == this.plat.AFF_VIDE) )
              return true;
            else
              return false;
@@ -80,7 +80,7 @@ public class Monstre
   }
 
   // Méthode qui permet aux monstres d'un plateau de se déplacer sur celui-ci
-  public void deplaceMonstre(Plateau p, Cuisinier c)
+  public void deplaceMonstre()
   {
         int deplacement;
         boolean valide = true;
@@ -88,25 +88,25 @@ public class Monstre
 
         while(valide)
         {
-          this.clearMonstre(p);
+          this.clearMonstre(this.plat);
           deplacement = (int)(Math.random()*4);
           pasBoucleInfinie++;
 
           switch(deplacement)
           {
               case 0:                                                          // Déplacement vers la gauche
-                  if(this.valideDep(p, 0) == true)                             // Vérification
+                  if(this.valideDep(0) == true)                             // Vérification
                   {
-                    p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()-1, this.getCharMonstre());
+                    this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()-1, this.getCharMonstre());
                     this.setPosColonne(this.getPosColonne()-1);
                     valide = false;
                   }
                   break;
 
               case 1:                                                          // Pour aller à droite
-                  if(this.valideDep(p, 1) == true)                             // Vérification
+                  if(this.valideDep(1) == true)                             // Vérification
                   {
-                    p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()+1, this.getCharMonstre());
+                    this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()+1, this.getCharMonstre());
                     this.setPosColonne(this.getPosColonne()+1);
                     valide = false;
                   }
@@ -114,9 +114,9 @@ public class Monstre
 
               case 2:       // Pour aller en haut
                 // Vérification en haut
-                if(this.valideDep(p, 2) == true)
+                if(this.valideDep(2) == true)
                 {
-                  p.modifieCaseDynamique(this.getPosLigne()-1, this.getPosColonne(), this.getCharMonstre());
+                  this.plat.modifieCaseDynamique(this.getPosLigne()-1, this.getPosColonne(), this.getCharMonstre());
                   this.setPosLigne(this.getPosLigne()-1);
                   valide = false;
                 }
@@ -124,9 +124,68 @@ public class Monstre
 
               case 3:      // Pour aller en bas
                 // Vérification en bas
-                if(this.valideDep(p, 3) == true)
+                if(this.valideDep(3) == true)
                 {
-                  p.modifieCaseDynamique(this.getPosLigne()+1, this.getPosColonne(), this.getCharMonstre());
+                  this.plat.modifieCaseDynamique(this.getPosLigne()+1, this.getPosColonne(), this.getCharMonstre());
+                  this.setPosLigne(this.getPosLigne()+1);
+                  valide = false;
+                }
+                break;
+          }
+
+          if(pasBoucleInfinie > 50)
+            valide = false;
+      }
+    }
+
+  // Méthode qui permet aux monstres d'un plateau de se déplacer sur celui-ci, avec 2 cusinisier
+  public void deplaceMonstre(Cuisinier cuis2)
+  {
+        int deplacement;
+        boolean valide = true;
+        int pasBoucleInfinie = 0;
+
+        while(valide)
+        {
+          this.clearMonstre(this.plat);
+          deplacement = (int)(Math.random()*4);
+          pasBoucleInfinie++;
+
+          switch(deplacement)
+          {
+              case 0:                                                          // Déplacement vers la gauche
+                  if(this.valideDep(0) == true)                             // Vérification
+                  {
+                    this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()-1, this.getCharMonstre());
+                    this.setPosColonne(this.getPosColonne()-1);
+                    valide = false;
+                  }
+                  break;
+
+              case 1:                                                          // Pour aller à droite
+                  if(this.valideDep(1) == true)                             // Vérification
+                  {
+                    this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()+1, this.getCharMonstre());
+                    this.setPosColonne(this.getPosColonne()+1);
+                    valide = false;
+                  }
+                  break;
+
+              case 2:       // Pour aller en haut
+                // Vérification en haut
+                if(this.valideDep(2) == true)
+                {
+                  this.plat.modifieCaseDynamique(this.getPosLigne()-1, this.getPosColonne(), this.getCharMonstre());
+                  this.setPosLigne(this.getPosLigne()-1);
+                  valide = false;
+                }
+                break;
+
+              case 3:      // Pour aller en bas
+                // Vérification en bas
+                if(this.valideDep(3) == true)
+                {
+                  this.plat.modifieCaseDynamique(this.getPosLigne()+1, this.getPosColonne(), this.getCharMonstre());
                   this.setPosLigne(this.getPosLigne()+1);
                   valide = false;
                 }
@@ -258,7 +317,7 @@ class MouvementMonstre extends Thread
       for(int j = 0; j < m.getNbMonstre(); j++)
       {
         monstre = m.getMonstre(j);
-        monstre.deplaceMonstre(this.plat, this.cuis);
+        monstre.deplaceMonstre();
 
         if(cuis.meetMonstre(monstre.getPosLigne(), monstre.getPosColonne()))
           cuis.setVie(cuis.getVie()-1);

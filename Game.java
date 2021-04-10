@@ -74,7 +74,7 @@ class Game{
       {
         this.cuis.deplaceCuisinier();
 
-        //on dit au thread que le cuisinier a bouger et qu'il peuvement bouger a leurs tours
+        //on dit au thread des monstres que le cuisinier a bouger et qu'il peuvement bouger a leurs tours
         mouv1.notif();
 
         this.plat.calcScore(this.cuis);
