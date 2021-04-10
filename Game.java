@@ -5,13 +5,10 @@ import java.util.*;
 class Game{
   private Joueur j;
   private Burger tabBurger[];
-  private SimulationPartie partie;
 
   public Joueur getJoueur(){ return this.j; }
   public void setJoueur(String pseudo){ this.j = new Joueur(pseudo); }
   public void setBurger() { this.tabBurger = new Burger[2]; }
-  public SimulationPartie getSimulationPartie() { return this.partie; }
-
 
   public Game(String pseudo)
   {
