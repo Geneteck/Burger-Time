@@ -141,7 +141,7 @@ class SimulationPartieMulti extends Thread
       while(this.cuis1.partieFinie() == false)
       {
         try{
-         Thread.sleep(8000);
+         wait();
         }catch(InterruptedException e){e.printStackTrace();}
 
         if( this.touche == 'z' || this.touche == 'q' || this.touche == 's' || this.touche == 'd' )
@@ -165,5 +165,9 @@ class SimulationPartieMulti extends Thread
             mouvCuis2.notif();
           }
       }
+    }
+
+    public synchronized void notif(){
+      notifyAll();
     }
   }

@@ -63,6 +63,7 @@ public class Serveur extends Thread {
 
        partie.toucheDeplace(carac);
        System.out.println("Dans serveur la touche = -" + carac + "-");
+       partie.notif();
      }
      this.sisw.println("END");
      return c1.getScore();
