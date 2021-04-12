@@ -36,6 +36,7 @@ public class Serveur extends Thread {
 
       public void run()
       {
+       System.out.println(" Je suis dans le run 1 ");
        Burger b1 = new Burger(1, 45);
        Burger b2 = new Burger(2, 19);
        Burger b3 = new Burger(4, 53);
@@ -66,14 +67,16 @@ public class Serveur extends Thread {
 
        while(this.cuis1.partieFinie() == false)
        {
-         this.cuis1.deplaceCuisinier();
+         System.out.println(" Je suis dans le run ");
          this.cuis2.deplaceCuisinier2(this.touche);
+         this.cuis1.deplaceCuisinier();
 
          //on dit au thread que les cuisinier ont bouger et qu'ils peuvement rebouger a leurs tours
          mouv1.notif();
 
          this.plat.calcScore(this.cuis1);
          this.plat.affiche(this.cuis1);
+         this.touche = ' ';
        }
      }
    }
@@ -102,7 +105,7 @@ public class Serveur extends Thread {
      System.out.println(" Choisir votre Pseudo");
      String pseudo1 = sc.nextLine();
      // Création du premier Joueur
-
+     char carac;
      Plateau p = new Plateau();
 
      this.j1 = new Joueur(pseudo1);
@@ -119,8 +122,6 @@ public class Serveur extends Thread {
      SimulationPartieMulti partie = new SimulationPartieMulti(5, p, c1, c2);
      partie.start();
 
-     char carac;
-
      while(c1.partieFinie() == false)
      {
        sisw.println(" Deplace ton cuisinier");
@@ -128,6 +129,7 @@ public class Serveur extends Thread {
        carac = str.charAt(0);
 
        partie.toucheDeplace(carac);
+       notify();
      }
      this.sisw.println("END");
      return c1.getScore();

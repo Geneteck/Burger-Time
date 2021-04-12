@@ -34,13 +34,15 @@ public void lance() throws Exception
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Choisir votre pseudo ");
 		String str = sc.nextLine();
-		this.sisw.println(str);          																						// envoi d'un message
+		this.sisw.println(str);
+
+		for(int i=0; i<50; i++) { System.out.println(""); }
 		str = this.sisr.readLine();      																						// lecture de la reponse
 		System.out.println(str);
 
 		while(str != "END")
 		{
-			for(int i=0; i<50; i++) { System.out.println(""); }
+			for(int i=0; i<70; i++) { System.out.println(""); }
 			str = this.sisr.readLine();      																					// lecture de la reponse
 			System.out.println(str);
 			str = sc.nextLine();
