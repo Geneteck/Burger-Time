@@ -12,72 +12,6 @@ public class Serveur extends Thread {
    private Joueur j1;
    private Joueur j2;
 
-
-   class SimulationPartieMulti extends Thread
-   {
-      private int nbMonstre;
-      private Plateau plat;
-      private Cuisinier cuis1;
-      private Cuisinier cuis2;
-      public char touche;
-
-      public SimulationPartieMulti(int nb, Plateau p, Cuisinier c1, Cuisinier c2)
-      {
-        this.nbMonstre = nb;
-        this.plat = p;
-        this.cuis1 = c1;
-        this.cuis2 = c2;
-      }
-
-      public synchronized char toucheDeplace(char t)
-      {
-        return this.touche = t;
-      }
-
-      public void run()
-      {
-       Burger b1 = new Burger(1, 45);
-       Burger b2 = new Burger(2, 19);
-       Burger b3 = new Burger(4, 53);
-
-       this.plat.addCuisinier(this.cuis1);
-       this.plat.addCuisinier(this.cuis2);
-
-       this.plat.Complete();
-
-       this.plat.addBurger(b1);
-       this.plat.addBurger(b2);
-       this.plat.addBurger(b3);
-
-       this.plat.setTabBurger(0, b1);
-       this.plat.setTabBurger(1, b2);
-       this.plat.setTabBurger(2, b3);
-
-       this.cuis1.spawnCuisinier();
-       this.cuis2.spawnCuisinier();
-
-       // Ajout de monstres dans le nouveau plateau dans lequel le joueur/cuisinier va jouer
-       Monstre m = new Monstre(this.nbMonstre, this.plat, this.cuis1);
-
-       MouvementMonstre mouv1 = new MouvementMonstre(m, plat, cuis1);
-       mouv1.start();
-
-       this.plat.affiche(this.cuis1);
-
-       while(this.cuis1.partieFinie() == false)
-       {
-         this.cuis1.deplaceCuisinier();
-         this.cuis2.deplaceCuisinier2(this.touche);
-
-         //on dit au thread que les cuisinier ont bouger et qu'ils peuvement rebouger a leurs tours
-         mouv1.notif();
-
-         this.plat.calcScore(this.cuis1);
-         this.plat.affiche(this.cuis1);
-       }
-     }
-   }
-
   // Appeler quand on choisis dans la section multijoueur : "Créer une partie"
  public Serveur() throws Exception
  {
@@ -99,7 +33,7 @@ public class Serveur extends Thread {
  public int lance() throws Exception
  {
      Scanner sc = new Scanner(System.in);
-     System.out.println(" Choisir votre Pseudo");
+     System.out.println("Choisir votre Pseudo");
      String pseudo1 = sc.nextLine();
      // Création du premier Joueur
 
@@ -113,25 +47,26 @@ public class Serveur extends Thread {
      Cuisinier c2 = new Cuisinier(p);
      this.j1.setCuisinier(c1);
      this.j2.setCuisinier(c2);
-     System.out.println(" Second joueur connecter !");
-     sisw.println(" Votre joueur "+j2.getPseudo() +" a ete ajoute a la partie ");                                                     // envoi d'un message
+     System.out.println("Second joueur connecter !");
+     sisw.println("Votre joueur "+j2.getPseudo() +" a ete ajoute a la partie.");                                                     // envoi d'un message
 
-     SimulationPartieMulti partie = new SimulationPartieMulti(5, p, c1, c2);
+     SimulationPartieMulti partie = new SimulationPartieMulti(0, p, c1, c2);
      partie.start();
 
      char carac;
 
      while(c1.partieFinie() == false)
      {
-       sisw.println(" Deplace ton cuisinier");
+       sisw.println("Deplace ton cuisinier");
        str = this.sisr.readLine();
        carac = str.charAt(0);
 
        partie.toucheDeplace(carac);
+       System.out.println("Dans serveur la touche = -" + carac + "-");
      }
      this.sisw.println("END");
      return c1.getScore();
-     
+
      //Scanner sc = new Scanner(System.in);
      //System.out.println(" Choisir votre Pseudo");
      //String pseudo1 = sc.nextLine();
@@ -140,7 +75,7 @@ public class Serveur extends Thread {
      //Plateau p = new Plateau();
 
      //this.j1 = new Joueur(pseudo1);
-     //String str = this.sisr.readLine();                                           // Lecture du pseudo du 2ème joueur
+     //String str = this.sisr.readLine();                                        // Lecture du pseudo du 2ème joueur
      //this.j2 = new Joueur(str);
 
      //Cuisinier c1 = new Cuisinier(p);

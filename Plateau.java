@@ -256,9 +256,9 @@ public class Plateau
   public void affiche(Cuisinier c)                                     // Affiche l'état du jeu à chaque déplacement du joueur
   {
       //commande utiliser pour l'éxecution sous windows afin de clear l'invite de commande
-      try{
-        new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-      }catch (Exception e) { e.printStackTrace();}
+      //try{
+      //  new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+      //}catch (Exception e) { e.printStackTrace();}
 
       // Pour aérer à chaque actualisation de la partie
       System.out.println(tiret+"\n"+tiret+"\n");

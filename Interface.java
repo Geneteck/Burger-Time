@@ -23,7 +23,7 @@ class Interface
   String tabu1 = "                                ";
   String tabu2 = "              ";
 
-  // Méthodes principales 
+  // Méthodes principales
 
   // Menu1 affiche le menu principal du jeu lorsque le programme est lancer
   public int Menu1()
@@ -139,7 +139,7 @@ class Interface
       try {
           Game g = new Game(pseudo);
           this.pseudoS = pseudo;
-          this.scoreFinal = g.getSimulationPartie().getScoreFinal();
+          //this.scoreFinal = g.getSimulationPartie().getScoreFinal();
           this.classement.start(this.pseudoS, this.scoreFinal);
       } catch (Exception e) { e.printStackTrace();}
       this.Menu4();
