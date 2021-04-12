@@ -15,8 +15,6 @@ public class Monstre
   private Monstre tabMonstre[];                                                 // Structure qui contient l'ensemble des monstres crée lors d'une partie
   private Plateau plat;                                                         //plateau courant
   private Cuisinier cuis;                                                       //cuisinier courant
-  private Cuisinier cuis2;                                                      //second cuisinier courant pour les partie multijoueur
-
 
   // Méthode d'accès
 
@@ -140,65 +138,6 @@ public class Monstre
       }
     }
 
-  // Méthode qui permet aux monstres d'un plateau de se déplacer sur celui-ci, avec 2 cusinisier
-  public void deplaceMonstre(Cuisinier cuis2)
-  {
-        int deplacement;
-        boolean valide = true;
-        int pasBoucleInfinie = 0;
-
-        while(valide)
-        {
-          this.clearMonstre(this.plat);
-          deplacement = (int)(Math.random()*4);
-          pasBoucleInfinie++;
-
-          switch(deplacement)
-          {
-              case 0:                                                          // Déplacement vers la gauche
-                  if(this.valideDep(0) == true)                             // Vérification
-                  {
-                    this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()-1, this.getCharMonstre());
-                    this.setPosColonne(this.getPosColonne()-1);
-                    valide = false;
-                  }
-                  break;
-
-              case 1:                                                          // Pour aller à droite
-                  if(this.valideDep(1) == true)                             // Vérification
-                  {
-                    this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()+1, this.getCharMonstre());
-                    this.setPosColonne(this.getPosColonne()+1);
-                    valide = false;
-                  }
-                  break;
-
-              case 2:       // Pour aller en haut
-                // Vérification en haut
-                if(this.valideDep(2) == true)
-                {
-                  this.plat.modifieCaseDynamique(this.getPosLigne()-1, this.getPosColonne(), this.getCharMonstre());
-                  this.setPosLigne(this.getPosLigne()-1);
-                  valide = false;
-                }
-                break;
-
-              case 3:      // Pour aller en bas
-                // Vérification en bas
-                if(this.valideDep(3) == true)
-                {
-                  this.plat.modifieCaseDynamique(this.getPosLigne()+1, this.getPosColonne(), this.getCharMonstre());
-                  this.setPosLigne(this.getPosLigne()+1);
-                  valide = false;
-                }
-                break;
-          }
-
-          if(pasBoucleInfinie > 50)
-            valide = false;
-      }
-    }
-
   // Méthode pour disposer de manière aléatoire les monstres (au préalable déjà crée), sur un plateau
   public void spawnRandom()
   {
@@ -263,15 +202,6 @@ public class Monstre
      this.tabMonstre = new Monstre[nb];
      this.plat = plat;
      this.cuis = c;
-   }
-
-  public Monstre(int nb, Plateau plat, Cuisinier c1, Cuisinier c2)
-  {
-     setNbMonstre(nb);
-     this.tabMonstre = new Monstre[nb];
-     this.plat = plat;
-     this.cuis = c1;
-     this.cuis2 = c2;
    }
 }
 

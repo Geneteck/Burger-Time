@@ -50,19 +50,18 @@ public class Serveur extends Thread {
      System.out.println("Second joueur connecter !");
      sisw.println("Votre joueur "+j2.getPseudo() +" a ete ajoute a la partie.");                                                     // envoi d'un message
 
-     SimulationPartieMulti partie = new SimulationPartieMulti(0, p, c1, c2);
+     SimulationPartieMulti partie = new SimulationPartieMulti(10, p, c1, c2);
      partie.start();
 
      char carac;
 
      while(c1.partieFinie() == false)
      {
-       sisw.println("Deplace ton cuisinier");
+       sisw.println("Deplace ton cuisinier :");
        str = this.sisr.readLine();
        carac = str.charAt(0);
 
        partie.toucheDeplace(carac);
-       System.out.println("Dans serveur la touche = -" + carac + "-");
        partie.notif();
      }
      this.sisw.println("END");

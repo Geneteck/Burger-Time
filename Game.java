@@ -41,7 +41,7 @@ class SimulationPartie extends Thread
        return this.cuis.getScore();
      }
 
-     public void run()
+     public synchronized void run()
      {
       Burger b1 = new Burger(1, 45);
       Burger b2 = new Burger(2, 19);
@@ -74,10 +74,8 @@ class SimulationPartie extends Thread
       while(this.cuis.partieFinie() == false)
       {
         mouvCuis.notif();
-
         //on dit au thread des monstres que le cuisinier a bouger et qu'il peuvement bouger a leurs tours
         mouvMonstre.notif();
-
         this.plat.calcScore(this.cuis);
         this.plat.affiche(this.cuis);
       }
@@ -138,6 +136,8 @@ class SimulationPartieMulti extends Thread
       MouvementCuisinierClient mouvCuis2 = new MouvementCuisinierClient(this.plat, this.cuis2);
       mouvCuis2.start();
 
+      this.plat.affiche(this.cuis1);
+
       while(this.cuis1.partieFinie() == false)
       {
         try{
@@ -146,7 +146,6 @@ class SimulationPartieMulti extends Thread
 
         if( this.touche == 'z' || this.touche == 'q' || this.touche == 's' || this.touche == 'd' )
           {
-            System.out.println("Dans la game la touche = -" + touche + "-");
             mouvCuis2.recupTouche(this.touche);
             mouvCuis2.notif(); //il peut prendre effectuer un déplacement
             this.touche = ' ';
@@ -160,7 +159,6 @@ class SimulationPartieMulti extends Thread
 
         if(mouvCuis1.getEvt() == true && mouvCuis2.getEvt() == true)
           {
-            System.out.println("On est dans le ptn de if de mort");
             mouvCuis1.notif();
             mouvCuis2.notif();
           }

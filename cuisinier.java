@@ -38,7 +38,6 @@ public class Cuisinier
   public void deplaceCuisinier()                               // Fonction qui permet de déplacer le cuisinier de la partie
   {
     Scanner sc = new Scanner(System.in);      // Create a Scanner object
-    System.out.println("Deplacer le cuisinier :");
 
     boolean verif = false;
 
@@ -234,8 +233,6 @@ class MouvementCuisinier extends Thread
       //permet de savoir que le déplacement du cuisinier a etait effectuer
       this.evt = true;
 
-      System.out.println("Deplacement cuisinier fait et evt fait");
-
       try{
        wait();
       }catch(InterruptedException e){e.printStackTrace();}
@@ -270,7 +267,6 @@ class MouvementCuisinierClient extends Thread
          wait();
         }catch(InterruptedException e){e.printStackTrace();}
 
-        System.out.println("Dans cuisinier la touche = -" + touche + "-");
         this.cuis1.deplaceCuisinier2(this.touche);
 
         //permet de savoir que le déplacement du cuisinier a etait effectuer

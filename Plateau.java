@@ -299,6 +299,7 @@ public class Plateau
 
       for(int i=0; i<12; i++) { System.out.println(""); }
       System.out.println(tiret+"\n"+tiret+"\n");
+      System.out.println("Deplacer le cuisinier :");  
   }
 
   public void afficheBurger()
