@@ -138,130 +138,71 @@ public class Monstre
       }
     }
 
-  // Méthode qui permet aux monstres d'un plateau de se déplacer sur celui-ci, avec 2 cusinisier
-  public void deplaceMonstre(Cuisinier cuis2)
-  {
-        int deplacement;
-        boolean valide = true;
-        int pasBoucleInfinie = 0;
-
-        while(valide)
-        {
-          this.clearMonstre(this.plat);
-          deplacement = (int)(Math.random()*4);
-          pasBoucleInfinie++;
-
-          switch(deplacement)
-          {
-              case 0:                                                          // Déplacement vers la gauche
-                  if(this.valideDep(0) == true)                             // Vérification
-                  {
-                    this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()-1, this.getCharMonstre());
-                    this.setPosColonne(this.getPosColonne()-1);
-                    valide = false;
-                  }
-                  break;
-
-              case 1:                                                          // Pour aller à droite
-                  if(this.valideDep(1) == true)                             // Vérification
-                  {
-                    this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()+1, this.getCharMonstre());
-                    this.setPosColonne(this.getPosColonne()+1);
-                    valide = false;
-                  }
-                  break;
-
-              case 2:       // Pour aller en haut
-                // Vérification en haut
-                if(this.valideDep(2) == true)
-                {
-                  this.plat.modifieCaseDynamique(this.getPosLigne()-1, this.getPosColonne(), this.getCharMonstre());
-                  this.setPosLigne(this.getPosLigne()-1);
-                  valide = false;
-                }
-                break;
-
-              case 3:      // Pour aller en bas
-                // Vérification en bas
-                if(this.valideDep(3) == true)
-                {
-                  this.plat.modifieCaseDynamique(this.getPosLigne()+1, this.getPosColonne(), this.getCharMonstre());
-                  this.setPosLigne(this.getPosLigne()+1);
-                  valide = false;
-                }
-                break;
-          }
-
-          if(pasBoucleInfinie > 50)
-            valide = false;
-      }
-    }
-
   // Méthode pour disposer de manière aléatoire les monstres (au préalable déjà crée), sur un plateau
- public void spawnRandom()
- {
-   for(int i = 0; i < this.getNbMonstre(); i++)
-   {
-     char map[][] = this.plat.getMapStatic();
-     char dyn[][] = this.plat.getMapDynamic();
-
-     boolean valide = false;
-
-     while(valide == false)
+  public void spawnRandom()
+  {
+     for(int i = 0; i < this.getNbMonstre(); i++)
      {
-       int col = (int)(Math.random()*this.plat.getNbCol());
-       int lig = (int)(Math.random()*this.plat.getNbLigne());
+       char map[][] = this.plat.getMapStatic();
+       char dyn[][] = this.plat.getMapDynamic();
 
-       int x = (int)(Math.random()*3);
+       boolean valide = false;
 
-       if( this.plat.getCharat(map, lig, col) == this.plat.AFF_SOL && this.plat.getCharat(dyn, lig, col) == this.plat.AFF_VIDE )
-         {
-           switch (x)
+       while(valide == false)
+       {
+         int col = (int)(Math.random()*this.plat.getNbCol());
+         int lig = (int)(Math.random()*this.plat.getNbLigne());
+
+         int x = (int)(Math.random()*3);
+
+         if( this.plat.getCharat(map, lig, col) == this.plat.AFF_SOL && this.plat.getCharat(dyn, lig, col) == this.plat.AFF_VIDE )
            {
-             case 0:
-              {
-                this.tabMonstre[i] = new Oeuf(lig, col, plat, cuis);
-                valide = true;
-                break;
-              }
+             switch (x)
+             {
+               case 0:
+                {
+                  this.tabMonstre[i] = new Oeuf(lig, col, plat, cuis);
+                  valide = true;
+                  break;
+                }
 
-              case 1:
-              {
-                this.tabMonstre[i] = new Saucisse(lig, col, plat, cuis);
-                valide = true;
-                break;
-              }
+                case 1:
+                {
+                  this.tabMonstre[i] = new Saucisse(lig, col, plat, cuis);
+                  valide = true;
+                  break;
+                }
 
-              case 2:
-              {
-                this.tabMonstre[i] = new Cornichon(lig, col, plat, cuis);
-                valide = true;
-                break;
-              }
-           } //end swtich
-         } //end if
-     } //end while
-   } //end for
- }
+                case 2:
+                {
+                  this.tabMonstre[i] = new Cornichon(lig, col, plat, cuis);
+                  valide = true;
+                  break;
+                }
+             } //end swtich
+           } //end if
+       } //end while
+     } //end for
+   }
 
- public void clearMonstre(Plateau p)
- {
-   char dyn[][] = p.getMapDynamic();
+  public void clearMonstre(Plateau p)
+  {
+     char dyn[][] = p.getMapDynamic();
 
-   int col = this.getPosColonne();
-   int lig = this.getPosLigne();
+     int col = this.getPosColonne();
+     int lig = this.getPosLigne();
 
-   if( p.getCharat(dyn, lig, col-1) != 'C' || p.getCharat(dyn, lig, col-1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' || p.getCharat(dyn, lig, col+1) != 'C' || p.getCharat(dyn, lig, col+1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' )
-     p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
- }
+     if( p.getCharat(dyn, lig, col-1) != 'C' || p.getCharat(dyn, lig, col-1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' || p.getCharat(dyn, lig, col+1) != 'C' || p.getCharat(dyn, lig, col+1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' )
+       p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
+   }
 
- public Monstre(int nb, Plateau plat, Cuisinier c)
- {
-   setNbMonstre(nb);
-   this.tabMonstre = new Monstre[nb];
-   this.plat = plat;
-   this.cuis = c;
- }
+  public Monstre(int nb, Plateau plat, Cuisinier c)
+  {
+     setNbMonstre(nb);
+     this.tabMonstre = new Monstre[nb];
+     this.plat = plat;
+     this.cuis = c;
+   }
 }
 
 class Oeuf extends Monstre

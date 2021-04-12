@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.util.*;
 import java.io.*;
 
-public class Cuisinier extends Thread
+public class Cuisinier
 {
   // Déclaration des attributs de la classe Cuisinier
 
@@ -38,9 +38,6 @@ public class Cuisinier extends Thread
   public void deplaceCuisinier()                               // Fonction qui permet de déplacer le cuisinier de la partie
   {
     Scanner sc = new Scanner(System.in);      // Create a Scanner object
-    System.out.println("Deplacer le cuisinier :");
-
-    this.clearCuisinier(this.plat);
 
     boolean verif = false;
 
@@ -50,6 +47,7 @@ public class Cuisinier extends Thread
 
       if(touche == 'z' && plat.valide(touche, this.getPosLigne(),this.getPosColonne()))
       {
+        this.clearCuisinier(this.plat);
         this.setPosLigne(this.getPosLigne()-1);
         verif = true;
       }
@@ -57,18 +55,21 @@ public class Cuisinier extends Thread
       else if(touche == 'q' && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
       {
         plat.tomber(touche, this.getPosLigne(), this.getPosColonne());
+        this.clearCuisinier(this.plat);
         this.setPosColonne(this.getPosColonne()-1);
         verif = true;
       }
       else if(touche == 'd'  && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
       {
         plat.tomber(touche, this.getPosLigne(), this.getPosColonne());
+        this.clearCuisinier(this.plat);
         this.setPosColonne(this.getPosColonne()+1);
         verif = true;
       }
 
       else if(touche == 's'  && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
       {
+        this.clearCuisinier(this.plat);
         this.setPosLigne(this.getPosLigne()+1);
         verif = true;
       }
@@ -182,6 +183,7 @@ public class Cuisinier extends Thread
         {
            this.setPosLigne(lig);
            this.setPosColonne(col);
+           this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), this.getCharCuisinier());
            valide = true;
         }
     }
@@ -207,5 +209,84 @@ public class Cuisinier extends Thread
     setScore(0);
     this.plat = p;
   }
+}
 
+class MouvementCuisinier extends Thread
+{
+  private Plateau plat;
+  private Cuisinier cuis;
+  private boolean evt = false;
+
+  public boolean getEvt() { return this.evt; }
+
+  public MouvementCuisinier(Plateau p, Cuisinier c){
+   this.plat = p;
+   this.cuis = c;
+   cuis.spawnCuisinier();
+  }
+
+  public synchronized void run(){
+    while(true)
+    {
+      this.cuis.deplaceCuisinier();
+
+      //permet de savoir que le déplacement du cuisinier a etait effectuer
+      this.evt = true;
+
+      try{
+       wait();
+      }catch(InterruptedException e){e.printStackTrace();}
+      this.evt = false;
+    }
+  }
+
+  public synchronized void notif(){
+    notifyAll();
+  }
+}
+
+class MouvementCuisinierClient extends Thread
+{
+  private Plateau plat;
+  private Cuisinier cuis1;
+  public char touche;
+  private boolean evt = false;
+
+  public boolean getEvt() { return this.evt; }
+
+  public MouvementCuisinierClient(Plateau p, Cuisinier c){
+   this.plat = p;
+   this.cuis1 = c;
+   cuis1.spawnCuisinier();
+  }
+
+  public synchronized void run(){
+    while(true)
+      {
+        try{
+         wait();
+        }catch(InterruptedException e){e.printStackTrace();}
+
+        this.cuis1.deplaceCuisinier2(this.touche);
+
+        //permet de savoir que le déplacement du cuisinier a etait effectuer
+        this.evt = true;
+
+        try{
+         wait();
+        }catch(InterruptedException e){e.printStackTrace();}
+
+        this.touche = ' ';
+        this.evt = false;
+      }
+  }
+
+  public void recupTouche(char touche)
+  {
+    this.touche = touche;
+  }
+
+  public synchronized void notif(){
+    notifyAll();
+  }
 }

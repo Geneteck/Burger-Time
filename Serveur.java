@@ -102,7 +102,7 @@ public class Serveur extends Thread {
  public int lance() throws Exception
  {
      Scanner sc = new Scanner(System.in);
-     System.out.println(" Choisir votre Pseudo");
+     System.out.println("Choisir votre Pseudo");
      String pseudo1 = sc.nextLine();
      // Création du premier Joueur
      char carac;
@@ -116,15 +116,15 @@ public class Serveur extends Thread {
      Cuisinier c2 = new Cuisinier(p);
      this.j1.setCuisinier(c1);
      this.j2.setCuisinier(c2);
-     System.out.println(" Second joueur connecter !");
-     sisw.println(" Votre joueur "+j2.getPseudo() +" a ete ajoute a la partie ");                                                     // envoi d'un message
+     System.out.println("Second joueur connecter !");
+     sisw.println("Votre joueur "+j2.getPseudo() +" a ete ajoute a la partie.");                                                     // envoi d'un message
 
-     SimulationPartieMulti partie = new SimulationPartieMulti(5, p, c1, c2);
+     SimulationPartieMulti partie = new SimulationPartieMulti(10, p, c1, c2);
      partie.start();
 
      while(c1.partieFinie() == false)
      {
-       sisw.println(" Deplace ton cuisinier");
+       sisw.println("Deplace ton cuisinier :");
        str = this.sisr.readLine();
        carac = str.charAt(0);
 
@@ -133,6 +133,7 @@ public class Serveur extends Thread {
      }
      this.sisw.println("END");
      return c1.getScore();
+
      //Scanner sc = new Scanner(System.in);
      //System.out.println(" Choisir votre Pseudo");
      //String pseudo1 = sc.nextLine();
@@ -141,7 +142,7 @@ public class Serveur extends Thread {
      //Plateau p = new Plateau();
 
      //this.j1 = new Joueur(pseudo1);
-     //String str = this.sisr.readLine();                                           // Lecture du pseudo du 2ème joueur
+     //String str = this.sisr.readLine();                                        // Lecture du pseudo du 2ème joueur
      //this.j2 = new Joueur(str);
 
      //Cuisinier c1 = new Cuisinier(p);
