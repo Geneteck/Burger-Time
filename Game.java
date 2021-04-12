@@ -144,24 +144,26 @@ class SimulationPartieMulti extends Thread
          Thread.sleep(8000);
         }catch(InterruptedException e){e.printStackTrace();}
 
-        System.out.println("Dans la game la touche = -" + touche + "-");
-
-        mouvCuis2.recupTouche(this.touche);
-
-        if(mouvCuis1.getEvt() == true && mouvCuis2.getEvt() == true)
+        if( this.touche == 'z' || this.touche == 'q' || this.touche == 's' || this.touche == 'd' )
           {
-            System.out.println("On est dans le ptn de if de mort");
-
+            System.out.println("Dans la game la touche = -" + touche + "-");
+            mouvCuis2.recupTouche(this.touche);
+            mouvCuis2.notif(); //il peut prendre effectuer un déplacement
+            this.touche = ' ';
           }
-
-        mouvCuis1.notif();
-        mouvCuis2.notif();
 
         //on dit au thread que les cuisinier ont bouger et qu'ils peuvement rebouger a leurs tours
         mouvMonstre.notif();
 
         this.plat.calcScore(this.cuis1);
         this.plat.affiche(this.cuis1);
+
+        if(mouvCuis1.getEvt() == true && mouvCuis2.getEvt() == true)
+          {
+            System.out.println("On est dans le ptn de if de mort");
+            mouvCuis1.notif();
+            mouvCuis2.notif();
+          }
       }
     }
   }

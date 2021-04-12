@@ -234,9 +234,12 @@ class MouvementCuisinier extends Thread
       //permet de savoir que le déplacement du cuisinier a etait effectuer
       this.evt = true;
 
+      System.out.println("Deplacement cuisinier fait et evt fait");
+
       try{
        wait();
       }catch(InterruptedException e){e.printStackTrace();}
+      this.evt = false;
     }
   }
 
@@ -264,7 +267,7 @@ class MouvementCuisinierClient extends Thread
     while(true)
       {
         try{
-         Thread.sleep(10000);
+         wait();
         }catch(InterruptedException e){e.printStackTrace();}
 
         System.out.println("Dans cuisinier la touche = -" + touche + "-");
@@ -278,6 +281,7 @@ class MouvementCuisinierClient extends Thread
         }catch(InterruptedException e){e.printStackTrace();}
 
         this.touche = ' ';
+        this.evt = false;
       }
   }
 
