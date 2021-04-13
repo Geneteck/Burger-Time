@@ -253,14 +253,10 @@ public class Plateau
      return v;
    }
 
-  public void affiche(Cuisinier c)                                     // Affiche l'état du jeu à chaque déplacement du joueur
-  {
-      //commande utiliser pour l'éxecution sous windows afin de clear l'invite de commande
-      //try{
-      //  new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-      //}catch (Exception e) { e.printStackTrace();}
 
-      // Pour aérer à chaque actualisation de la partie
+  // Permet de visualiser au fur et à mesure l'état du plateau
+  public void affiche(Cuisinier c)
+  {
       System.out.println(tiret+"\n"+tiret+"\n");
       this.calcScore(c);
       for(int i=0; i<15; i++)
@@ -273,14 +269,14 @@ public class Plateau
         else System.out.println("");
       }
 
-      for(int i=-1; i<=this.getNbLigne()+2; i++)                       // afficheScorePV du terrain dans lequel les monstres et le cuisinier évolue
+      for(int i=-1; i<=this.getNbLigne()+2; i++)
       {
         for(int j=-1; j<=this.getNbCol()+2; j++)
         {
           if(j == -1)
             System.out.print(tabu1);
 
-          if (i == -1 || j == -1 || i == this.getNbLigne()+2 || j ==  this.getNbCol()+2) // Permet l'affichage des bords du tableau
+          if (i == -1 || j == -1 || i == this.getNbLigne()+2 || j ==  this.getNbCol()+2)
             System.out.print(AFF_LIMITE);
 
           else if( mapDynam[i][j] == 'J'|| mapDynam[i][j] == 'S' || mapDynam[i][j] == 'O' || mapDynam[i][j] == 'C' )
@@ -299,7 +295,7 @@ public class Plateau
 
       for(int i=0; i<12; i++) { System.out.println(""); }
       System.out.println(tiret+"\n"+tiret+"\n");
-      System.out.println("Deplacer le cuisinier :");  
+      System.out.println("Deplacer le cuisinier :");
   }
 
   public void afficheBurger()
@@ -350,10 +346,10 @@ public class Plateau
           {
               if (j == this.getTabBurger(z).getColonne())
               {
-                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 40;}
-                if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 20; }
-                if( i == 2 && b.steack(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 10; }
-
+                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 70;}
+                if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { point = point + 50; }
+                if( i == 2 && b.steack(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) {  point = point + 30; }
+                if( x == 1 || x == 2 || x == 3) { point = point*2; }
               }
           }
           c.setScore(point);
@@ -484,68 +480,6 @@ public class Plateau
     modifieCaseStatic(this.getNbLigne()-2, 50, AFF_ECHELLE);
   }
 
-  public void PlateauNiveau1()                                   // Modifie les cases d'un Plateau(4, 14) (Spécifique)
-  {
-    modifieCaseStatic(0,0,AFF_SOL);
-    modifieCaseStatic(0,1,AFF_SOL);
-    modifieCaseStatic(0,2,AFF_SOL);
-    modifieCaseStatic(0,3,AFF_SOL);
-    modifieCaseStatic(0,4,AFF_ECHELLE);
-    modifieCaseStatic(0,5,AFF_SOL);
-    modifieCaseStatic(0,6,AFF_SOL);
-    modifieCaseStatic(0,7,AFF_SOL);
-    modifieCaseStatic(0,8,AFF_SOL);
-    modifieCaseStatic(0,9,AFF_SOL);
-    modifieCaseStatic(0,10,AFF_SOL);
-    modifieCaseStatic(0,11,AFF_SOL);
-    modifieCaseStatic(0,12,AFF_SOL);
-    modifieCaseStatic(0,13,AFF_ECHELLE);
-
-    modifieCaseStatic(1,0,AFF_SOL);
-    modifieCaseStatic(1,1,AFF_SOL);
-    modifieCaseStatic(1,2,AFF_SOL);
-    modifieCaseStatic(1,3,AFF_SOL);
-    modifieCaseStatic(1,4,AFF_ECHELLE);
-    modifieCaseStatic(1,5,AFF_SOL);
-    modifieCaseStatic(1,6,AFF_SOL);
-    modifieCaseStatic(1,7,AFF_SOL);
-    modifieCaseStatic(1,8,AFF_VIDE);
-    modifieCaseStatic(1,9,AFF_VIDE);
-    modifieCaseStatic(1,10,AFF_SOL);
-    modifieCaseStatic(1,11,AFF_SOL);
-    modifieCaseStatic(1,12,AFF_SOL);
-    modifieCaseStatic(1,13,AFF_ECHELLE);
-
-    modifieCaseStatic(2,0,AFF_ECHELLE);
-    modifieCaseStatic(2,1,AFF_SOL);
-    modifieCaseStatic(2,2,AFF_SOL);
-    modifieCaseStatic(2,3,AFF_SOL);
-    modifieCaseStatic(2,4,AFF_ECHELLE);
-    modifieCaseStatic(2,5,AFF_SOL);
-    modifieCaseStatic(2,6,AFF_SOL);
-    modifieCaseStatic(2,7,AFF_SOL);
-    modifieCaseStatic(2,8,AFF_SOL);
-    modifieCaseStatic(2,9,AFF_SOL);
-    modifieCaseStatic(2,10,AFF_SOL);
-    modifieCaseStatic(2,11,AFF_SOL);
-    modifieCaseStatic(2,12,AFF_SOL);
-    modifieCaseStatic(2,13,AFF_SOL);
-
-    modifieCaseStatic(3,0,AFF_ECHELLE);
-    modifieCaseStatic(3,1,AFF_SOL);
-    modifieCaseStatic(3,2,AFF_SOL);
-    modifieCaseStatic(3,3,AFF_SOL);
-    modifieCaseStatic(3,4,AFF_SOL);
-    modifieCaseStatic(3,5,AFF_SOL);
-    modifieCaseStatic(3,6,AFF_SOL);
-    modifieCaseStatic(3,7,AFF_SOL);
-    modifieCaseStatic(3,8,AFF_SOL);
-    modifieCaseStatic(3,9,AFF_SOL);
-    modifieCaseStatic(3,10,AFF_SOL);
-    modifieCaseStatic(3,11,AFF_SOL);
-    modifieCaseStatic(3,12,AFF_SOL);
-    modifieCaseStatic(3,13,AFF_SOL);
-  }
 
   public void addMonstre(Monstre m)                              // Ajoute un monstre m sur le plateau pour qu'il puisse être visualiser
   {

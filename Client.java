@@ -16,7 +16,6 @@ public Client(int port) throws Exception
 	this.sisr = new BufferedReader( new InputStreamReader(socket.getInputStream()));
 	this.sisw = new PrintWriter( new BufferedWriter( new OutputStreamWriter(socket.getOutputStream())),true);
 	String recep = sisr.readLine();
-	System.out.println(recep);
 	if(recep.equals("TRUE"))
 	{
 		this.lance();
@@ -30,7 +29,7 @@ public Client(int port) throws Exception
 
 public void lance() throws Exception
 {
-		for(int i=0; i<50; i++) { System.out.println(""); }
+		for(int i=0; i<70; i++) { System.out.println(""); }
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Choisir votre pseudo ");
 		String str = sc.nextLine();

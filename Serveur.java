@@ -13,74 +13,6 @@ public class Serveur extends Thread {
    private Joueur j2;
 
 
-   class SimulationPartieMulti extends Thread
-   {
-      private int nbMonstre;
-      private Plateau plat;
-      private Cuisinier cuis1;
-      private Cuisinier cuis2;
-      public char touche;
-
-      public SimulationPartieMulti(int nb, Plateau p, Cuisinier c1, Cuisinier c2)
-      {
-        this.nbMonstre = nb;
-        this.plat = p;
-        this.cuis1 = c1;
-        this.cuis2 = c2;
-      }
-
-      public synchronized char toucheDeplace(char t)
-      {
-        return this.touche = t;
-      }
-
-      public void run()
-      {
-       System.out.println(" Je suis dans le run 1 ");
-       Burger b1 = new Burger(1, 45);
-       Burger b2 = new Burger(2, 19);
-       Burger b3 = new Burger(4, 53);
-
-       this.plat.addCuisinier(this.cuis1);
-       this.plat.addCuisinier(this.cuis2);
-
-       this.plat.Complete();
-
-       this.plat.addBurger(b1);
-       this.plat.addBurger(b2);
-       this.plat.addBurger(b3);
-
-       this.plat.setTabBurger(0, b1);
-       this.plat.setTabBurger(1, b2);
-       this.plat.setTabBurger(2, b3);
-
-       this.cuis1.spawnCuisinier();
-       this.cuis2.spawnCuisinier();
-
-       // Ajout de monstres dans le nouveau plateau dans lequel le joueur/cuisinier va jouer
-       Monstre m = new Monstre(this.nbMonstre, this.plat, this.cuis1);
-
-       MouvementMonstre mouv1 = new MouvementMonstre(m, plat, cuis1);
-       mouv1.start();
-
-       this.plat.affiche(this.cuis1);
-
-       while(this.cuis1.partieFinie() == false)
-       {
-         System.out.println(" Je suis dans le run ");
-         this.cuis2.deplaceCuisinier2(this.touche);
-         this.cuis1.deplaceCuisinier();
-
-         //on dit au thread que les cuisinier ont bouger et qu'ils peuvement rebouger a leurs tours
-         mouv1.notif();
-
-         this.plat.calcScore(this.cuis1);
-         this.plat.affiche(this.cuis1);
-         this.touche = ' ';
-       }
-     }
-   }
-
   // Appeler quand on choisis dans la section multijoueur : "Créer une partie"
  public Serveur() throws Exception
  {
@@ -129,7 +61,7 @@ public class Serveur extends Thread {
        carac = str.charAt(0);
 
        partie.toucheDeplace(carac);
-       notify();
+       partie.notif();
      }
      this.sisw.println("END");
      return c1.getScore();

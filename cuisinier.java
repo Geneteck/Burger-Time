@@ -148,7 +148,7 @@ public class Cuisinier
         System.out.println("END GAME, THE PLAYER IS DEAD !!");
         return true;
       }
-    else if (this.getScore() == 210)
+    else if (this.getScore() == 2100)
       {
         System.out.println("END GAME, ALL BURGER IS READY!!");
         return true;
@@ -226,7 +226,7 @@ class MouvementCuisinier extends Thread
   }
 
   public synchronized void run(){
-    while(true)
+    while(this.cuis.partieFinie() == false)
     {
       this.cuis.deplaceCuisinier();
 
@@ -245,7 +245,7 @@ class MouvementCuisinier extends Thread
   }
 }
 
-class MouvementCuisinierClient extends Thread
+ class MouvementCuisinierClient extends Thread
 {
   private Plateau plat;
   private Cuisinier cuis1;
@@ -261,7 +261,7 @@ class MouvementCuisinierClient extends Thread
   }
 
   public synchronized void run(){
-    while(true)
+    while(this.cuis1.partieFinie() == false)
       {
         try{
          wait();

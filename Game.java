@@ -5,10 +5,13 @@ import java.util.*;
 public class Game{
   private Joueur j;
   private Burger tabBurger[];
+  private SimulationPartie simulPartie;
 
   public Joueur getJoueur(){ return this.j; }
   public void setJoueur(String pseudo){ this.j = new Joueur(pseudo); }
   public void setBurger() { this.tabBurger = new Burger[2]; }
+  public SimulationPartie getSimulationPartie() { return this.simulPartie;}
+
 
   public Game(String pseudo)
   {
@@ -16,8 +19,8 @@ public class Game{
 
     setJoueur(pseudo);
 
-    SimulationPartie partie = new SimulationPartie(10, p, this.j);
-    partie.run();
+    this.simulPartie = new SimulationPartie(0, p, this.j);
+    this.simulPartie.run();
   }
 }
 
@@ -79,7 +82,9 @@ class SimulationPartie extends Thread
         this.plat.calcScore(this.cuis);
         this.plat.affiche(this.cuis);
       }
+      this.interrupt();
     }
+
   }
 
 class SimulationPartieMulti extends Thread
@@ -127,7 +132,7 @@ class SimulationPartieMulti extends Thread
 
       this.plat.affiche(this.cuis1);
 
-      MouvementMonstre mouvMonstre = new MouvementMonstre(m, plat, cuis1);
+      MouvementMonstreMulti mouvMonstre = new MouvementMonstreMulti(m, plat, cuis1, cuis2);
       mouvMonstre.start();
 
       MouvementCuisinier mouvCuis1 = new MouvementCuisinier(this.plat, this.cuis1);
@@ -163,6 +168,7 @@ class SimulationPartieMulti extends Thread
             mouvCuis2.notif();
           }
       }
+      this.interrupt();
     }
 
     public synchronized void notif(){

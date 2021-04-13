@@ -139,7 +139,7 @@ class Interface
       try {
           Game g = new Game(pseudo);
           this.pseudoS = pseudo;
-          //this.scoreFinal = g.getSimulationPartie().getScoreFinal();
+          this.scoreFinal = g.getSimulationPartie().getScoreFinal();
           this.classement.start(this.pseudoS, this.scoreFinal);
       } catch (Exception e) { e.printStackTrace();}
       this.Menu4();

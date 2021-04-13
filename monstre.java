@@ -274,3 +274,42 @@ class MouvementMonstre extends Thread
     notifyAll();
   }
 }
+
+class MouvementMonstreMulti extends Thread
+{
+  private Monstre m;
+  private Plateau plat;
+  private Cuisinier cuis1;
+  private Cuisinier cuis2;
+
+  public MouvementMonstreMulti(Monstre m, Plateau p, Cuisinier c1, Cuisinier c2){
+   this.m = m;
+   this.plat = p;
+   this.cuis1 = c1;
+   this.cuis2 = c2;
+   m.spawnRandom();
+  }
+
+  public synchronized void run(){
+    Monstre monstre;
+    while(this.cuis1.partieFinie() == false )
+    {
+      for(int j = 0; j < m.getNbMonstre(); j++)
+      {
+        monstre = m.getMonstre(j);
+        monstre.deplaceMonstre();
+
+        if(cuis1.meetMonstre(monstre.getPosLigne(), monstre.getPosColonne()) || cuis2.meetMonstre(monstre.getPosLigne(), monstre.getPosColonne()))
+          cuis1.setVie(cuis1.getVie()-1);
+      }
+
+      try{
+       wait();
+      }catch(InterruptedException e){e.printStackTrace();}
+    }
+  }
+
+  public synchronized void notif(){
+    notifyAll();
+  }
+}
