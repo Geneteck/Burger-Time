@@ -19,7 +19,7 @@ public class Game{
 
     setJoueur(pseudo);
 
-    this.simulPartie = new SimulationPartie(0, p, this.j);
+    this.simulPartie = new SimulationPartie(8, p, this.j);
     this.simulPartie.run();
   }
 }
@@ -49,6 +49,7 @@ class SimulationPartie extends Thread
       Burger b1 = new Burger(1, 45);
       Burger b2 = new Burger(2, 19);
       Burger b3 = new Burger(4, 53);
+      Burger b4 = new Burger(5, 30);
 
       this.plat.addCuisinier(this.cuis);
       this.plat.Complete();
@@ -58,10 +59,12 @@ class SimulationPartie extends Thread
       this.plat.addBurger(b1);
       this.plat.addBurger(b2);
       this.plat.addBurger(b3);
+      this.plat.addBurger(b4);
 
       this.plat.setTabBurger(0, b1);
       this.plat.setTabBurger(1, b2);
       this.plat.setTabBurger(2, b3);
+      this.plat.setTabBurger(3, b4);
 
       // Ajout de monstres dans le nouveau plateau dans lequel le joueur/cuisinier va jouer
       Monstre m = new Monstre(this.nbMonstre, this.plat, this.cuis);
@@ -113,6 +116,7 @@ class SimulationPartieMulti extends Thread
       Burger b1 = new Burger(1, 45);
       Burger b2 = new Burger(2, 19);
       Burger b3 = new Burger(4, 53);
+      Burger b4 = new Burger(5, 30);
 
       this.plat.addCuisinier(this.cuis1);
       this.plat.addCuisinier(this.cuis2);
@@ -122,10 +126,12 @@ class SimulationPartieMulti extends Thread
       this.plat.addBurger(b1);
       this.plat.addBurger(b2);
       this.plat.addBurger(b3);
+      this.plat.addBurger(b4);
 
       this.plat.setTabBurger(0, b1);
       this.plat.setTabBurger(1, b2);
       this.plat.setTabBurger(2, b3);
+      this.plat.setTabBurger(3, b4);
 
       // Ajout de monstres dans le nouveau plateau dans lequel le joueur/cuisinier va jouer
       Monstre m = new Monstre(this.nbMonstre, this.plat, this.cuis1);

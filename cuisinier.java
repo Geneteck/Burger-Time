@@ -148,7 +148,7 @@ public class Cuisinier
         System.out.println("END GAME, THE PLAYER IS DEAD !!");
         return true;
       }
-    else if (this.getScore() == 2100)
+    else if (this.getScore() == 5500)
       {
         System.out.println("END GAME, ALL BURGER IS READY!!");
         return true;

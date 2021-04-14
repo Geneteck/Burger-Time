@@ -104,7 +104,7 @@ public class Plateau
       {
           for(int j=0; j<this.getNbCol()+2; j++)
           {      // Parcours de l'ensemble des colonnes du sous tableau ayant le même nombre que le grand tableau du dessus
-                if (i == 3 && (j == this.getTabBurger(0).getColonne() || j == this.getTabBurger(1).getColonne() || j == this.getTabBurger(2).getColonne()))
+                if (i == 3 && (j == this.getTabBurger(0).getColonne() || j == this.getTabBurger(1).getColonne() || j == this.getTabBurger(2).getColonne() || j == this.getTabBurger(3).getColonne() ))
                 {
                   this.petitTabBurger[i][j] = '*';
                   this.petitTabBurger[i][j+1] = '*';
@@ -244,8 +244,9 @@ public class Plateau
       }
    }
 
-  // Permet de vérifier si il existe encore des steacks sur la ligne du dessous, lorsque le déplacement s'effectue sur les fromages d'un burger
+  // Permet de vérifier s'il existe encore des steacks sur la ligne du dessous, lorsque le déplacement s'effectue sur les fromages d'un burger
   public boolean verifSteack(char touche, int lig, int col)
+  {
      boolean v = true;
      int ligne = lig;
      ligne ++;
@@ -285,39 +286,39 @@ public class Plateau
    }
 
   // Permet de vérifier si il existe encore des fromages sur la ligne du dessous, lorsque le déplacement s'effectue sur les pains supérieur d'un burger
-  public boolean verifFromage(char touche, int lig, int col)                                      // touche pour le déplacement efectuer, lig et col pour l'élément fromage dont on cherche l'existence (possible) de steack
+  public boolean verifFromage(char touche, int lig, int col)
   {
      boolean v = true;
-     int ligne = lig;                                                                              // On stocke la ligne lig dans une nouvelle variable ligne
-     ligne ++;                                                                                     // ligne prend pour numéro la ligne en-dessous de la ligne du fromage acuel dont on effectue la vérification
-     if( touche == 'q')                                                                            // Si on se déplace sur la gauche
+     int ligne = lig;
+     ligne ++;
+     if( touche == 'q')
      {
-       if( mapStatic[ligne][col] == AFF_SOL)                                                      // Alors on regarde si en-dessous du fromage on a du sol en static
+       if( mapStatic[ligne][col] == AFF_SOL)
        {
-         if(mapDynamBurger[ligne][col] == '=' || mapDynamBurger[ligne][col-1] == '=')  { v = false; }            // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la gauche
+         if(mapDynamBurger[ligne][col] == '=' || mapDynamBurger[ligne][col-1] == '=')  { v = false; }
        }
        else
        {
          if(lig<this.getNbLigne())
          {
            while( mapStatic[ligne][col] == AFF_VIDE) { ligne++; }
-           if(mapDynamBurger[ligne][col] == '=' || mapDynamBurger[ligne][col-1] == '=') { v = false; }       // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la gauche
+           if(mapDynamBurger[ligne][col] == '=' || mapDynamBurger[ligne][col-1] == '=') { v = false; }
          }
          else v = true;
        }
      }
-     else if (touche == 'd')                                                                      // Si on se déplace sur la droite
+     else if (touche == 'd')
      {
-       if( mapStatic[ligne][col] == AFF_SOL)                                                      // On regarde si en-dessous du fromage on a du sol en static
+       if( mapStatic[ligne][col] == AFF_SOL)
        {
-         if(mapDynamBurger[ligne][col] == '=' || mapDynamBurger[ligne][col+1] == '=')  { v = false; }    // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la droite
+         if(mapDynamBurger[ligne][col] == '=' || mapDynamBurger[ligne][col+1] == '=')  { v = false; }
        }
        else
        {
          if(lig<this.getNbLigne())
          {
            while( mapStatic[ligne][col] == AFF_VIDE) { ligne++; }
-           if(mapDynamBurger[ligne][col] == '=' || mapDynamBurger[ligne][col+1] == '=') { v = false; }     // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la gauche
+           if(mapDynamBurger[ligne][col] == '=' || mapDynamBurger[ligne][col+1] == '=') { v = false; }
          }
          else v = true;
        }
@@ -325,14 +326,12 @@ public class Plateau
      return v;
    }
 
-
-
-
+  // Pemet de calculer le score de la partie à chaque déplacement de cuisinier
   public void calcScore(Cuisinier c)
   {
     int x = 0;
     int point = 0;
-    for(int z = 0; z<3; z++)
+    for(int z = 0; z<4; z++)
     {
       Burger b = this.getTabBurger(z);
       for(int i=0; i<4; i++)
@@ -344,7 +343,7 @@ public class Plateau
                 if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 70;}
                 if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { point = point + 50; }
                 if( i == 2 && b.steack(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) {  point = point + 30; }
-                if( x == 1 || x == 2 || x == 3) { point = point*2; }
+                if( x == 1 || x == 2 || x == 3 || x == 4) { point = point*2; }
               }
           }
           c.setScore(point);
@@ -352,30 +351,32 @@ public class Plateau
     }
   }
 
-
-  public Plateau(int lig, int col)                               // Constructeur(s) de la classe spécifique
-  {
-    this.setNbLigne(lig);
-    this.setNbCol(col);
-    this.mapStatic = new char[lig+2][col+2];
-    this.mapDynam = new char[lig+2][col+2];
-    this.mapDynamBurger = new char[lig+2][col+2];
-    this.tabBurger = new Burger[3];
-    this.petitTabBurger = new char[4+2][col+2];
-  }
-
-  public Plateau()                                               // Constructeur par défaut du Plateau
+  // Constructeur par défaut du Plateau
+  public Plateau()
   {
     this.NB_LIGNES = 8;
     this.NB_COLONNES = 70;
     this.mapStatic = new char[getNbLigne()+2][getNbCol()+2];
     this.mapDynam = new char[getNbLigne()+2][getNbCol()+2];
     this.mapDynamBurger = new char[getNbLigne()+2][getNbCol()+2];
-    this.tabBurger = new Burger[3];                              // 0, 1, 2 soit 3 burgers qui sont crées
-    this.petitTabBurger = new char[4+2][getNbCol()+2];           // Deuxième tableau static simplement pour l'affichage du sous tableau de burger qui se complète au cours de la partie
+    this.tabBurger = new Burger[4];                              // 0, 1, 2 soit 3 burgers qui sont crées
+    this.petitTabBurger = new char[4+2][getNbCol()+2];
   }
 
-  public void Complete()                                         // Complete un plateau du constructeur par défaut
+  // Constructeur avec paramètres de la classe Plateau
+  public Plateau(int lig, int col)
+  {
+    this.setNbLigne(lig);
+    this.setNbCol(col);
+    this.mapStatic = new char[lig+2][col+2];
+    this.mapDynam = new char[lig+2][col+2];
+    this.mapDynamBurger = new char[lig+2][col+2];
+    this.tabBurger = new Burger[4];
+    this.petitTabBurger = new char[4+2][col+2];
+  }
+
+  // Complete l'instance d'un plateau construit par le constructeur par défaut
+  public void Complete()
   {
     for(int i=0; i<=getNbLigne()+1; i++)
     {
@@ -463,9 +464,16 @@ public class Plateau
     modifieCaseStatic(this.getNbLigne(), this.getNbCol(), AFF_ECHELLE);
     modifieCaseStatic(this.getNbLigne()-1, this.getNbCol(), AFF_ECHELLE);
     modifieCaseStatic(this.getNbLigne()-2, this.getNbCol(), AFF_ECHELLE);
+    modifieCaseStatic(this.getNbLigne()-3, this.getNbCol(), AFF_ECHELLE);
 
     modifieCaseStatic(this.getNbLigne(), 16, AFF_ECHELLE);
     modifieCaseStatic(this.getNbLigne()-1, 16, AFF_ECHELLE);
+
+    modifieCaseStatic(this.getNbLigne(), 59, AFF_ECHELLE);
+    modifieCaseStatic(this.getNbLigne()-1, 59, AFF_ECHELLE);
+
+    modifieCaseStatic(this.getNbLigne(), 37, AFF_ECHELLE);
+    modifieCaseStatic(this.getNbLigne()-1, 37, AFF_ECHELLE);
 
     modifieCaseStatic(this.getNbLigne()-1, 9, AFF_ECHELLE);
     modifieCaseStatic(this.getNbLigne()-2, 9, AFF_ECHELLE);
@@ -475,8 +483,8 @@ public class Plateau
     modifieCaseStatic(this.getNbLigne()-2, 50, AFF_ECHELLE);
   }
 
-
-  public void addMonstre(Monstre m)                              // Ajoute un monstre m sur le plateau pour qu'il puisse être visualiser
+  // Ajoute un monstre m sur le plateau pour qu'il puisse être visualiser
+  public void addMonstre(Monstre m)
   {
     int ligne = m.getPosLigne();
     int col = m.getPosColonne();
@@ -484,7 +492,8 @@ public class Plateau
     modifieCaseDynamique(ligne, col, c);
   }
 
-  public void addCuisinier(Cuisinier c)                          // Ajoute le cuisinier au plateau pour qu'il puisse être visualiser
+  // Ajoute un cuisinier c au plateau pour qu'il puisse être visualiser
+  public void addCuisinier(Cuisinier c)
   {
     int ligne = c.getPosLigne();
     int col = c.getPosColonne();
@@ -492,6 +501,7 @@ public class Plateau
     this.modifieCaseDynamique(ligne, col, cuis);
   }
 
+  // Ajoute un burger b au plateau sur les lignes du plateau
   public void addBurger(Burger b)
   {
     int lig = b.getLigne();                                                // On récupère la ligne à partir de laquelle on veut commencer
@@ -503,7 +513,6 @@ public class Plateau
       for(int j = 0; j < 3; j++)
       {
           // On part du principe que la ligne et la colonne choisis de départ sont possibles
-          // Tentons de les ajouter CORRECTEMENT
           if(i == 0)
           {
             while(mapStatic[lig][col] ==  AFF_VIDE ||  mapStatic[lig][col+1] == AFF_VIDE || mapStatic[lig][col+2] == AFF_VIDE) { lig++; }
