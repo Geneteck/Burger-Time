@@ -47,7 +47,7 @@ public class Cuisinier
 
       if(touche == 'z' && plat.valide(touche, this.getPosLigne(),this.getPosColonne()))
       {
-        this.clearCuisinier(this.plat);
+        this.clearCuisinier();
         this.setPosLigne(this.getPosLigne()-1);
         verif = true;
       }
@@ -55,21 +55,21 @@ public class Cuisinier
       else if(touche == 'q' && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
       {
         plat.tomber(touche, this.getPosLigne(), this.getPosColonne());
-        this.clearCuisinier(this.plat);
+        this.clearCuisinier();
         this.setPosColonne(this.getPosColonne()-1);
         verif = true;
       }
       else if(touche == 'd'  && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
       {
         plat.tomber(touche, this.getPosLigne(), this.getPosColonne());
-        this.clearCuisinier(this.plat);
+        this.clearCuisinier();
         this.setPosColonne(this.getPosColonne()+1);
         verif = true;
       }
 
       else if(touche == 's'  && plat.valide(touche, this.getPosLigne(), this.getPosColonne()))
       {
-        this.clearCuisinier(this.plat);
+        this.clearCuisinier();
         this.setPosLigne(this.getPosLigne()+1);
         verif = true;
       }
@@ -80,9 +80,10 @@ public class Cuisinier
     plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), this.getCharCuisinier());
   }
 
-  public void deplaceCuisinier2(char touche)                  // Fonction qui permet de déplacer le cuisinier de la partie pour le client
+  // Fonction qui permet de déplacer le cuisinier de la partie coop pour le client
+  public void deplaceCuisinier2(char touche)
   {
-    this.clearCuisinier(this.plat);
+    this.clearCuisinier();
 
     boolean verif = false;
     while( verif == false )
@@ -116,16 +117,16 @@ public class Cuisinier
     }
   }
 
-  // Méthode qui
-  public void clearCuisinier(Plateau p)
+  // Méthode qui efface l'ancienne position du cuisinier en verifiant a ne pas effacer d'autre éléments
+  public void clearCuisinier()
   {
-    char dyn[][] = p.getMapDynamic();
+    char dyn[][] = this.plat.getMapDynamic();
 
     int col = this.getPosColonne();
     int lig = this.getPosLigne();
 
-    if( p.getCharat(dyn, lig, col-1) != 'C' || p.getCharat(dyn, lig, col-1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' || p.getCharat(dyn, lig, col+1) != 'C' || p.getCharat(dyn, lig, col+1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' )
-      p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
+    if( this.plat.getCharat(dyn, lig, col-1) != 'C' || this.plat.getCharat(dyn, lig, col-1) != 'O' || this.plat.getCharat(dyn, lig, col-1) != 'S' || this.plat.getCharat(dyn, lig, col+1) != 'C' || this.plat.getCharat(dyn, lig, col+1) != 'O' || this.plat.getCharat(dyn, lig, col-1) != 'S' )
+      this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
   }
 
   // Méthode qui vérifie si le cuisinier à rencontrer/toucher un monstre
@@ -143,18 +144,26 @@ public class Cuisinier
   // Méthode qui vérifie les points de vie restat d'un cuisinier
   public boolean partieFinie()
   {
-    if(this.getVie() < 1)
-      {
-        System.out.println("END GAME, THE PLAYER IS DEAD !!");
-        return true;
-      }
-    else if (this.getScore() == 5500)
-      {
-        System.out.println("END GAME, ALL BURGER IS READY!!");
-        return true;
-      }
-    else
-      return false;
+    boolean verif = false;
+    char[][] test = this.plat.getDynamBurgeur();
+    for(int i = 0; i<this.plat.getNbLigne()+2; i++)
+    {
+        for(int j = 0; j<this.plat.getNbCol()+2; j++)
+        {
+            if (test[i][j] == '*') verif = true;
+        }
+    }
+    if (verif == false)
+    {
+      System.out.println("END GAME, ALL BURGER IS READY !!");
+      return true;
+    }
+    else if(this.getVie() < 1)
+    {
+      System.out.println("END GAME, THE PLAYER IS DEAD !!");
+      return true;
+    }
+    else return false;
   }
 
   // Méthode qui affiche le score et les points de vies du joueur
@@ -200,6 +209,7 @@ public class Cuisinier
     this.plat = p;
   }
 
+  // Deuxième constructeur de la classe Cuisinier
   public Cuisinier(Plateau p)
   {
     setVie(3);
@@ -213,19 +223,27 @@ public class Cuisinier
 
 class MouvementCuisinier extends Thread
 {
+  // Déclaration des attributs
+
   private Plateau plat;
   private Cuisinier cuis;
   private boolean evt = false;
 
+  // Méthode d'accès
+
   public boolean getEvt() { return this.evt; }
 
-  public MouvementCuisinier(Plateau p, Cuisinier c){
+  // Constructeur du thread MouvementCuisinier
+  public MouvementCuisinier(Plateau p, Cuisinier c)
+  {
    this.plat = p;
    this.cuis = c;
    cuis.spawnCuisinier();
   }
 
-  public synchronized void run(){
+  // Permet de lancer les actions des threads MouvementCuisinier
+  public synchronized void run()
+  {
     while(this.cuis.partieFinie() == false)
     {
       this.cuis.deplaceCuisinier();
@@ -240,27 +258,36 @@ class MouvementCuisinier extends Thread
     }
   }
 
-  public synchronized void notif(){
+  public synchronized void notif()
+  {
     notifyAll();
   }
 }
 
  class MouvementCuisinierClient extends Thread
 {
+  // Déclaration des attributs
+
   private Plateau plat;
   private Cuisinier cuis1;
   public char touche;
   private boolean evt = false;
 
+  // Méthode d'accès
+
   public boolean getEvt() { return this.evt; }
 
-  public MouvementCuisinierClient(Plateau p, Cuisinier c){
+  // Constructeur du thread MouvementCuisinierClient
+  public MouvementCuisinierClient(Plateau p, Cuisinier c)
+  {
    this.plat = p;
    this.cuis1 = c;
    cuis1.spawnCuisinier();
   }
 
-  public synchronized void run(){
+  // Permet de lancer les actions des threads MouvementCuisinierClient
+  public synchronized void run()
+  {
     while(this.cuis1.partieFinie() == false)
       {
         try{
@@ -281,12 +308,15 @@ class MouvementCuisinier extends Thread
       }
   }
 
+  // Permet de récupérer la touche saisie par le client récupérer dans le serveur
   public void recupTouche(char touche)
   {
     this.touche = touche;
   }
 
-  public synchronized void notif(){
+  // Permet de notifier
+  public synchronized void notif()
+  {
     notifyAll();
   }
 }

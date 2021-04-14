@@ -2,24 +2,29 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
-public class Game{
+public class Game
+{
+  // Déclaration des attributs
+  
   private Joueur j;
   private Burger tabBurger[];
   private SimulationPartie simulPartie;
+
+  // Méthode d'accès
 
   public Joueur getJoueur(){ return this.j; }
   public void setJoueur(String pseudo){ this.j = new Joueur(pseudo); }
   public void setBurger() { this.tabBurger = new Burger[2]; }
   public SimulationPartie getSimulationPartie() { return this.simulPartie;}
 
-
+  // Constructeur de la classe
   public Game(String pseudo)
   {
     Plateau p = new Plateau();
 
     setJoueur(pseudo);
 
-    this.simulPartie = new SimulationPartie(8, p, this.j);
+    this.simulPartie = new SimulationPartie(10, p, this.j);
     this.simulPartie.run();
   }
 }

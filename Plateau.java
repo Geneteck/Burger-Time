@@ -37,7 +37,6 @@ public class Plateau
   public int getNbLigne() { return this.NB_LIGNES; }
   public void setNbCol(int n) { this.NB_COLONNES = n; }
   public int getNbCol() { return this.NB_COLONNES; }
-  public int getID(int lig, int col) { return (this.NB_COLONNES*lig)+col; }
   public char[][] getMapStatic() { return this.mapStatic; }
   public char[][] getDynamBurgeur() { return this.mapDynamBurger; }
   public char[][] getMapDynamic() { return this.mapDynam; }
@@ -329,7 +328,6 @@ public class Plateau
   // Pemet de calculer le score de la partie à chaque déplacement de cuisinier
   public void calcScore(Cuisinier c)
   {
-    int x = 0;
     int point = 0;
     for(int z = 0; z<4; z++)
     {
@@ -340,10 +338,9 @@ public class Plateau
           {
               if (j == this.getTabBurger(z).getColonne())
               {
-                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { x++; point = point + 70;}
+                if( i == 0 && b.pain(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) {  point = point + 70;}
                 if( i == 1 && b.fromage(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) { point = point + 50; }
                 if( i == 2 && b.steack(this.petitTabBurger[i][j], this.petitTabBurger[i][j+1], this.petitTabBurger[i][j+2])) {  point = point + 30; }
-                if( x == 1 || x == 2 || x == 3 || x == 4) { point = point*2; }
               }
           }
           c.setScore(point);

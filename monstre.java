@@ -88,14 +88,14 @@ public class Monstre
 
         while(valide)
         {
-          this.clearMonstre(this.plat);
+          this.clearMonstre();
           deplacement = (int)(Math.random()*4);
           pasBoucleInfinie++;
 
           switch(deplacement)
           {
-              case 0:                                                          // Déplacement vers la gauche
-                  if(this.valideDep(0) == true)                             // Vérification
+              case 0:                                                           // Déplacement vers la gauche
+                  if(this.valideDep(0) == true)                                 // Vérification
                   {
                     this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()-1, this.getCharMonstre());
                     this.setPosColonne(this.getPosColonne()-1);
@@ -103,8 +103,8 @@ public class Monstre
                   }
                   break;
 
-              case 1:                                                          // Pour aller à droite
-                  if(this.valideDep(1) == true)                             // Vérification
+              case 1:                                                           // Déplacement vers la droite
+                  if(this.valideDep(1) == true)                                 // Vérification
                   {
                     this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne()+1, this.getCharMonstre());
                     this.setPosColonne(this.getPosColonne()+1);
@@ -112,9 +112,8 @@ public class Monstre
                   }
                   break;
 
-              case 2:       // Pour aller en haut
-                // Vérification en haut
-                if(this.valideDep(2) == true)
+              case 2:                                                           // Déplacement vers le haut
+                if(this.valideDep(2) == true)                                   // Vérification
                 {
                   this.plat.modifieCaseDynamique(this.getPosLigne()-1, this.getPosColonne(), this.getCharMonstre());
                   this.setPosLigne(this.getPosLigne()-1);
@@ -122,9 +121,8 @@ public class Monstre
                 }
                 break;
 
-              case 3:      // Pour aller en bas
-                // Vérification en bas
-                if(this.valideDep(3) == true)
+              case 3:                                                           // Déplacement vers le bas
+                if(this.valideDep(3) == true)                                   // Vérification
                 {
                   this.plat.modifieCaseDynamique(this.getPosLigne()+1, this.getPosColonne(), this.getCharMonstre());
                   this.setPosLigne(this.getPosLigne()+1);
@@ -133,7 +131,7 @@ public class Monstre
                 break;
           }
 
-          if(pasBoucleInfinie > 50)
+          if(pasBoucleInfinie > 50)                                             // Condition qui permet de ne pas boucler a l'infinie
             valide = false;
       }
     }
@@ -185,17 +183,19 @@ public class Monstre
      } //end for
    }
 
-  public void clearMonstre(Plateau p)
+   // Méthode qui efface l'ancienne position du monstre en verifiant a ne pas effacer d'autre éléments
+  public void clearMonstre()
   {
-     char dyn[][] = p.getMapDynamic();
+     char dyn[][] = this.plat.getMapDynamic();
 
      int col = this.getPosColonne();
      int lig = this.getPosLigne();
 
-     if( p.getCharat(dyn, lig, col-1) != 'C' || p.getCharat(dyn, lig, col-1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' || p.getCharat(dyn, lig, col+1) != 'C' || p.getCharat(dyn, lig, col+1) != 'O' || p.getCharat(dyn, lig, col-1) != 'S' )
-       p.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
+     if( this.plat.getCharat(dyn, lig, col-1) != 'C' || this.plat.getCharat(dyn, lig, col-1) != 'O' || this.plat.getCharat(dyn, lig, col-1) != 'S' || this.plat.getCharat(dyn, lig, col+1) != 'C' || this.plat.getCharat(dyn, lig, col+1) != 'O' || this.plat.getCharat(dyn, lig, col-1) != 'S' )
+       this.plat.modifieCaseDynamique(this.getPosLigne(), this.getPosColonne(), ' ');
    }
 
+  //Constructeur de la classe Monstre
   public Monstre(int nb, Plateau plat, Cuisinier c)
   {
      setNbMonstre(nb);
@@ -261,7 +261,7 @@ class MouvementMonstre extends Thread
         monstre.deplaceMonstre();
 
         if(cuis.meetMonstre(monstre.getPosLigne(), monstre.getPosColonne()))
-          cuis.setVie(cuis.getVie()-1);
+                  cuis.setVie(cuis.getVie()-1);
       }
 
       try{
@@ -298,7 +298,6 @@ class MouvementMonstreMulti extends Thread
       {
         monstre = m.getMonstre(j);
         monstre.deplaceMonstre();
-
         if(cuis1.meetMonstre(monstre.getPosLigne(), monstre.getPosColonne()) || cuis2.meetMonstre(monstre.getPosLigne(), monstre.getPosColonne()))
           cuis1.setVie(cuis1.getVie()-1);
       }
