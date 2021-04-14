@@ -22,49 +22,119 @@ public class Plateau
   private char petitTabBurger[][];                                             // Tableau statique que l'on affiche/visualise (= sous tableau)
   private Burger tabBurger[];                                                  // Tableau ou chaque entité de burger est concaténer (utiliser dans l'affichage statique du sous tableau petitTabBurger)
 
+  // Permet de réaliser les différents affichages, et de rendre le code plus lisibles
 
   char AFF_LIMITE = 'X';
   char AFF_SOL = '_';
   char AFF_ECHELLE = '#';
   char AFF_VIDE = ' ';
-
-
   String tiret = "-------------------------------------------------------------------------------------------------------------------------------------------";
   String tabu1 = "                ";
 
-  // Fonctions pour accéder aux attributs ou les retourner
+  // Méthodes d'accès aux différents attributs
 
   public void setNbLigne(int n) { this.NB_LIGNES = n; }
-
   public int getNbLigne() { return this.NB_LIGNES; }
-
   public void setNbCol(int n) { this.NB_COLONNES = n; }
-
   public int getNbCol() { return this.NB_COLONNES; }
-
   public int getID(int lig, int col) { return (this.NB_COLONNES*lig)+col; }
-
   public char[][] getMapStatic() { return this.mapStatic; }
-
   public char[][] getDynamBurgeur() { return this.mapDynamBurger; }
-
   public char[][] getMapDynamic() { return this.mapDynam; }
-
   public void setTabBurger(int x, Burger b) { this.tabBurger[x] = b; }
 
+  // Méthodes intermédiaires de la classe Plateau
+
   public Burger getTabBurger(int x) { return this.tabBurger[x]; }
-
   public char getCharat(char[][] c, int lig, int col) { return c[lig][col];}
-
   public void modifieCaseStatic(int lig, int col, char c) { mapStatic[lig][col] = c; }
-
   public void modifieCaseDynamique(int lig, int col, char c){ mapDynam[lig][col] = c; }
-
   public void modifieCaseDynamiqueBurger(int lig, int col, char c){ mapDynamBurger[lig][col] = c; }
 
-  // Autre fonctions hors attributs
+  // Méthodes principales de la classe Plateau
 
-  public boolean valide(char c, int ligCuisto, int colCuisto)     // Fonction valide vérifie si le déplacement (cuisto) désiré est réalisable
+  // Permet de visualiser au fur et à mesure d'une partie l'état du jeu
+  public void affiche(Cuisinier c)
+  {
+      System.out.println(tiret+"\n"+tiret+"\n");
+      this.calcScore(c);
+      for(int i=0; i<15; i++)
+      {
+        if(i == 9)
+        {
+          System.out.print("                                                ");
+          c.afficheScorePv();
+        }
+        else System.out.println("");
+      }
+
+      for(int i=-1; i<=this.getNbLigne()+2; i++)
+      {
+        for(int j=-1; j<=this.getNbCol()+2; j++)
+        {
+          if(j == -1)
+            System.out.print(tabu1);
+
+          if (i == -1 || j == -1 || i == this.getNbLigne()+2 || j ==  this.getNbCol()+2)
+            System.out.print(AFF_LIMITE);
+
+          else if( mapDynam[i][j] == 'J'|| mapDynam[i][j] == 'S' || mapDynam[i][j] == 'O' || mapDynam[i][j] == 'C' )
+            System.out.print(mapDynam[i][j]);
+
+          else if (mapDynamBurger[i][j] == '*' || mapDynamBurger[i][j] == '~' || mapDynamBurger[i][j] == '=')
+            System.out.print(mapDynamBurger[i][j]);
+
+          else
+              System.out.print(mapStatic[i][j]);
+        }
+        System.out.println("\n");
+      }
+
+      this.afficheBurger();
+
+      for(int i=0; i<12; i++) { System.out.println(""); }
+      System.out.println(tiret+"\n"+tiret+"\n");
+      System.out.println("Deplacer le cuisinier :");
+  }
+
+  // Pemert l'affichage du tableau dans lequel les éléments de burger tombe
+  public void afficheBurger()
+  {
+      for(int i=0; i<4; i++)
+      {
+          for(int j=0; j<this.getNbCol()+2; j++)
+          {      // Parcours de l'ensemble des colonnes du sous tableau ayant le même nombre que le grand tableau du dessus
+                if (i == 3 && (j == this.getTabBurger(0).getColonne() || j == this.getTabBurger(1).getColonne() || j == this.getTabBurger(2).getColonne()))
+                {
+                  this.petitTabBurger[i][j] = '*';
+                  this.petitTabBurger[i][j+1] = '*';
+                  this.petitTabBurger[i][j+2] = '*';
+                }
+                else if (!(this.petitTabBurger[i][j] == '*' || this.petitTabBurger[i][j] == '~' || this.petitTabBurger[i][j] == '='))
+                {
+                  this.petitTabBurger[i][j] = AFF_VIDE;
+                }
+          }
+      }
+
+      // Affichage des burgers qui se complèe au fur et à mesure, Tableau du bas
+      for(int i=-1; i<=4;i++)
+      {
+          for(int j=-1; j<=this.getNbCol()+2; j++)
+          {
+            if(j == -1)
+              System.out.print(tabu1);
+            if (i == -1 || j == -1 || i == 4 || j == this.getNbCol()+2)
+              System.out.print(AFF_LIMITE);
+            else
+              System.out.print(this.petitTabBurger[i][j]);
+        }
+        System.out.print("\n");
+      }
+  }
+
+  // Fonction valide vérifie si le déplacement (cuisto) désiré est réalisable
+  public boolean valide(char c, int ligCuisto, int colCuisto)
   {
     boolean verif = false;
     switch(c)
@@ -96,6 +166,7 @@ public class Plateau
     return verif;
   }
 
+  // Permet de faire tomber (si cela est possibe) les éléments de burger sur lequel un cuisinier se déplace
   public void tomber(char c, int lig, int col)
   {
       int ligne = lig;
@@ -173,39 +244,39 @@ public class Plateau
       }
    }
 
-  public boolean verifSteack(char touche, int lig, int col)                                      // touche pour le déplacement efectuer, lig et col pour l'élément fromage dont on cherche l'existence (possible) de steack
-  {
+  // Permet de vérifier si il existe encore des steacks sur la ligne du dessous, lorsque le déplacement s'effectue sur les fromages d'un burger
+  public boolean verifSteack(char touche, int lig, int col)
      boolean v = true;
-     int ligne = lig;                                                                              // On stocke la ligne lig dans une nouvelle variable ligne
-     ligne ++;                                                                                     // ligne prend pour numéro la ligne en-dessous de la ligne du fromage acuel dont on effectue la vérification
-     if( touche == 'q')                                                                            // Si on se déplace sur la gauche
+     int ligne = lig;
+     ligne ++;
+     if( touche == 'q')
      {
-       if( mapStatic[ligne][col] == AFF_SOL)                                                      // Alors on regarde si en-dessous du fromage on a du sol en static
+       if( mapStatic[ligne][col] == AFF_SOL)
        {
-         if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col-1] == '~')  { v = false; }            // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la gauche
+         if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col-1] == '~')  { v = false; }
        }
        else
        {
          if(lig<this.getNbLigne())
          {
            while( mapStatic[ligne][col] == AFF_VIDE) { ligne++; }
-           if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col-1] == '~') { v = false; }       // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la gauche
+           if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col-1] == '~') { v = false; }
          }
          else v = true;
        }
      }
-     else if (touche == 'd')                                                                      // Si on se déplace sur la droite
+     else if (touche == 'd')
      {
-       if( mapStatic[ligne][col] == AFF_SOL)                                                      // On regarde si en-dessous du fromage on a du sol en static
+       if( mapStatic[ligne][col] == AFF_SOL)
        {
-         if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col+1] == '~')  { v = false; }    // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la droite
+         if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col+1] == '~')  { v = false; }
        }
        else
        {
          if(lig<this.getNbLigne())
          {
            while( mapStatic[ligne][col] == AFF_VIDE) { ligne++; }
-           if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col+1] == '~') { v = false; }     // Si c'est le cas on vérifie alors si en cette ligne il existe des fromages sur la gauche
+           if(mapDynamBurger[ligne][col] == '~' || mapDynamBurger[ligne][col+1] == '~') { v = false; }
          }
          else v = true;
        }
@@ -213,6 +284,7 @@ public class Plateau
      return v;
    }
 
+  // Permet de vérifier si il existe encore des fromages sur la ligne du dessous, lorsque le déplacement s'effectue sur les pains supérieur d'un burger
   public boolean verifFromage(char touche, int lig, int col)                                      // touche pour le déplacement efectuer, lig et col pour l'élément fromage dont on cherche l'existence (possible) de steack
   {
      boolean v = true;
@@ -254,84 +326,7 @@ public class Plateau
    }
 
 
-  // Permet de visualiser au fur et à mesure l'état du plateau
-  public void affiche(Cuisinier c)
-  {
-      System.out.println(tiret+"\n"+tiret+"\n");
-      this.calcScore(c);
-      for(int i=0; i<15; i++)
-      {
-        if(i == 9)
-        {
-          System.out.print("                                                ");
-          c.afficheScorePv();
-        }
-        else System.out.println("");
-      }
 
-      for(int i=-1; i<=this.getNbLigne()+2; i++)
-      {
-        for(int j=-1; j<=this.getNbCol()+2; j++)
-        {
-          if(j == -1)
-            System.out.print(tabu1);
-
-          if (i == -1 || j == -1 || i == this.getNbLigne()+2 || j ==  this.getNbCol()+2)
-            System.out.print(AFF_LIMITE);
-
-          else if( mapDynam[i][j] == 'J'|| mapDynam[i][j] == 'S' || mapDynam[i][j] == 'O' || mapDynam[i][j] == 'C' )
-            System.out.print(mapDynam[i][j]);
-
-          else if (mapDynamBurger[i][j] == '*' || mapDynamBurger[i][j] == '~' || mapDynamBurger[i][j] == '=')
-            System.out.print(mapDynamBurger[i][j]);
-
-          else
-              System.out.print(mapStatic[i][j]);
-        }
-        System.out.println("\n");
-      }
-
-      this.afficheBurger();
-
-      for(int i=0; i<12; i++) { System.out.println(""); }
-      System.out.println(tiret+"\n"+tiret+"\n");
-      System.out.println("Deplacer le cuisinier :");
-  }
-
-  public void afficheBurger()
-  {
-      for(int i=0; i<4; i++)                                                                            // Parcours des ligne du sous tableau (4 donc 0, 1, 2, 3, 4)
-      {
-          for(int j=0; j<this.getNbCol()+2; j++)
-          {      // Parcours de l'ensemble des colonnes du sous tableau au même nombre que le grand tableau du dessus
-                if (i == 3 && (j == this.getTabBurger(0).getColonne() || j == this.getTabBurger(1).getColonne() || j == this.getTabBurger(2).getColonne()))
-                {
-                  this.petitTabBurger[i][j] = '*';
-                  this.petitTabBurger[i][j+1] = '*';
-                  this.petitTabBurger[i][j+2] = '*';
-                }
-                else if (!(this.petitTabBurger[i][j] == '*' || this.petitTabBurger[i][j] == '~' || this.petitTabBurger[i][j] == '='))
-                {
-                  this.petitTabBurger[i][j] = AFF_VIDE;
-                }
-          }
-      }
-
-        for(int i=-1; i<=4;i++)                                   // Affichage des burgers qui se complèe au fur et à mesure, Tableau du bas
-        {
-            for(int j=-1; j<=this.getNbCol()+2; j++)
-            {
-              if(j == -1)
-                System.out.print(tabu1);
-              if (i == -1 || j == -1 || i == 4 || j == this.getNbCol()+2) // Permet l'affichage des bords du tableau
-                System.out.print(AFF_LIMITE);
-              else
-                System.out.print(this.petitTabBurger[i][j]);
-          }
-          System.out.print("\n");
-      }
-
-  }
 
   public void calcScore(Cuisinier c)
   {
